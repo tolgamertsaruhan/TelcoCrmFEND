@@ -18,6 +18,6 @@ export class CustomerService {
 
 // http://localhost:8091/customerservice/api/individual-customers
   createIndividualCustomer(request: IndividualCustomerCreateRequest): Observable<any> {
-  return this.httpClient.post(' http://localhost:64703/api/individual-customers', request);
+  return this.httpClient.post('http://localhost:8091/customerservice/api/individual-customers', request);
 }
 }

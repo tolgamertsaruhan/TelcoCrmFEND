@@ -1,5 +1,4 @@
-
-export interface IndividualCustomerListResponse {
+export interface IndividualCustomerSearchResponse {
   id: string;
   firstName: string;
   lastName: string;
@@ -10,8 +9,8 @@ export interface IndividualCustomerListResponse {
   fatherName: string;
   gender: string;
   dateOfBirth: string;
-  addresses: Address[];
-  contactMediums: ContactMedium[]; 
+  addressSearchList: Address[];
+  contactMediumSearchList: ContactMedium[]; 
 
 }
 export interface Address { 

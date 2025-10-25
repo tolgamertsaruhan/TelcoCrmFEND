@@ -1,20 +1,20 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IndividualCustomerListResponse } from '../models/individualcustomer/responses/individualCustomerListResponse';
-import { Observable } from 'rxjs/internal/Observable';
+import { Observable } from 'rxjs';
 import { IndividualCustomerSearchRequest } from '../models/individualcustomer/requests/individualCustomerSearchRequest';
+import { IndividualCustomerSearchResponse } from '../models/individualcustomer/responses/individualCustomerSearchResponse';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CustomerSearchService {
-  private apiUrl = 'http://localhost:8091/searchservice/api/customer-search/search?'
+  private apiUrl = 'http://localhost:8091/searchservice/api/customer-search/search';
+
   constructor(private http: HttpClient) { }
 
-  searchCustomers(request: IndividualCustomerSearchRequest): Observable<IndividualCustomerListResponse[]> {
+  searchCustomers(request: IndividualCustomerSearchRequest): Observable<IndividualCustomerSearchResponse[]> {
     let httpParams = new HttpParams();
 
-    // Sadece değeri olan alanları HttpParams'e ekle
     if (request.id) {
       httpParams = httpParams.set('id', request.id);
     }
@@ -30,14 +30,12 @@ export class CustomerSearchService {
     if (request.lastName) {
       httpParams = httpParams.set('lastName', request.lastName);
     }
-    
-    // UI'daki GSM Number (gsmNumber) bilgisini, BE'nin beklediği 'mobilePhone' parametresi olarak gönder.
+
+    // Backend'in beklediği parametre adı
     if (request.gsmNumber) {
-      httpParams = httpParams.set('mobilePhone', request.gsmNumber);
+      httpParams = httpParams.set('value', request.gsmNumber);
     }
 
-    // Diğer alanları (middleName, orderNumber) BE request'ine dahil etmiyoruz.
-
-    return this.http.get<IndividualCustomerListResponse[]>(this.apiUrl, { params: httpParams });
+    return this.http.get<IndividualCustomerSearchResponse[]>(this.apiUrl, { params: httpParams });
   }
 }

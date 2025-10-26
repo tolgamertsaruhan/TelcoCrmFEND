@@ -3,10 +3,12 @@ import { Navbar } from '../../components/navbar/navbar';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CustomerService } from '../../services/customer-service';
 import { IndividualCustomerCreateRequest } from '../../models/individualcustomer/requests/individualCustomerCreateRequest';
+import { CreateAddress } from "../create-address/create-address";
+import { Sidebar } from "../../components/sidebar/sidebar";
 
 @Component({
   selector: 'app-individual-customer-create',
-  imports: [Navbar, FormsModule, ReactiveFormsModule],
+  imports: [Navbar, FormsModule, ReactiveFormsModule, CreateAddress, Sidebar],
   templateUrl: './individual-customer-create.html',
   styleUrl: './individual-customer-create.scss',
 })

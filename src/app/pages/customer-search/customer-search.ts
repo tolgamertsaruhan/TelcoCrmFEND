@@ -6,10 +6,11 @@ import { IndividualCustomerSearchRequest } from '../../models/individualcustomer
 import { IndividualCustomerSearchResponse } from '../../models/individualcustomer/responses/individualCustomerSearchResponse';
 import { CustomerSearchService } from '../../services/customer-search-service';
 import { Router } from '@angular/router';
+import { Sidebar } from "../../components/sidebar/sidebar";
 
 @Component({
   selector: 'app-customer-search',
-  imports: [Navbar, FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [Navbar, FormsModule, ReactiveFormsModule, CommonModule, Sidebar],
   templateUrl: './customer-search.html',
   styleUrl: './customer-search.scss',
 })

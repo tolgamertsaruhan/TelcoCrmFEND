@@ -4,10 +4,11 @@ import { Loader } from "./components/loader/loader";
 import { IndividualcustomerList } from './components/individualcustomer-list/individualcustomer-list';
 import { IndividualcustomerItem } from "./components/individualcustomer-item/individualcustomer-item";
 import { Navbar } from "./components/navbar/navbar";
+import { Sidebar } from './components/sidebar/sidebar';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Loader, IndividualcustomerList, IndividualcustomerItem, Navbar],
+  imports: [RouterOutlet, Loader, IndividualcustomerList, IndividualcustomerItem, Navbar, Sidebar],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

@@ -1,34 +1,8 @@
-<div class="flex h-screen bg-gray-100 p-4 font-inter">
-  <!-- Sol Menü (Görseldeki tasarımı taklit ediyoruz) -->
-  <div class="w-20 bg-gray-800 p-2 rounded-l-xl flex flex-col items-center justify-start text-white shadow-xl">
-    <!-- İkonlar -->
-    <div class="flex flex-col space-y-4 w-full mt-4">
-      <!-- B2C (Aktif) -->
-      <div class="p-2 flex flex-col items-center cursor-pointer bg-orange-600 rounded-lg shadow-lg">
-        <!-- User Group Icon (Lucide/SVG) -->
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        <span class="text-xs mt-1">B2C</span>
-      </div>
-      <!-- B2B (Pasif) -->
-      <div class="p-2 flex flex-col items-center cursor-pointer text-gray-400 hover:bg-gray-700 rounded-lg">
-        <!-- Briefcase Icon -->
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-        <span class="text-xs mt-1">B2B</span>
-      </div>
-      <!-- Diğer Menü İkonları -->
-      <div class="p-2 flex flex-col items-center cursor-pointer text-gray-400 hover:bg-gray-700 rounded-lg">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
-      </div>
-      <div class="p-2 flex flex-col items-center cursor-pointer text-gray-400 hover:bg-gray-700 rounded-lg">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="m17 19-5-5-5 5"/><path d="m17 5-5 5-5-5"/></svg>
-      </div>
-    </div>
-    <div class="mt-auto p-2 flex flex-col items-center cursor-pointer text-gray-400 hover:bg-gray-700 rounded-lg mb-4">
-      <!-- Log Out Icon -->
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
-    </div>
-  </div>
+<app-navbar></app-navbar>
 
+<div class="flex h-screen bg-gray-100 p-4 font-inter">
+  
+  <app-sidebar></app-sidebar>
   <!-- Ana İçerik: Arama Filtresi ve Sonuçları -->
   <div class="flex-grow bg-white rounded-r-xl shadow-2xl flex relative overflow-hidden">
     

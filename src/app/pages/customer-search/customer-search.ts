@@ -16,10 +16,29 @@ import { Router } from '@angular/router';
 export class CustomerSearch implements OnInit {
   searchForm: IndividualCustomerSearchRequest = {}; 
   searchResults: IndividualCustomerSearchResponse[] | null = null; 
+  paginatedResults: IndividualCustomerSearchResponse[] = [];
 
   isLoading: boolean = false;
   isNationalIdActive: boolean = false;
   isAnyFieldFilled: boolean = false; 
+  isIdLocked: boolean = false;
+
+  disabledFields = {
+    id: false,
+    customerNumber: false,
+    nationalId: false,
+    gsmNumber: false,
+    firstName: false,
+    middleName: false,
+    lastName: false
+  };
+
+
+  // Pagination
+  currentPage: number = 1;
+  pageSize: number = 20;
+  totalPages: number = 0;
+
 
   constructor(
     private customerSearchService: CustomerSearchService,
@@ -31,48 +50,191 @@ export class CustomerSearch implements OnInit {
     this.checkAnyFieldFilled();
   }
 
-  onNatIdChange(): void {
-    this.isNationalIdActive = !!this.searchForm.nationalId; 
+  onChange(): void {
+    //this.isNationalIdActive = !!this.searchForm.nationalId; 
     this.checkAnyFieldFilled();
+
+    // Eğer searchResults varsa ve tüm inputlar boş değilse tabloyu sakla
+  if (this.searchResults && !this.isAnyFieldFilled) {
+    this.paginatedResults = this.searchResults.slice(
+      (this.currentPage - 1) * this.pageSize,
+      this.currentPage * this.pageSize
+    );
+  }
   }
 
   clearSearch(): void {
-    this.searchForm = {};
+    /*this.searchForm = {};
     this.searchResults = null;
     this.isNationalIdActive = false;
     this.isAnyFieldFilled = false;
+    this.isIdLocked = false;*/
+    this.searchForm = {
+      id: '',
+      customerNumber: '',
+      nationalId: '',
+      gsmNumber: '',
+      firstName: '',
+      middleName: '',
+      lastName: ''
+    };
+
+    this.disabledFields = {
+      id: false,
+      customerNumber: false,
+      nationalId: false,
+      gsmNumber: false,
+      firstName: false,
+      middleName: false,
+      lastName: false
+    };
+
+    this.isAnyFieldFilled = false;
+    this.searchResults = null;
+    //this.paginatedResults = [];
+    this.currentPage=0;
   }
 
   checkAnyFieldFilled(): void {
-    const { id, customerNumber, nationalId, gsmNumber, firstName, middleName, lastName } = this.searchForm;
-    this.isAnyFieldFilled = !!(id || customerNumber || nationalId || gsmNumber || firstName || middleName || lastName);
+    
+  const { id, customerNumber, nationalId, gsmNumber, firstName, middleName, lastName } = this.searchForm;
+
+  // 1️⃣ Kimlik alanlarından biri dolu mu?
+  const isAnyIdentityFieldFilled = !!(id || customerNumber || nationalId || gsmNumber);
+
+  // 2️⃣ İsim alanlarından biri dolu mu?
+  const isAnyNameFieldFilled = !!(firstName || middleName || lastName);
+
+  // 3️⃣ Arama yapılabilir mi?
+  this.isAnyFieldFilled = isAnyIdentityFieldFilled || isAnyNameFieldFilled;
+
+  // 4️⃣ Disable mantığı (kimlik <-> isim alanları)
+  if (isAnyIdentityFieldFilled) {
+    this.disabledFields = {
+      id: !id,
+      customerNumber: !customerNumber,
+      nationalId: !nationalId,
+      gsmNumber: !gsmNumber,
+      firstName: true,
+      middleName: true,
+      lastName: true
+    };
+  } else if (isAnyNameFieldFilled) {
+    this.disabledFields = {
+      id: true,
+      customerNumber: true,
+      nationalId: true,
+      gsmNumber: true,
+      firstName: false,
+      middleName: false,
+      lastName: false
+    };
+  } else {
+    // Hiçbiri dolu değilse, her şey aktif
+    this.disabledFields = {
+      id: false,
+      customerNumber: false,
+      nationalId: false,
+      gsmNumber: false,
+      firstName: false,
+      middleName: false,
+      lastName: false
+    };
+  }
   }
 
   search(): void {
-    if (!this.isAnyFieldFilled) {
+    /*if (!this.isAnyFieldFilled) {
       this.searchResults = null;
+      this.paginatedResults = [];
       this.isLoading = false;
       this.cdr.detectChanges();
       return;
     }
     this.isLoading = true;
     this.searchResults = null;
+    this.paginatedResults = [];
     this.cdr.detectChanges(); 
 
     this.customerSearchService.searchCustomers(this.searchForm).subscribe({
       next: (data: IndividualCustomerSearchResponse[]) => {
         this.isLoading = false;
         this.searchResults = data;
+        this.currentPage = 1;
+        this.updatePaginatedResults();
         this.cdr.detectChanges(); 
       },
       error: (err) => {
         console.error('Search error:', err);
         this.isLoading = false;
         this.searchResults = [];
+        this.paginatedResults = [];
         this.cdr.detectChanges(); 
       }
     });
+
+     if (!this.isAnyFieldFilled) {
+    this.searchResults = null;
+    this.isLoading = false;
+    return;
+  }*/
+
+  this.isLoading = true;
+  this.customerSearchService.searchCustomers(this.searchForm, this.currentPage, this.pageSize).subscribe({
+    next: (data) => {
+      this.searchResults = data;
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    },
+    error: (err) => {
+      console.error('Search error:', err);
+      this.searchResults = [];
+      this.isLoading = false;
+      this.cdr.detectChanges();
+    }
+  });
   }
+
+
+  nextPage(): void {
+  if (this.searchResults && this.searchResults.length === this.pageSize) {
+    this.currentPage++;
+    this.search();
+  }
+}
+
+prevPage(): void {
+  if (this.currentPage > 0) {
+    this.currentPage--;
+    this.search();
+  }
+}
+  /*updatePaginatedResults(): void {
+    if (!this.searchResults) {
+      this.paginatedResults = [];
+      return;
+    }
+
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.paginatedResults = this.searchResults.slice(startIndex, endIndex);
+
+    this.totalPages = Math.ceil(this.searchResults.length / this.pageSize);
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePaginatedResults();
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePaginatedResults();
+    }
+  }*/
 
   goToCreateCustomer(): void {
     this.router.navigate(['create-individual-customer']); 
@@ -94,6 +256,6 @@ export class CustomerSearch implements OnInit {
   }
 
   get isFieldDisabled(): boolean {
-    return this.isNationalIdActive;
+    return this.isIdLocked;
   }
 }

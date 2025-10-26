@@ -12,7 +12,7 @@ export class CustomerSearchService {
 
   constructor(private http: HttpClient) { }
 
-  searchCustomers(request: IndividualCustomerSearchRequest): Observable<IndividualCustomerSearchResponse[]> {
+  searchCustomers(request: IndividualCustomerSearchRequest, page: number = 0, size: number = 20): Observable<IndividualCustomerSearchResponse[]> {
     let httpParams = new HttpParams();
 
     if (request.id) {
@@ -35,6 +35,9 @@ export class CustomerSearchService {
     if (request.gsmNumber) {
       httpParams = httpParams.set('value', request.gsmNumber);
     }
+
+    httpParams = httpParams.set('page', page.toString());
+    httpParams = httpParams.set('size', size.toString());
 
     return this.http.get<IndividualCustomerSearchResponse[]>(this.apiUrl, { params: httpParams });
   }

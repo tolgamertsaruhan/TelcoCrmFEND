@@ -31,5 +31,5 @@ export interface ContactMedium {
   customerId: string;
   type: string;
   value: string;
-  isPrimary: boolean;
+  primary: boolean;
 }

@@ -24,6 +24,8 @@ export class CustomerSearch implements OnInit {
   isAnyFieldFilled: boolean = false; 
   isIdLocked: boolean = false;
 
+
+  
   disabledFields = {
     id: false,
     customerNumber: false,
@@ -36,7 +38,7 @@ export class CustomerSearch implements OnInit {
 
 
   // Pagination
-  currentPage: number = 1;
+  currentPage: number = 0;
   pageSize: number = 20;
   totalPages: number = 0;
 

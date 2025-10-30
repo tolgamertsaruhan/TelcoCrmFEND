@@ -1,0 +1,46 @@
+<div class="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-md mt-10">
+  <h2 class="text-2xl font-semibold text-gray-800 mb-6">Contact Information</h2>
+
+  <form [formGroup]="form" class="space-y-5">
+    <div>
+      <label class="block font-medium text-gray-700 mb-1">Email</label>
+      <div *ngFor="let email of emails.controls; let i = index" class="flex gap-2 mb-2">
+        <input [formControl]="email" type="email" placeholder="Enter email" class="input-field flex-1" />
+        <button type="button" (click)="removeField(emails, i)" *ngIf="emails.length > 1" class="btn-danger">-</button>
+      </div>
+      <button type="button" (click)="addField(emails)" class="btn-secondary">+ Add Email</button>
+    </div>
+
+    <div>
+      <label class="block font-medium text-gray-700 mb-1">Mobile Phone</label>
+      <div *ngFor="let phone of mobilePhones.controls; let i = index" class="flex gap-2 mb-2">
+        <input [formControl]="phone" type="text" placeholder="Enter mobile number" class="input-field flex-1" />
+        <button type="button" (click)="removeField(mobilePhones, i)" *ngIf="mobilePhones.length > 1" class="btn-danger">-</button>
+      </div>
+      <button type="button" (click)="addField(mobilePhones)" class="btn-secondary">+ Add Mobile</button>
+    </div>
+
+    <div>
+      <label class="block font-medium text-gray-700 mb-1">Home Phone</label>
+      <div *ngFor="let phone of homePhones.controls; let i = index" class="flex gap-2 mb-2">
+        <input [formControl]="phone" type="text" placeholder="Enter home phone" class="input-field flex-1" />
+        <button type="button" (click)="removeField(homePhones, i)" class="btn-danger">-</button>
+      </div>
+      <button type="button" (click)="addField(homePhones)" class="btn-secondary">+ Add Home Phone</button>
+    </div>
+
+    <div>
+      <label class="block font-medium text-gray-700 mb-1">Fax</label>
+      <div *ngFor="let fax of faxes.controls; let i = index" class="flex gap-2 mb-2">
+        <input [formControl]="fax" type="text" placeholder="Enter fax number" class="input-field flex-1" />
+        <button type="button" (click)="removeField(faxes, i)" class="btn-danger">-</button>
+      </div>
+      <button type="button" (click)="addField(faxes)" class="btn-secondary">+ Add Fax</button>
+    </div>
+
+    <div class="flex justify-between mt-6">
+      <button type="button" (click)="back()" class="btn-secondary">Back</button>
+      <button type="button" (click)="create()" class="btn-primary">Create Customer</button>
+    </div>
+  </form>
+</div>

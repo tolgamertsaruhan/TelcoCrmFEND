@@ -8,16 +8,20 @@ import { IndividualCustomerCreateRequest } from '../models/individualcustomer/re
   providedIn: 'root',
 })
 export class CustomerService {
+
+  public baseUrl = 'http://localhost:8091/customerservice/api/districts';
   constructor(private httpClient: HttpClient) {}
+
+
 
   getIndividualCustomers(): Observable<IndividualCustomerListResponse[]> {
     return this.httpClient.get<IndividualCustomerListResponse[]>(
-      'http://localhost:8091/customerservice/api/individual-customers'
+      'http://localhost:8091/customerservice/api/individual-customers/'
     );
   }
 
 // http://localhost:8091/customerservice/api/individual-customers
   createIndividualCustomer(request: IndividualCustomerCreateRequest): Observable<any> {
-  return this.httpClient.post('http://localhost:8091/customerservice/api/individual-customers', request);
+  return this.httpClient.post('http://localhost:8091/customerservice/api/individual-customers/', request);
 }
 }

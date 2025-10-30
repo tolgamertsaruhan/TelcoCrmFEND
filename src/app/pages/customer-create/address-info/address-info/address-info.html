@@ -1,0 +1,42 @@
+<div class="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-md mt-10">
+  <h2 class="text-2xl font-semibold mb-6">Address Information</h2>
+
+  <form [formGroup]="form" class="space-y-5">
+    <div>
+      <label class="text-sm font-medium">City *</label>
+      <select formControlName="cityId" (change)="onCityChange($event)" class="w-full p-2 border rounded-md">
+        <option value="">Select City</option>
+        <option *ngFor="let c of cities" [value]="c.id">{{ c.name }}</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="text-sm font-medium">District *</label>
+      <select formControlName="districtId" class="w-full p-2 border rounded-md">
+        <option value="">Select District</option>
+        <option *ngFor="let d of districts" [value]="d.id">{{ d.name }}</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="text-sm font-medium">Street *</label>
+      <input type="text" formControlName="street" class="w-full p-2 border rounded-md" />
+    </div>
+
+    <div class="grid grid-cols-2 gap-5">
+      <div>
+        <label class="text-sm font-medium">House Number</label>
+        <input type="text" formControlName="housenumber" class="w-full p-2 border rounded-md" />
+      </div>
+      <div>
+        <label class="text-sm font-medium">Description</label>
+        <input type="text" formControlName="description" class="w-full p-2 border rounded-md" />
+      </div>
+    </div>
+
+    <div class="flex justify-between mt-6">
+      <button type="button" (click)="back()" class="px-6 py-2 border rounded-lg">Back</button>
+      <button type="button" (click)="next()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Next</button>
+    </div>
+  </form>
+</div>

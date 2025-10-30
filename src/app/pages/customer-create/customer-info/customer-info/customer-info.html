@@ -1,0 +1,56 @@
+<div class="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-md mt-10">
+  <h2 class="text-2xl font-semibold text-gray-800 mb-6">Customer Information</h2>
+
+  <form [formGroup]="form" class="space-y-5">
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">First Name *</label>
+        <input formControlName="firstName" type="text" class="input-field" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Last Name *</label>
+        <input formControlName="lastName" type="text" class="input-field" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Middle Name</label>
+        <input formControlName="middleName" type="text" class="input-field" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">National ID *</label>
+        <input formControlName="nationalId" type="text" class="input-field" maxlength="11" />
+        <p *ngIf="nationalIdExists" class="text-red-500 text-sm mt-1">
+          This National ID already exists in the system.
+        </p>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Gender *</label>
+        <select formControlName="gender" class="input-field">
+          <option value="" disabled selected>Select gender</option>
+          <option value="MALE">Male</option>
+          <option value="FEMALE">Female</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Date of Birth *</label>
+        <input formControlName="dateOfBirth" type="date" class="input-field" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Mother’s Name</label>
+        <input formControlName="motherName" type="text" class="input-field" />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Father’s Name</label>
+        <input formControlName="fatherName" type="text" class="input-field" />
+      </div>
+    </div>
+
+    <button (click)="next()" type="button" class="btn-primary w-full">Next</button>
+  </form>
+</div>

@@ -16,7 +16,7 @@ export const routes: Routes = [
       { path: 'customer-info', component: CustomerInfo },
       { path: 'address-info', component: AddressInfo },
       { path: 'contact-medium-info', component: ContactMediumInfo },
-      { path: '', redirectTo: 'customer-info', pathMatch: 'full' }
+      { path: '', redirectTo: 'customer-information-screen/:id', pathMatch: 'full' }
     ]
   },
   { path: '', redirectTo: 'customer-search', pathMatch: 'full' }

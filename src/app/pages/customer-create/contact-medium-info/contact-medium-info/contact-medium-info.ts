@@ -4,6 +4,7 @@ import { CustomerCreationService } from '../../../../services/customer-creation-
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { CreateFullIndividualCustomerResponse } from '../../../../models/individualcustomer/responses/CreateFullIndividualCustomerResponse';
 
 @Component({
   selector: 'app-contact-medium-info',
@@ -136,8 +137,31 @@ export class ContactMediumInfo {
 
   console.log("Gönderilen payload:", payload);
 
-  // environment üzerinden API çağrısı yap
   this.http
+  .post<CreateFullIndividualCustomerResponse>(
+    'http://localhost:8091/customerservice/api/individual-customers/create-full',
+    payload
+  )
+  .subscribe({
+    next: (response) => {
+      const customerId = response.customerResponse?.id;
+ 
+      if (customerId) {
+        alert('Customer created successfully!');
+        // ID ile yönlendirme
+        this.router.navigateByUrl(`/customer-information-screen/${customerId}`);
+      } else {
+        alert('Customer created, but ID not found in response.');
+      }
+    },
+    error: (err) => {
+      console.error(err);
+      alert('Error occurred: ' + err.message);
+    },
+  });
+
+  // environment üzerinden API çağrısı yap
+  /*this.http
     .post('http://localhost:8091/customerservice/api/individual-customers/create-full', payload)
     .subscribe({
       next: () => {
@@ -148,7 +172,7 @@ export class ContactMediumInfo {
         console.error(err);
         alert('Error occurred: ' + err.message);
       },
-    });
+    });*7
 
     /*this.http
       .post('http://localhost:8091/customerservice/api/individual-customers/create-full', updated)

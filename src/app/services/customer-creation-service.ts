@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { CreateCustomerModel, Customer } from '../models/individualcustomer/CreateCustomerModel';
+import { CreateCustomerModel, Customer } from '../models/individualcustomer/requests/CreateCustomerModel';
 
 
 @Injectable({

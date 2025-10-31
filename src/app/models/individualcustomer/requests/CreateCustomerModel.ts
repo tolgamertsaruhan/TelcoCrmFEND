@@ -19,7 +19,7 @@ export interface Address {
   cityId:string,
   districtId: string;
   street: string;
-  housenumber?: string;
+  houseNumber?: string;
   description?: string;
   isDefault:boolean;
 }

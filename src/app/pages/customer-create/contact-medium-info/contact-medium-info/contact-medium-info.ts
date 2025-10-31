@@ -87,7 +87,7 @@ export class ContactMediumInfo {
 
     const updated = {
     ...this.customerService.state(),
-    createContactMediumRequests: [this.form.value]
+    createContactMediumRequests: contactMediums
   };
   this.customerService.state.set(updated);
     this.router.navigateByUrl('/customer-create/address-info');

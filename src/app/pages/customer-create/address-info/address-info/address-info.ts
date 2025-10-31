@@ -39,7 +39,7 @@ export class AddressInfo  {
     cityId: [state.addressRequestList?.[0]?.cityId ?? '', Validators.required],
     districtId: [state.addressRequestList?.[0]?.districtId ?? '', Validators.required],
     street: [state.addressRequestList?.[0]?.street ?? '', Validators.required],
-    housenumber: [state.addressRequestList?.[0]?.housenumber ?? ''],
+    houseNumber: [state.addressRequestList?.[0]?.houseNumber ?? ''],
     description: [state.addressRequestList?.[0]?.description ?? ''],
     isDefault: [state.addressRequestList?.[0]?.isDefault ?? true]
     });

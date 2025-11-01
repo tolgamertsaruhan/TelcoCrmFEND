@@ -28,7 +28,7 @@ export class CustomerSearch implements OnInit {
   
   disabledFields = {
     id: false,
-    customerNumber: false,
+    accountNumber: false,
     nationalId: false,
     gsmNumber: false,
     firstName: false,
@@ -74,7 +74,7 @@ export class CustomerSearch implements OnInit {
     this.isIdLocked = false;*/
     this.searchForm = {
       id: '',
-      customerNumber: '',
+      accountNumber: '',
       nationalId: '',
       gsmNumber: '',
       firstName: '',
@@ -84,7 +84,7 @@ export class CustomerSearch implements OnInit {
 
     this.disabledFields = {
       id: false,
-      customerNumber: false,
+      accountNumber: false,
       nationalId: false,
       gsmNumber: false,
       firstName: false,
@@ -100,10 +100,10 @@ export class CustomerSearch implements OnInit {
 
   checkAnyFieldFilled(): void {
     
-  const { id, customerNumber, nationalId, gsmNumber, firstName, middleName, lastName } = this.searchForm;
+  const { id, accountNumber, nationalId, gsmNumber, firstName, middleName, lastName } = this.searchForm;
 
   // 1️⃣ Kimlik alanlarından biri dolu mu?
-  const isAnyIdentityFieldFilled = !!(id || customerNumber || nationalId || gsmNumber);
+  const isAnyIdentityFieldFilled = !!(id || accountNumber || nationalId || gsmNumber);
 
   // 2️⃣ İsim alanlarından biri dolu mu?
   const isAnyNameFieldFilled = !!(firstName || middleName || lastName);
@@ -115,7 +115,7 @@ export class CustomerSearch implements OnInit {
   if (isAnyIdentityFieldFilled) {
     this.disabledFields = {
       id: !id,
-      customerNumber: !customerNumber,
+      accountNumber: !accountNumber,
       nationalId: !nationalId,
       gsmNumber: !gsmNumber,
       firstName: true,
@@ -125,7 +125,7 @@ export class CustomerSearch implements OnInit {
   } else if (isAnyNameFieldFilled) {
     this.disabledFields = {
       id: true,
-      customerNumber: true,
+      accountNumber: true,
       nationalId: true,
       gsmNumber: true,
       firstName: false,
@@ -136,7 +136,7 @@ export class CustomerSearch implements OnInit {
     // Hiçbiri dolu değilse, her şey aktif
     this.disabledFields = {
       id: false,
-      customerNumber: false,
+      accountNumber: false,
       nationalId: false,
       gsmNumber: false,
       firstName: false,

@@ -1,6 +1,6 @@
 export interface IndividualCustomerSearchRequest {
   id?: string; // Customer ID
-  customerNumber?: string; // Account Number
+  accountNumber?: string; // Account Number
   firstName?: string;
   lastName?: string;
   nationalId?: string; // NAT ID

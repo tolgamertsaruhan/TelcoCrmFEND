@@ -11,6 +11,7 @@ export interface IndividualCustomerSearchResponse {
   dateOfBirth: string;
   addressSearchList: Address[];
   contactMediumSearchList: ContactMedium[]; 
+  billingAccountList: BillingAccount[];
 
 }
 export interface Address { 
@@ -31,4 +32,15 @@ export interface ContactMedium {
   type: string;
   value: string;
   isPrimary: boolean;
+}
+
+export interface BillingAccount { 
+  billingAccountId: string;
+  type: string;
+  status: string;
+  accountNumber:string;
+  accountName:string,
+  customerId:string,
+  addressId:string
+
 }

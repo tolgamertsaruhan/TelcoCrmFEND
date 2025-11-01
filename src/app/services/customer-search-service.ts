@@ -18,8 +18,8 @@ export class CustomerSearchService {
     if (request.id) {
       httpParams = httpParams.set('id', request.id);
     }
-    if (request.customerNumber) {
-      httpParams = httpParams.set('customerNumber', request.customerNumber);
+    if (request.accountNumber) {
+      httpParams = httpParams.set('accountNumber', request.accountNumber);
     }
     if (request.nationalId) {
       httpParams = httpParams.set('nationalId', request.nationalId);

@@ -1,0 +1,112 @@
+<div class="space-y-6">
+
+  <!-- 🏠 Address list -->
+  <div *ngIf="!isAdding && !isEditing">
+    <div
+      *ngFor="let address of addresses"
+      class="relative border rounded-xl p-5 flex justify-between items-start mb-4 shadow-sm hover:shadow-md transition"
+    >
+      <!-- Nokta (Primary işareti) -->
+      <div class="absolute -left-2 top-2">
+        <div
+          class="w-3 h-3 rounded-full"
+          [ngClass]="address.isDefault"
+          title="{{ address.isDefault ? 'Primary Address' : 'Not Primary' }}"
+        ></div>
+      </div>
+
+      <!-- Adres bilgileri -->
+      <div class="flex flex-col text-sm text-gray-700 space-y-1 ml-3">
+        <p><strong>City:</strong> {{  cityNames[address.districtId] || 'Loading...' }}</p>
+        <p><strong>District:</strong> {{ districtNames[address.districtId] || 'Loading...' }}</p>
+        <p><strong>Street:</strong> {{ address.street }}</p>
+        <p><strong>House No:</strong> {{ address.houseNumber }}</p>
+        <p><strong>Description:</strong> {{ address.description }}</p>
+      </div>
+
+      <!-- Aksiyon ikonları -->
+      <div class="flex space-x-3">
+        <button (click)="startEdit(address)" class="text-yellow-500 hover:text-yellow-600">✏️</button>
+        <button (click)="confirmDelete(address.id)" class="text-red-500 hover:text-red-600">🗑️</button>
+      </div>
+    </div>
+
+    <button
+      (click)="startAdd()"
+      class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+    >
+      ➕ Add New Address
+    </button>
+  </div>
+
+  <!-- 🧾 Address Form -->
+  <div *ngIf="isAdding || isEditing" class="border rounded-xl p-6 bg-gray-50 shadow-inner">
+    <form [formGroup]="addressForm" class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">City</label>
+          <select formControlName="cityId" (change)="onCityChange()" class="form-select w-full">
+            <option value="">Select City</option>
+            <option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700">District</label>
+          <select formControlName="districtId" class="form-select w-full">
+            <option value="">Select District</option>
+            <option *ngFor="let district of districts" [value]="district.id">{{ district.name }}</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Street</label>
+          <input type="text" formControlName="street" class="form-input w-full" />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700">House / Flat Number</label>
+          <input type="text" formControlName="houseNumber" class="form-input w-full" />
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Address Description</label>
+        <textarea formControlName="description" class="form-textarea w-full"></textarea>
+      </div>
+
+      <div class="flex items-center space-x-2">
+        <input type="checkbox" id="isPrimary" formControlName="isPrimary" />
+        <label for="isPrimary" class="text-sm text-gray-700">Set as Default Address</label>
+      </div>
+
+      <div class="flex justify-end space-x-3 mt-4">
+        <button
+          type="button"
+          class="bg-gray-400 text-white px-4 py-2 rounded"
+          (click)="cancel()"
+        >
+          Cancel
+        </button>
+
+        <!-- 🔄 Duruma göre Create veya Update butonu 
+        <button
+          type="button"
+          class="bg-green-600 text-white px-4 py-2 rounded"
+          (click)="save()"
+          
+        >
+          Save
+        </button>-->
+
+        <button
+        type="button"
+        class="bg-green-600 text-white px-4 py-2 rounded"
+        (click)="save()"
+      >
+        {{ isAdding ? 'Create' : 'Update' }}
+      </button>
+      </div>
+    </form>
+  </div>
+</div>

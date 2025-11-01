@@ -15,4 +15,8 @@ export class DistrictService {
   getDistrictsByCity(cityId: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/getByCityId/${cityId}`);
   }
+
+  getDistrictById(districtId: string): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/${districtId}`);
+  }
 }

@@ -1,1 +1,37 @@
-<p>customer-information-screen works!</p>
+<div class="max-w-6xl mx-auto bg-white p-6 rounded-2xl shadow-md mt-10">
+
+  <!-- 🔹 Sekme menüsü -->
+  <div class="flex border-b border-gray-200 mb-6">
+    <button
+      (click)="navigateTo('customer-information')"
+      class="px-6 py-2 font-medium"
+      [ngClass]="activeTab === 'info' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'">
+      Customer Info
+    </button>
+
+    <button
+      (click)="navigateTo('address-information')"
+      class="px-6 py-2 font-medium"
+      [ngClass]="activeTab === 'address' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'">
+      Address Info
+    </button>
+
+    <button
+      (click)="navigateTo('contact-medium-information')"
+      class="px-6 py-2 font-medium"
+      [ngClass]="activeTab === 'contact-medium' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'">
+      Contact Medium
+    </button>
+
+    <button
+      (click)="navigateTo('billing-account-information')"
+      class="px-6 py-2 font-medium"
+      [ngClass]="activeTab === 'account' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'">
+      Customer Account
+    </button>
+  </div>
+
+  <!-- 🔹 Alt component’ler -->
+  <router-outlet></router-outlet>
+</div>
+

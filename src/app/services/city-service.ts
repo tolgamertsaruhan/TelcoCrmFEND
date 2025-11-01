@@ -14,6 +14,11 @@ export class CityService {
     return this.http.get<string[]>(this.baseUrl);
   }
 
+  
+  getCitiesforaddresspage(): Observable<{ id: string; name: string }[]> {
+    return this.http.get<{ id: string; name: string }[]>(this.baseUrl);
+  }
+
   /*getDistrictsByCity(cityId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/${cityId}/districts`);
   }*/

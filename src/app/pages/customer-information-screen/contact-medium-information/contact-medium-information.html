@@ -1,0 +1,50 @@
+<div class="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-md mt-10">
+
+  <!-- Üst başlık -->
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-semibold text-gray-800">Contact Medium</h2>
+
+    <div class="flex space-x-3">
+      <button (click)="onEdit()" class="p-2 rounded-full bg-yellow-100 hover:bg-yellow-200" *ngIf="!isEditing">
+        <i class="fa fa-pencil text-yellow-600"></i>
+      </button>
+
+      <button (click)="onDelete()" class="p-2 rounded-full bg-red-100 hover:bg-red-200">
+        <i class="fa fa-trash text-red-600"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <form [formGroup]="contactForm" class="grid grid-cols-2 gap-6">
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Email</label>
+      <input type="email" formControlName="email" class="form-input" />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Mobile Phone</label>
+      <input type="text" formControlName="mobilePhone" class="form-input" />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Home Phone</label>
+      <input type="text" formControlName="homePhone" class="form-input" />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Fax</label>
+      <input type="text" formControlName="fax" class="form-input" />
+    </div>
+  </form>
+
+  <!-- Save / Cancel butonları -->
+  <div class="mt-6 flex justify-end space-x-4" *ngIf="isEditing">
+    <button (click)="onCancel()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400">
+      Cancel
+    </button>
+    <button (click)="onSave()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+      Save
+    </button>
+  </div>
+</div>

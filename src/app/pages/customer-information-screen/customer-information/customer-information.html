@@ -1,0 +1,64 @@
+<div class="max-w-5xl mx-auto bg-white p-8 rounded-2xl shadow-md mt-6">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-semibold text-gray-800">Customer Info</h2>
+    <div class="flex space-x-3">
+      <button (click)="onEdit()" class="p-2 rounded-full bg-yellow-100 hover:bg-yellow-200" *ngIf="!isEditing">
+        <i class="fa fa-pencil text-yellow-600"></i>
+      </button>
+      <button (click)="onDelete()" class="p-2 rounded-full bg-red-100 hover:bg-red-200">
+        <i class="fa fa-trash text-red-600"></i>
+      </button>
+    </div>
+  </div>
+
+  <form [formGroup]="customerForm" class="grid grid-cols-2 gap-6">
+    <div>
+      <label class="block text-sm font-medium text-gray-700">First Name</label>
+      <input formControlName="firstName" type="text" class="form-input">
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Middle Name</label>
+      <input formControlName="middleName" type="text" class="form-input">
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Last Name</label>
+      <input formControlName="lastName" type="text" class="form-input">
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Gender</label>
+      <input formControlName="gender" type="text" class="form-input">
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Nat ID</label>
+      <input formControlName="nationalId" type="text" class="form-input">
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Birth Date</label>
+      <input formControlName="dateOfBirth" type="date" class="form-input">
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Mother Name</label>
+      <input formControlName="motherName" type="text" class="form-input">
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Father Name</label>
+      <input formControlName="fatherName" type="text" class="form-input">
+    </div>
+  </form>
+
+  <div class="mt-6 flex justify-end space-x-4" *ngIf="isEditing">
+    <button (click)="onCancel()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400">
+      Cancel
+    </button>
+    <button (click)="onSave()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+      Save
+    </button>
+  </div>
+</div>

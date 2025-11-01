@@ -261,4 +261,8 @@ prevPage(): void {
   get isFieldDisabled(): boolean {
     return this.isIdLocked;
   }
+
+  goToCustomerInformation(customerId: string): void {
+  this.router.navigate([`customer-information-screen/`, customerId]);
+}
 }

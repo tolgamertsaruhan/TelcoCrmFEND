@@ -94,6 +94,8 @@ export class AddressInformation {
                 if (city) {
                   this.cityNames[address.districtId] = city.name;
                 }
+
+                this.cdr.detectChanges();
               }
             });
           },

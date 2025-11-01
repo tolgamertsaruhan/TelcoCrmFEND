@@ -240,7 +240,7 @@ prevPage(): void {
   }*/
 
   goToCreateCustomer(): void {
-    this.router.navigate(['create-individual-customer']); 
+    this.router.navigate(['customer-create/customer-info']); 
   }
 
   getGsmNumber(customer: IndividualCustomerSearchResponse): string {

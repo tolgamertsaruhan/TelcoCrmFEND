@@ -33,15 +33,43 @@ export class CustomerInformation {
   ngOnInit(): void {
     this.customerId = this.route.parent?.snapshot.paramMap.get('id') || '';
 
-    this.customerForm = this.fb.group({
-      firstName: [{ value: '', disabled: true }, Validators.required],
-      middleName: [{ value: '', disabled: true }],
-      lastName: [{ value: '', disabled: true }, Validators.required],
+     this.customerForm = this.fb.group({
+      firstName: [
+        { value: '', disabled: true }, 
+        [Validators.required, Validators.minLength(2), Validators.maxLength(20)]
+      ],
+      middleName: [
+        { value: '', disabled: true }, 
+        [Validators.minLength(2), Validators.maxLength(20)]
+      ],
+      lastName: [
+        { value: '', disabled: true }, 
+        [Validators.required, Validators.minLength(2), Validators.maxLength(20)]
+      ],
       gender: [{ value: '', disabled: true }, Validators.required],
-      nationalId: [{ value: '', disabled: true }, Validators.required],
-      dateOfBirth: [{ value: '', disabled: true }],
-      motherName: [{ value: '', disabled: true }],
-      fatherName: [{ value: '', disabled: true }],
+      nationalId: [
+        { value: '', disabled: true }, 
+        [Validators.required, Validators.minLength(11), Validators.maxLength(11), Validators.pattern(/^\d+$/)]
+      ],
+      dateOfBirth: [{ value: '', disabled: true }, Validators.required],
+      motherName: [
+        { value: '', disabled: true }, 
+        [Validators.minLength(2), Validators.maxLength(20)]
+      ],
+      fatherName: [
+        { value: '', disabled: true }, 
+        [Validators.minLength(2), Validators.maxLength(20)]
+      ],
+    });
+
+    // National ID için sadece sayı girişi kontrolü
+    this.customerForm.get('nationalId')?.valueChanges.subscribe(value => {
+      if (value) {
+        const numericValue = value.replace(/\D/g, '');
+        if (value !== numericValue) {
+          this.customerForm.get('nationalId')?.setValue(numericValue, { emitEvent: false });
+        }
+      }
     });
 
     this.loadCustomer();

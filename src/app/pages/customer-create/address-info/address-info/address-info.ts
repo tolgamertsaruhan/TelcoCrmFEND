@@ -39,10 +39,10 @@ export class AddressInfo  {
     
     this.form = this.fb.group({
     cityId: [state.addressRequestList?.[0]?.cityId ?? '', Validators.required],
-    districtId: [state.addressRequestList?.[0]?.districtId ?? '', Validators.required],
-    street: [state.addressRequestList?.[0]?.street ?? '', Validators.required],
-    houseNumber: [state.addressRequestList?.[0]?.houseNumber ?? ''],
-    description: [state.addressRequestList?.[0]?.description ?? ''],
+    districtId: [{ value: state.addressRequestList?.[0]?.districtId ?? '', disabled: true }, Validators.required],
+    street: [{ value: state.addressRequestList?.[0]?.street ?? '', disabled: true }, Validators.required],
+    houseNumber: [{ value: state.addressRequestList?.[0]?.houseNumber ?? '', disabled: true }],
+    description: [{ value: state.addressRequestList?.[0]?.description ?? '', disabled: true }],
     isDefault: [state.addressRequestList?.[0]?.isDefault ?? true]
     });
 
@@ -74,17 +74,28 @@ export class AddressInfo  {
   loadDistricts(cityId: string) {
   this.districtService.getDistrictsByCity(cityId).subscribe(districts => {
     this.districts = districts;
+    this.form.get('districtId')?.enable();
     this.cdr.detectChanges();
 
     const selectedDistrictId = this.customerService.state().addressRequestList?.[0]?.districtId;
     if (selectedDistrictId) {
       this.form.patchValue({ districtId: selectedDistrictId });
+      this.enableOtherFields();
     }
   });
 }
   onCityChange(event: any) {
   const cityId = event.target.value;
-  this.loadDistricts(cityId);
+  // District'i temizle ve disable et
+    this.form.patchValue({ districtId: '' });
+    this.form.get('districtId')?.disable();
+    // Diğer alanları temizle ve disable et
+    this.disableOtherFields();
+    this.districts = [];
+    
+    if (cityId) {
+      this.loadDistricts(cityId);
+    }
 }
 
   /*onCityChange(event: any) {
@@ -95,14 +106,46 @@ export class AddressInfo  {
     });
   }*/
 
-  back() {
-     const updated = {
-    ...this.customerService.state(),
-    addressRequestList: [this.form.value]
-  };
-  this.customerService.state.set(updated);
 
-  this.router.navigateByUrl('/customer-create/customer-info');
+     onDistrictChange(event: any) {
+    const districtId = event.target.value;
+    if (districtId) {
+      this.enableOtherFields();
+    } else {
+      this.disableOtherFields();
+    }
+  }
+
+  enableOtherFields() {
+    this.form.get('street')?.enable();
+    this.form.get('houseNumber')?.enable();
+    this.form.get('description')?.enable();
+  }
+
+  disableOtherFields() {
+    this.form.patchValue({
+      street: '',
+      houseNumber: '',
+      description: ''
+    });
+    this.form.get('street')?.disable();
+    this.form.get('houseNumber')?.disable();
+    this.form.get('description')?.disable();
+  }
+
+  back() {
+    // Disabled alanları da dahil et
+    const formValue = {
+      ...this.form.getRawValue()
+    };
+    
+    const updated = {
+      ...this.customerService.state(),
+      addressRequestList: [formValue]
+    };
+    this.customerService.state.set(updated);
+
+    this.router.navigateByUrl('/customer-create/customer-info');
   }
 
   next() {

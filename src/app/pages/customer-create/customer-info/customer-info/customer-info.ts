@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { CustomerCreationService } from '../../../../services/customer-creation-service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -32,6 +32,15 @@ ngOnInit(){
     this.buildForm();
   }
 
+  // Custom validator: Sadece sayı kontrolü
+  numericValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    if (!value) return null; // Boşsa required validator kontrol eder
+    
+    const isNumeric = /^\d+$/.test(value); // Sadece rakam kontrolü
+    return isNumeric ? null : { notNumeric: true };
+  }
+
 buildForm() {
   const nameValidators = [Validators.minLength(2), Validators.maxLength(20)];
     this.form = this.fb.group({
@@ -41,7 +50,8 @@ buildForm() {
       nationalId: new FormControl(this.customerService.state().createIndividualCustomerRequest?.nationalId ?? '', [
         Validators.required,
         Validators.minLength(11),
-        Validators.maxLength(11)
+        Validators.maxLength(11),
+        this.numericValidator
       ]),
       gender: new FormControl(this.customerService.state().createIndividualCustomerRequest?.gender ?? '', Validators.required),
       motherName: new FormControl(this.customerService.state().createIndividualCustomerRequest?.motherName ?? '',nameValidators),

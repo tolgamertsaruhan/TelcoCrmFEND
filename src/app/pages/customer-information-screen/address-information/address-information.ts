@@ -301,7 +301,9 @@ this.addressService.updateAddress(updatedRequest).subscribe({
   error: (err) => console.error('Error updating address:', err)
 });*/
 const formValue = this.addressForm.value;
-
+  console.log('Form Value:', formValue);  // ✅ Tüm form değerlerini görelim
+  console.log('isPrimary:', formValue.isPrimary);  // ✅ Özellikle isPrimary değerini kontrol edelim
+  console.log('isPrimary type:', typeof formValue.isPrimary);  // ✅ Tipini kontrol edelim
     // ✅ CREATE MODE
     if (this.isAdding) {
       const createRequest = {

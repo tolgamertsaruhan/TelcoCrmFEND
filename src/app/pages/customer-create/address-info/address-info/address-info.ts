@@ -5,10 +5,12 @@ import { CustomerCreationService } from '../../../../services/customer-creation-
 import { CommonModule } from '@angular/common';
 import { CityService } from '../../../../services/city-service';
 import { DistrictService } from '../../../../services/district-service';
+import { Sidebar } from "../../../../components/sidebar/sidebar";
+import { Navbar } from "../../../../components/navbar/navbar";
 
 @Component({
   selector: 'app-address-info',
-  imports: [FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, Sidebar, Navbar],
   templateUrl: './address-info.html',
   styleUrl: './address-info.scss',
 })

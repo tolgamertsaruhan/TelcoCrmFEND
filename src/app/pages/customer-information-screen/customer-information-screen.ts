@@ -4,10 +4,12 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Navbar } from "../../components/navbar/navbar";
+import { Sidebar } from "../../components/sidebar/sidebar";
 
 @Component({
   selector: 'app-customer-information-screen',
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, RouterOutlet],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, RouterOutlet, Navbar, Sidebar],
   templateUrl: './customer-information-screen.html',
   styleUrl: './customer-information-screen.scss',
 })
@@ -33,5 +35,9 @@ export class CustomerInformationScreen {
   navigateTo(tab: string): void {
     this.activeTab = tab;
     this.router.navigate([tab], { relativeTo: this.route });
+  }
+
+  goBack(){
+    this.router.navigate(['/customer-search']);
   }
 }

@@ -8,10 +8,12 @@ import { debounceTime } from 'rxjs/internal/operators/debounceTime';
 import { switchMap } from 'rxjs/internal/operators/switchMap';
 import { catchError } from 'rxjs/internal/operators/catchError';
 import { of } from 'rxjs/internal/observable/of';
+import { Navbar } from "../../../../components/navbar/navbar";
+import { Sidebar } from "../../../../components/sidebar/sidebar";
 
 @Component({
   selector: 'app-customer-info',
-  imports: [FormsModule, ReactiveFormsModule,CommonModule],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, Navbar, Sidebar],
   templateUrl: './customer-info.html',
   styleUrl: './customer-info.scss',
 })
@@ -31,18 +33,19 @@ ngOnInit(){
   }
 
 buildForm() {
+  const nameValidators = [Validators.minLength(2), Validators.maxLength(20)];
     this.form = this.fb.group({
-      firstName: new FormControl(this.customerService.state().createIndividualCustomerRequest?.firstName ?? '', Validators.required),
-      lastName: new FormControl(this.customerService.state().createIndividualCustomerRequest?.lastName ?? '', Validators.required),
-      middleName: new FormControl(this.customerService.state().createIndividualCustomerRequest?.middleName ?? ''),
+      firstName: new FormControl(this.customerService.state().createIndividualCustomerRequest?.firstName ?? '', [Validators.required, ...nameValidators]),
+      lastName: new FormControl(this.customerService.state().createIndividualCustomerRequest?.lastName ?? '',[Validators.required, ...nameValidators]),
+      middleName: new FormControl(this.customerService.state().createIndividualCustomerRequest?.middleName ?? '',nameValidators),
       nationalId: new FormControl(this.customerService.state().createIndividualCustomerRequest?.nationalId ?? '', [
         Validators.required,
         Validators.minLength(11),
         Validators.maxLength(11)
       ]),
       gender: new FormControl(this.customerService.state().createIndividualCustomerRequest?.gender ?? '', Validators.required),
-      motherName: new FormControl(this.customerService.state().createIndividualCustomerRequest?.motherName ?? ''),
-      fatherName: new FormControl(this.customerService.state().createIndividualCustomerRequest?.fatherName ?? ''),
+      motherName: new FormControl(this.customerService.state().createIndividualCustomerRequest?.motherName ?? '',nameValidators),
+      fatherName: new FormControl(this.customerService.state().createIndividualCustomerRequest?.fatherName ?? '',nameValidators),
       dateOfBirth: new FormControl(this.customerService.state().createIndividualCustomerRequest?.dateOfBirth ?? '', Validators.required)
     });
 
@@ -77,4 +80,13 @@ buildForm() {
   // Sonra bir sonraki sayfaya geçiyoruz
   this.router.navigateByUrl('/customer-create/address-info');
   }
+
+  goBackToSearch(): void {
+    // Absolute route ile
+    this.router.navigate(['/customer-search']); // customer search sayfanın route'u
+
+    // veya relative route ile parent route'a dönmek istersen
+    // this.router.navigate(['../'], { relativeTo: this.route });
+  }
+  
 }

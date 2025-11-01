@@ -1,64 +1,132 @@
-<div class="max-w-5xl mx-auto bg-white p-8 rounded-2xl shadow-md mt-6">
-  <div class="flex justify-between items-center mb-6">
-    <h2 class="text-2xl font-semibold text-gray-800">Customer Info</h2>
-    <div class="flex space-x-3">
-      <button (click)="onEdit()" class="p-2 rounded-full bg-yellow-100 hover:bg-yellow-200" *ngIf="!isEditing">
-        <i class="fa fa-pencil text-yellow-600"></i>
-      </button>
-      <button (click)="onDelete()" class="p-2 rounded-full bg-red-100 hover:bg-red-200">
-        <i class="fa fa-trash text-red-600"></i>
-      </button>
-    </div>
-  </div>
+<div class="p-6 md:p-8">
+    <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg border border-gray-200">
+        
+        <div class="flex justify-end items-center mb-6">
+            <button 
+                (click)="onEdit()" 
+                class="text-gray-600 hover:text-orange-500 transition-colors p-2 rounded-full hover:bg-gray-100" 
+                *ngIf="!isEditing"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                </svg>
+            </button>
+            
+            <button 
+                (click)="onDelete()" 
+                class="text-gray-600 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-gray-100 ml-3"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+            </button>
+        </div>
 
-  <form [formGroup]="customerForm" class="grid grid-cols-2 gap-6">
-    <div>
-      <label class="block text-sm font-medium text-gray-700">First Name</label>
-      <input formControlName="firstName" type="text" class="form-input">
-    </div>
+        <form [formGroup]="customerForm" class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700">First Name</label>
+                <input 
+                    formControlName="firstName" 
+                    type="text" 
+                    [readonly]="!isEditing"
+                    [ngClass]="{'bg-gray-50 shadow-inner text-gray-800 border-gray-300': !isEditing, 'focus:ring-orange-500 focus:border-orange-500 border-orange-500/50': isEditing}" 
+                    class="mt-1 block w-full rounded-lg border p-2.5 transition ease-in-out duration-150"
+                />
+            </div>
 
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Middle Name</label>
-      <input formControlName="middleName" type="text" class="form-input">
-    </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Nat ID</label>
+                <input 
+                    formControlName="nationalId" 
+                    type="text" 
+                    [readonly]="!isEditing"
+                    [ngClass]="{'bg-gray-50 shadow-inner text-gray-800 border-gray-300': !isEditing, 'focus:ring-orange-500 focus:border-orange-500 border-orange-500/50': isEditing}" 
+                    class="mt-1 block w-full rounded-lg border p-2.5 transition ease-in-out duration-150"
+                />
+            </div>
 
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Last Name</label>
-      <input formControlName="lastName" type="text" class="form-input">
-    </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Middle Name</label>
+                <input 
+                    formControlName="middleName" 
+                    type="text" 
+                    [readonly]="!isEditing"
+                    [ngClass]="{'bg-gray-50 shadow-inner text-gray-800 border-gray-300': !isEditing, 'focus:ring-orange-500 focus:border-orange-500 border-orange-500/50': isEditing}" 
+                    class="mt-1 block w-full rounded-lg border p-2.5 transition ease-in-out duration-150"
+                />
+            </div>
 
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Gender</label>
-      <input formControlName="gender" type="text" class="form-input">
-    </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Birth Date</label>
+                <input 
+                    formControlName="dateOfBirth" 
+                    type="text" 
+                    [readonly]="!isEditing"
+                    [ngClass]="{'bg-gray-50 shadow-inner text-gray-800 border-gray-300': !isEditing, 'focus:ring-orange-500 focus:border-orange-500 border-orange-500/50': isEditing}" 
+                    class="mt-1 block w-full rounded-lg border p-2.5 transition ease-in-out duration-150"
+                />
+            </div>
 
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Nat ID</label>
-      <input formControlName="nationalId" type="text" class="form-input">
-    </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Last Name</label>
+                <input 
+                    formControlName="lastName" 
+                    type="text" 
+                    [readonly]="!isEditing"
+                    [ngClass]="{'bg-gray-50 shadow-inner text-gray-800 border-gray-300': !isEditing, 'focus:ring-orange-500 focus:border-orange-500 border-orange-500/50': isEditing}" 
+                    class="mt-1 block w-full rounded-lg border p-2.5 transition ease-in-out duration-150"
+                />
+            </div>
 
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Birth Date</label>
-      <input formControlName="dateOfBirth" type="date" class="form-input">
-    </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Mother Name</label>
+                <input 
+                    formControlName="motherName" 
+                    type="text" 
+                    [readonly]="!isEditing"
+                    [ngClass]="{'bg-gray-50 shadow-inner text-gray-800 border-gray-300': !isEditing, 'focus:ring-orange-500 focus:border-orange-500 border-orange-500/50': isEditing}" 
+                    class="mt-1 block w-full rounded-lg border p-2.5 transition ease-in-out duration-150"
+                />
+            </div>
 
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Mother Name</label>
-      <input formControlName="motherName" type="text" class="form-input">
-    </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Gender</label>
+                <input 
+                    formControlName="gender" 
+                    type="text" 
+                    [readonly]="!isEditing"
+                    [ngClass]="{'bg-gray-50 shadow-inner text-gray-800 border-gray-300': !isEditing, 'focus:ring-orange-500 focus:border-orange-500 border-orange-500/50': isEditing}" 
+                    class="mt-1 block w-full rounded-lg border p-2.5 transition ease-in-out duration-150"
+                />
+            </div>
 
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Father Name</label>
-      <input formControlName="fatherName" type="text" class="form-input">
-    </div>
-  </form>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Father Name</label>
+                <input 
+                    formControlName="fatherName" 
+                    type="text" 
+                    [readonly]="!isEditing"
+                    [ngClass]="{'bg-gray-50 shadow-inner text-gray-800 border-gray-300': !isEditing, 'focus:ring-orange-500 focus:border-orange-500 border-orange-500/50': isEditing}" 
+                    class="mt-1 block w-full rounded-lg border p-2.5 transition ease-in-out duration-150"
+                />
+            </div>
+            
+        </form>
 
-  <div class="mt-6 flex justify-end space-x-4" *ngIf="isEditing">
-    <button (click)="onCancel()" class="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400">
-      Cancel
-    </button>
-    <button (click)="onSave()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
-      Save
-    </button>
-  </div>
+        <div class="mt-8 flex justify-end space-x-4 border-t pt-4" *ngIf="isEditing">
+            <button 
+                (click)="onCancel()" 
+                class="bg-gray-300 text-gray-700 px-6 py-2 rounded-md shadow-md hover:bg-gray-400 font-medium transition duration-150"
+            >
+                Cancel
+            </button>
+            <button 
+                (click)="onSave()" 
+                class="bg-orange-600 text-white px-6 py-2 rounded-md shadow-md hover:bg-orange-700 font-medium focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition duration-150"
+            >
+                Save Changes
+            </button>
+        </div>
+    </div>
 </div>

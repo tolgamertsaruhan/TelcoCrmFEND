@@ -1,37 +1,58 @@
-<div class="max-w-6xl mx-auto bg-white p-6 rounded-2xl shadow-md mt-10">
+<div class="flex flex-col h-screen bg-gray-100">
 
-  <!-- 🔹 Sekme menüsü -->
-  <div class="flex border-b border-gray-200 mb-6">
-    <button
-      (click)="navigateTo('customer-information')"
-      class="px-6 py-2 font-medium"
-      [ngClass]="activeTab === 'info' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'">
-      Customer Info
-    </button>
+    <app-navbar></app-navbar>
 
-    <button
-      (click)="navigateTo('address-information')"
-      class="px-6 py-2 font-medium"
-      [ngClass]="activeTab === 'address' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'">
-      Address Info
-    </button>
+    <div class="flex flex-1 overflow-hidden">
 
-    <button
-      (click)="navigateTo('contact-medium-information')"
-      class="px-6 py-2 font-medium"
-      [ngClass]="activeTab === 'contact-medium' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'">
-      Contact Medium
-    </button>
+        <app-sidebar></app-sidebar>
 
-    <button
-      (click)="navigateTo('billing-account-information')"
-      class="px-6 py-2 font-medium"
-      [ngClass]="activeTab === 'account' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'">
-      Customer Account
-    </button>
-  </div>
+        <main class="flex-1 overflow-y-auto p-4 md:p-8">
+            <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-xl">
+                
+                <div class="flex items-center p-3 md:p-4 bg-gray-200 rounded-t-xl">
+                    <button (click)="goBack()" class="flex items-center text-gray-700 hover:text-gray-900 focus:outline-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        <span class="text-base font-semibold">Customer Info</span>
+                    </button>
+                    </div>
 
-  <!-- 🔹 Alt component’ler -->
-  <router-outlet></router-outlet>
+                <div class="flex text-center font-medium bg-orange-500/90 text-white shadow-md">
+                    <button
+                        (click)="navigateTo('customer-information')"
+                        class="flex-1 py-3 text-sm md:text-base cursor-pointer transition-all duration-200"
+                        [ngClass]="activeTab === 'customer-information' ? 'border-b-2 border-amber-300 bg-orange-600/90' : 'hover:bg-orange-500/80'">
+                        Customer Info
+                    </button>
+
+                    <button
+                        (click)="navigateTo('address-information')"
+                        class="flex-1 py-3 text-sm md:text-base cursor-pointer transition-all duration-200"
+                        [ngClass]="activeTab === 'address-information' ? 'border-b-2 border-amber-300 bg-orange-600/90' : 'hover:bg-orange-500/80'">
+                        Address Info
+                    </button>
+
+                    <button
+                        (click)="navigateTo('contact-medium-information')"
+                        class="flex-1 py-3 text-sm md:text-base cursor-pointer transition-all duration-200"
+                        [ngClass]="activeTab === 'contact-medium-information' ? 'border-b-2 border-amber-300 bg-orange-600/90' : 'hover:bg-orange-500/80'">
+                        Contact Medium
+                    </button>
+
+                    <button
+                        (click)="navigateTo('billing-account-information')"
+                        class="flex-1 py-3 text-sm md:text-base cursor-pointer transition-all duration-200"
+                        [ngClass]="activeTab === 'billing-account-information' ? 'border-b-2 border-amber-300 bg-orange-600/90' : 'hover:bg-orange-500/80'">
+                        Customer Account
+                    </button>
+                </div>
+
+                <div class="p-6 md:p-8">
+                    <router-outlet></router-outlet>
+                </div>
+
+            </div>
+        </main>
+    </div>
 </div>
-

@@ -10,13 +10,19 @@ import { CustomerInformation } from './pages/customer-information-screen/custome
 import { AddressInformation } from './pages/customer-information-screen/address-information/address-information';
 import { ContactMediumInformation } from './pages/customer-information-screen/contact-medium-information/contact-medium-information';
 import { BillingAccountInformation } from './pages/customer-information-screen/billing-account-information/billing-account-information';
+import { Login } from './pages/login/login';
+import { AuthGuard } from './guards/auth-guard-guard';
+import { Register } from './pages/register/register';
 
 export const routes: Routes = [
-    {path:"create-individual-customer", component:IndividualCustomerCreate},
-    {path:"customer-search", component:CustomerSearch},
+    { path: 'register', component: Register },
+    { path: 'login', component: Login },
+    {path:"create-individual-customer", component:IndividualCustomerCreate, canActivate: [AuthGuard]},
+    {path:"customer-search", component:CustomerSearch , canActivate: [AuthGuard]},
     {
     path: 'customer-create',
     component: CustomerCreate,
+    canActivate: [AuthGuard],
     children: [
       { path: 'customer-info', component: CustomerInfo },
       { path: 'address-info', component: AddressInfo },
@@ -27,6 +33,7 @@ export const routes: Routes = [
   {
     path: 'customer-information-screen/:id', // 👈 müşteri ID burada parametre olarak gelecek
     component: CustomerInformationScreen,
+    canActivate: [AuthGuard],
     children: [
       { path: '', redirectTo: 'customer-information', pathMatch: 'full' },
       { path: 'customer-information', component: CustomerInformation },

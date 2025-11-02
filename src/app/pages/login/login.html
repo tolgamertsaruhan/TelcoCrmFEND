@@ -1,0 +1,98 @@
+<div class="min-h-screen flex items-center justify-center" style="background-color: #2d2d44;">
+  <div class="flex items-center gap-16">
+    <!-- Logo Bölümü -->
+    <div class="flex flex-col items-start">
+      <div class="flex items-center gap-3 mb-2">
+        <div class="flex flex-col gap-1">
+          <div class="w-6 h-6 bg-orange-500 rounded"></div>
+          <div class="flex gap-1">
+            <div class="w-6 h-6 bg-orange-500 rounded"></div>
+            <div class="w-6 h-6 bg-orange-500 rounded"></div>
+          </div>
+          <div class="flex gap-1">
+            <div class="w-6 h-6 bg-orange-500 rounded"></div>
+            <div class="w-6 h-6 bg-orange-500 rounded"></div>
+          </div>
+        </div>
+        <h1 class="text-5xl font-bold text-white ml-4" style="letter-spacing: 0.1em;">ETIYA</h1>
+      </div>
+      <p class="text-orange-500 text-sm font-semibold ml-16" style="letter-spacing: 0.2em;">CRM LITE</p>
+    </div>
+
+    <!-- Login Formu -->
+    <div class="rounded-lg p-8 w-96" style="background-color: #5a5a6e;">
+      <div class="text-center mb-8">
+        <h2 class="text-white text-sm font-medium mb-1">WELCOME !</h2>
+        <p class="text-white text-xs">LOG IN WITH YOUR ORGANIZATIONAL ACCOUNT</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="submit()">
+        <!-- Username -->
+        <div class="mb-4">
+          <label class="block text-white text-xs font-medium mb-2">Username</label>
+          <input
+            type="email"
+            formControlName="email"
+            placeholder=""
+            class="w-full px-4 py-2 rounded-full text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            style="background-color: #e8e8ee;"
+          />
+        </div>
+
+        <!-- Password -->
+        <div class="mb-6">
+          <label class="block text-white text-xs font-medium mb-2">Password</label>
+          <div class="relative">
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              formControlName="password"
+              placeholder=""
+              class="w-full px-4 py-2 rounded-full text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 pr-10"
+              style="background-color: #e8e8ee;"
+            />
+            <button
+              type="button"
+              *ngIf="loginForm.get('password')?.value"
+              (click)="togglePasswordVisibility()"
+              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-gray-800 focus:outline-none"
+            >
+              <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+                <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
+                <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
+                <line x1="2" y1="2" x2="22" y2="22"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Login Butonu -->
+        <button
+          type="submit"
+          [disabled]="loginForm.invalid || isSubmitting"
+          class="w-full py-2 rounded-full text-white text-sm font-medium transition-all duration-200 mb-4"
+          [ngClass]="{
+            'bg-orange-500 hover:bg-orange-600 cursor-pointer': loginForm.valid && !isSubmitting,
+            'bg-gray-400 cursor-not-allowed opacity-60': loginForm.invalid || isSubmitting
+          }"
+        >
+          <span *ngIf="!isSubmitting">LOG IN</span>
+          <span *ngIf="isSubmitting">Logging in...</span>
+        </button>
+
+        <!-- Hata Mesajı -->
+        <div
+          *ngIf="errorMessage"
+          class="text-center text-red-500 text-xs font-medium"
+          style="white-space: pre-line;"
+        >
+          {{ errorMessage }}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

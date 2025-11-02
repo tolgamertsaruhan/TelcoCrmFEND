@@ -53,6 +53,8 @@ export class ContactMediumInfo {
     // Eğer state’te hiçbir email yoksa en az bir tane ekleyelim:
     if (this.emails.length === 0) this.emails.push(new FormControl('', [Validators.email]));
     if (this.mobilePhones.length === 0) this.mobilePhones.push(new FormControl('', Validators.required));
+     if (this.homePhones.length === 0) this.homePhones.push(new FormControl('', [Validators.email]));
+    if (this.faxes.length === 0) this.faxes.push(new FormControl('', Validators.required));
   }
 
   get emails() {

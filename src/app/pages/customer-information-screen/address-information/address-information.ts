@@ -56,7 +56,7 @@ export class AddressInformation {
       street: ['', Validators.required],
       houseNumber: ['', Validators.required],
       description: [''],
-      isPrimary: [false]
+      isDefault: [false]
     });
   }
 
@@ -163,7 +163,7 @@ export class AddressInformation {
     this.isAdding = true;
     this.isEditing = false;
     this.editingAddressId = "";
-    this.addressForm.reset({ isPrimary: false });
+    this.addressForm.reset({ isDefault: false });
   }
 
   startEdit(address: CreatedAddressResponse): void {
@@ -223,7 +223,7 @@ export class AddressInformation {
                 street: address.street,
                 houseNumber: address.houseNumber,
                 description: address.description,
-                isPrimary: address.isDefault
+                isDefault: address.isDefault
               });
 
               this.cdr.detectChanges();
@@ -302,8 +302,8 @@ this.addressService.updateAddress(updatedRequest).subscribe({
 });*/
 const formValue = this.addressForm.value;
   console.log('Form Value:', formValue);  // ✅ Tüm form değerlerini görelim
-  console.log('isPrimary:', formValue.isPrimary);  // ✅ Özellikle isPrimary değerini kontrol edelim
-  console.log('isPrimary type:', typeof formValue.isPrimary);  // ✅ Tipini kontrol edelim
+  console.log('isDefault:', formValue.isDefault);  // ✅ Özellikle isPrimary değerini kontrol edelim
+  console.log('isDefault type:', typeof formValue.isDefault);  // ✅ Tipini kontrol edelim
     // ✅ CREATE MODE
     if (this.isAdding) {
       const createRequest = {
@@ -313,7 +313,7 @@ const formValue = this.addressForm.value;
         street: formValue.street,
         houseNumber: formValue.houseNumber,
         description: formValue.description,
-        isDefault: formValue.isPrimary ?? false
+        default: formValue.isDefault ?? false
       };
 
       console.log('Create Request:', createRequest);
@@ -337,7 +337,7 @@ const formValue = this.addressForm.value;
         houseNumber: formValue.houseNumber,
         description: formValue.description,
         districtId: formValue.districtId,
-        isDefault: formValue.isPrimary ?? false
+        default: formValue.isDefault ?? false
       };
 
       console.log('Final Update Request:', updatedRequest);

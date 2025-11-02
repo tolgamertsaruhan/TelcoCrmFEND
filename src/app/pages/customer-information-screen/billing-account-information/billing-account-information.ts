@@ -5,6 +5,9 @@ import { BillingAccount } from '../../../models/individualcustomer/billingAccoun
 import { ActivatedRoute } from '@angular/router';
 import { BillingAccountService } from '../../../services/billingAccount-service';
 import { AddressService } from '../../../services/address-service';
+import { BillingAccountResponse } from '../../../models/individualcustomer/responses/BillingAccountResponse';
+import { CityService } from '../../../services/city-service';
+import { DistrictService } from '../../../services/district-service';
 
 @Component({
   selector: 'app-billing-account-information',
@@ -16,14 +19,16 @@ import { AddressService } from '../../../services/address-service';
 })
 export class BillingAccountInformation implements OnInit {
   customerId!: string;
-  accounts: BillingAccount[] = [];
+  accounts: BillingAccountResponse[] = [];
   accountForm!: FormGroup;
+  addresses: CreatedAddressResponse[] = [];
+  districtNames: { [key: string]: string } = {};
+  cityNames: { [key: string]: string } = {};
 
   isAdding = false;
   isEditing = false;
   editingId: string | null = null;
 
-  // form helpers for select / UI
   types = ['INDIVIDUAL', 'CORPORATE', 'PREPAID', 'POSTPAID'];
   statuses = ['ACTIVE', 'SUSPENDED', 'CLOSED'];
 
@@ -32,15 +37,17 @@ export class BillingAccountInformation implements OnInit {
     private route: ActivatedRoute,
     private billingService: BillingAccountService,
     private addressService: AddressService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private cityService: CityService,
+    private districtService:DistrictService
   ) {}
 
   ngOnInit(): void {
-    // parent route'tan customer id al
     this.customerId = this.route.parent?.snapshot.paramMap.get('id') || '';
     this.initForm();
     if (this.customerId) {
       this.loadAccounts();
+      this.loadAddresses();
     }
   }
 
@@ -48,57 +55,87 @@ export class BillingAccountInformation implements OnInit {
     this.accountForm = this.fb.group({
       type: ['INDIVIDUAL', Validators.required],
       accountName: ['', Validators.required],
-      accountNumber: [''],
+      accountNumber: [{ value: '', disabled: true }],
       status: ['ACTIVE', Validators.required],
-      addressId: [''] // optional, fill from default address when adding
+      addressId: ['', Validators.required],
     });
   }
 
   loadAccounts() {
-    if (!this.customerId) return;
     this.billingService.getByCustomerId(this.customerId).subscribe({
       next: (data) => {
-        this.accounts = data;
+        this.accounts = data as BillingAccountResponse[]; 
         this.cdr.detectChanges();
       },
-      error: (err) => console.error('Error loading billing accounts', err)
+      error: (err) => console.error('Error loading billing accounts', err),
     });
+  }
+
+  loadAddresses() {
+     if (!this.customerId) return;
+
+  this.addressService.getAddressesByCustomerId(this.customerId).subscribe({
+    next: (data) => {
+      this.addresses = data;
+
+      // Her adres için district ve city isimlerini al
+      this.addresses.forEach(address => {
+        this.districtService.getDistrictById(address.districtId).subscribe({
+          next: (district) => {
+            this.districtNames[address.districtId] = district.name;
+
+            // Şehrin adını da al
+            this.cityService.getCitiesforaddresspage().subscribe({
+              next: (cities) => {
+                const city = cities.find((c: any) => c.id === district.cityId);
+                if (city) {
+                  this.cityNames[address.districtId] = city.name;
+                }
+
+                this.cdr.detectChanges();
+              }
+            });
+          },
+          error: (err) => console.error('Error loading district:', err)
+        });
+      });
+    },
+    error: (err) => console.error('Error loading addresses:', err)
+  });
   }
 
   startAdd() {
     this.isAdding = true;
     this.isEditing = false;
     this.editingId = null;
-    this.accountForm.reset({ type: 'INDIVIDUAL', status: 'ACTIVE', accountNumber: '' });
 
-    // otomatik default adresi alıp addressId koymak istersen:
-    this.addressService.getAddressesByCustomerId(this.customerId).subscribe({
-  next: (addresses) => {
-    const defaultAddress = addresses.find(a => a.isDefault === 'true' || a.isDefault === "true");
-    if (defaultAddress) {
-      this.accountForm.patchValue({ addressId: defaultAddress.id });
+    this.accountForm.reset({
+      type: 'INDIVIDUAL',
+      status: 'ACTIVE',
+      accountNumber: '',
+      addressId: '',
+    });
+
+    // Varsayılan adresi seç
+    const defaultAddr = this.addresses.find(a => a.isDefault === true);
+    if (defaultAddr) {
+      this.accountForm.patchValue({ addressId: defaultAddr.id });
     }
-  },
-  error: (err) => {
-    console.error('Error loading addresses', err);
-  }
-});
   }
 
-  startEdit(account: BillingAccount) {
+  startEdit(account: BillingAccountResponse) {
     this.isEditing = true;
     this.isAdding = false;
-    this.editingId = account.id || null;
+    this.editingId = account.id;
 
     this.accountForm.patchValue({
       type: account.type,
       accountName: account.accountName,
       accountNumber: account.accountNumber,
-      status: account.status || 'ACTIVE',
-      addressId: account.addressId || ''
+      status: account.status,
+      addressId: account.addressId || '',
     });
 
-    // change detection to ensure form re-renders
     this.cdr.detectChanges();
   }
 
@@ -115,49 +152,55 @@ export class BillingAccountInformation implements OnInit {
       return;
     }
 
-    const formValue = this.accountForm.value;
+    const formValue = this.accountForm.getRawValue();
+
     if (this.isAdding) {
-      const payload: Partial<BillingAccount> = {
+      const payload = {
         accountName: formValue.accountName,
         type: formValue.type,
         customerId: this.customerId,
-        addressId: formValue.addressId || undefined
+        addressId: formValue.addressId,
       };
+
       this.billingService.add(payload).subscribe({
         next: () => {
           this.isAdding = false;
           this.loadAccounts();
         },
-        error: (err) => console.error('Error adding billing account', err)
+        error: (err) => console.error('Error adding billing account', err),
       });
     } else if (this.isEditing && this.editingId) {
-      const payload: BillingAccount = {
+      const payload = {
         id: this.editingId,
         accountName: formValue.accountName,
-        accountNumber: formValue.accountNumber,
         type: formValue.type,
         status: formValue.status,
         customerId: this.customerId,
-        addressId: formValue.addressId || undefined
+        addressId: formValue.addressId,
       };
-      console.log('Billing update payload', payload);
+
+      console.log(payload);
+
       this.billingService.update(payload).subscribe({
         next: () => {
           this.isEditing = false;
           this.editingId = null;
           this.loadAccounts();
         },
-        error: (err) => console.error('Error updating billing account', err)
+        error: (err) => console.error('Error updating billing account', err),
       });
     }
   }
 
+  
+
   confirmDelete(id?: string) {
     if (!id) return;
     if (!confirm('Are you sure you want to delete this billing account?')) return;
+
     this.billingService.delete(id).subscribe({
       next: () => this.loadAccounts(),
-      error: (err) => console.error('Error deleting billing account', err)
+      error: (err) => console.error('Error deleting billing account', err),
     });
   }
 

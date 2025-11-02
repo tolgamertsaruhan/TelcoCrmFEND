@@ -43,7 +43,7 @@ export class AddressInfo  {
     street: [{ value: state.addressRequestList?.[0]?.street ?? '', disabled: true }, Validators.required],
     houseNumber: [{ value: state.addressRequestList?.[0]?.houseNumber ?? '', disabled: true }],
     description: [{ value: state.addressRequestList?.[0]?.description ?? '', disabled: true }],
-    isDefault: [state.addressRequestList?.[0]?.isDefault ?? true]
+    isDefault: [state.addressRequestList?.[0]?.default ?? true]
     });
 
    /* this.cityService.getCities().subscribe(data => {
@@ -71,6 +71,13 @@ export class AddressInfo  {
   }
 
 
+  goBackToSearch(): void {
+    // Absolute route ile
+    this.router.navigate(['/customer-search']); // customer search sayfanın route'u
+
+    // veya relative route ile parent route'a dönmek istersen
+    // this.router.navigate(['../'], { relativeTo: this.route });
+  }
   loadDistricts(cityId: string) {
   this.districtService.getDistrictsByCity(cityId).subscribe(districts => {
     this.districts = districts;

@@ -1,12 +1,20 @@
 import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CustomerCreationService } from '../../../../services/customer-creation-service';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { CreateFullIndividualCustomerResponse } from '../../../../models/individualcustomer/responses/CreateFullIndividualCustomerResponse';
-import { Navbar } from "../../../../components/navbar/navbar";
-import { Sidebar } from "../../../../components/sidebar/sidebar";
+import { Navbar } from '../../../../components/navbar/navbar';
+import { Sidebar } from '../../../../components/sidebar/sidebar';
 
 @Component({
   selector: 'app-contact-medium-info',
@@ -15,7 +23,7 @@ import { Sidebar } from "../../../../components/sidebar/sidebar";
   styleUrl: './contact-medium-info.scss',
 })
 export class ContactMediumInfo {
-   form!: FormGroup;
+  form!: FormGroup;
 
   constructor(
     private fb: FormBuilder,
@@ -33,27 +41,32 @@ export class ContactMediumInfo {
 
     this.form = this.fb.group({
       emails: this.fb.array(
-        (state.createContactMediumRequests?.filter((x: any) => x.type === 'EMAIL') ?? [''])
-          .map((x: any) => new FormControl(x.value || '', [Validators.email]))
+        (state.createContactMediumRequests?.filter((x: any) => x.type === 'EMAIL') ?? ['']).map(
+          (x: any) => new FormControl(x.value || '', [Validators.email])
+        )
       ),
       mobilePhones: this.fb.array(
-        (state.createContactMediumRequests?.filter((x: any) => x.type === 'MOBILE_PHONE') ?? [''])
-          .map((x: any) => new FormControl(x.value || '', Validators.required))
+        (
+          state.createContactMediumRequests?.filter((x: any) => x.type === 'MOBILE_PHONE') ?? ['']
+        ).map((x: any) => new FormControl(x.value || '', Validators.required))
       ),
       homePhones: this.fb.array(
-        (state.createContactMediumRequests?.filter((x: any) => x.type === 'HOME_PHONE') ?? [])
-          .map((x: any) => new FormControl(x.value || ''))
+        (state.createContactMediumRequests?.filter((x: any) => x.type === 'HOME_PHONE') ?? []).map(
+          (x: any) => new FormControl(x.value || '')
+        )
       ),
       faxes: this.fb.array(
-        (state.createContactMediumRequests?.filter((x: any) => x.type === 'FAX') ?? [])
-          .map((x: any) => new FormControl(x.value || ''))
-      )
+        (state.createContactMediumRequests?.filter((x: any) => x.type === 'FAX') ?? []).map(
+          (x: any) => new FormControl(x.value || '')
+        )
+      ),
     });
 
     // Eğer state’te hiçbir email yoksa en az bir tane ekleyelim:
     if (this.emails.length === 0) this.emails.push(new FormControl('', [Validators.email]));
-    if (this.mobilePhones.length === 0) this.mobilePhones.push(new FormControl('', Validators.required));
-     if (this.homePhones.length === 0) this.homePhones.push(new FormControl('', [Validators.email]));
+    if (this.mobilePhones.length === 0)
+      this.mobilePhones.push(new FormControl('', Validators.required));
+    if (this.homePhones.length === 0) this.homePhones.push(new FormControl('', [Validators.email]));
     if (this.faxes.length === 0) this.faxes.push(new FormControl('', Validators.required));
   }
 
@@ -82,20 +95,27 @@ export class ContactMediumInfo {
   }
 
   back() {
-
     const contactMediums = [
-    ...this.emails.value.map(v => ({ type: 'EMAIL', value: v, primary: false })),
-    ...this.mobilePhones.value.map(v => ({ type: 'MOBILE_PHONE', value: v, primary: false })),
-    ...this.homePhones.value.map(v => ({ type: 'HOME_PHONE', value: v, primary: false })),
-    ...this.faxes.value.map(v => ({ type: 'FAX', value: v, primary: false }))
-  ];
+      ...this.emails.value.map((v) => ({ type: 'EMAIL', value: v, primary: false })),
+      ...this.mobilePhones.value.map((v) => ({ type: 'MOBILE_PHONE', value: v, primary: false })),
+      ...this.homePhones.value.map((v) => ({ type: 'HOME_PHONE', value: v, primary: false })),
+      ...this.faxes.value.map((v) => ({ type: 'FAX', value: v, primary: false })),
+    ];
 
     const updated = {
-    ...this.customerService.state(),
-    createContactMediumRequests: contactMediums
-  };
-  this.customerService.state.set(updated);
+      ...this.customerService.state(),
+      createContactMediumRequests: contactMediums,
+    };
+    this.customerService.state.set(updated);
     this.router.navigateByUrl('/customer-create/address-info');
+  }
+
+  goBackToSearch(): void {
+    // Absolute route ile
+    this.router.navigate(['/customer-search']); // customer search sayfanın route'u
+
+    // veya relative route ile parent route'a dönmek istersen
+    // this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   create() {
@@ -130,42 +150,42 @@ export class ContactMediumInfo {
     this.customerService.state.set(updated);
 
     // En güncel state'i al
-  const currentState = this.customerService.getCurrentCustomer();
+    const currentState = this.customerService.getCurrentCustomer();
 
-  // Backend'in beklediği yapıya uygun payload
-  const payload = {
-    createIndividualCustomerRequest: currentState.createIndividualCustomerRequest,
-    addressRequestList: currentState.addressRequestList,
-    createContactMediumRequests: currentState.createContactMediumRequests
-  };
+    // Backend'in beklediği yapıya uygun payload
+    const payload = {
+      createIndividualCustomerRequest: currentState.createIndividualCustomerRequest,
+      addressRequestList: currentState.addressRequestList,
+      createContactMediumRequests: currentState.createContactMediumRequests,
+    };
 
-  console.log("Gönderilen payload:", payload);
+    console.log('Gönderilen payload:', payload);
 
-  this.http
-  .post<CreateFullIndividualCustomerResponse>(
-    'http://localhost:8091/customerservice/api/individual-customers/create-full',
-    payload
-  )
-  .subscribe({
-    next: (response) => {
-      const customerId = response.customerResponse?.id;
- 
-      if (customerId) {
-        alert('Customer created successfully!');
-        // ID ile yönlendirme
-        this.router.navigateByUrl(`/customer-information-screen/${customerId}`);
-      } else {
-        alert('Customer created, but ID not found in response.');
-      }
-    },
-    error: (err) => {
-      console.error(err);
-      alert('Error occurred: ' + err.message);
-    },
-  });
+    this.http
+      .post<CreateFullIndividualCustomerResponse>(
+        'http://localhost:8091/customerservice/api/individual-customers/create-full',
+        payload
+      )
+      .subscribe({
+        next: (response) => {
+          const customerId = response.customerResponse?.id;
 
-  // environment üzerinden API çağrısı yap
-  /*this.http
+          if (customerId) {
+            alert('Customer created successfully!');
+            // ID ile yönlendirme
+            this.router.navigateByUrl(`/customer-information-screen/${customerId}`);
+          } else {
+            alert('Customer created, but ID not found in response.');
+          }
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Error occurred: ' + err.message);
+        },
+      });
+
+    // environment üzerinden API çağrısı yap
+    /*this.http
     .post('http://localhost:8091/customerservice/api/individual-customers/create-full', payload)
     .subscribe({
       next: () => {
@@ -185,7 +205,6 @@ export class ContactMediumInfo {
         error: (err) => alert('Error occurred: ' + err.message),
       });*/
   }
-  
 
   /*addContactMedium() {
     if (this.form.valid) {
@@ -207,4 +226,3 @@ export class ContactMediumInfo {
     history.back();
   }*/
 }
-

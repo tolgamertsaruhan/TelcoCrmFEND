@@ -1,194 +1,274 @@
 <div class="p-6 md:p-8">
-    <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg border border-gray-200">
-        
-        <div class="flex justify-end items-center mb-6">
-            <button 
-                (click)="onEdit()" 
-                class="text-gray-600 hover:text-orange-500 transition-colors p-2 rounded-full hover:bg-gray-100" 
-                *ngIf="!isEditing"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                </svg>
-            </button>
-            
-            <button 
-                (click)="onDelete()" 
-                class="text-gray-600 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-gray-100 ml-3"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-            </button>
-        </div>
+  <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg border border-gray-200">
+    <div class="flex justify-end items-center mb-6">
+      <button
+        (click)="onEdit()"
+        class="text-gray-600 hover:text-orange-500 transition-colors p-2 rounded-full hover:bg-gray-100"
+        *ngIf="!isEditing"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+          />
+        </svg>
+      </button>
 
-        <form [formGroup]="customerForm" class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
-            
-            <!-- First Name -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">
-                    First Name <span class="text-red-500">*</span>
-                    <span class="inline-block ml-1 relative group">
-                        <span class="inline-flex items-center justify-center w-4 h-4 text-xs bg-gray-300 text-gray-700 rounded-full cursor-help">i</span>
-                        <span class="invisible group-hover:visible absolute left-0 top-6 w-64 bg-gray-800 text-white text-xs rounded px-3 py-2 z-10 shadow-lg">
-                            First Name must be between 2 and 20 characters.
-                        </span>
-                    </span>
-                </label>
-                <input 
-                    formControlName="firstName" 
-                    type="text" 
-                    maxlength="20"
-                    [readonly]="!isEditing"
-                    [ngClass]="{'bg-gray-50 shadow-inner text-gray-800 border-gray-300': !isEditing, 'focus:ring-orange-500 focus:border-orange-500 border-orange-500/50': isEditing}" 
-                    class="mt-1 block w-full rounded-lg border p-2.5 transition ease-in-out duration-150"
-                />
-            </div>
-
-            <!-- Nat ID -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">
-                    Nat ID <span class="text-red-500">*</span>
-                    <span class="inline-block ml-1 relative group">
-                        <span class="inline-flex items-center justify-center w-4 h-4 text-xs bg-gray-300 text-gray-700 rounded-full cursor-help">i</span>
-                        <span class="invisible group-hover:visible absolute left-0 top-6 w-64 bg-gray-800 text-white text-xs rounded px-3 py-2 z-10 shadow-lg">
-                            National Id must be 11 characters.
-                        </span>
-                    </span>
-                </label>
-                <input 
-                    formControlName="nationalId" 
-                    type="text" 
-                    maxlength="11"
-                    [readonly]="!isEditing"
-                    [ngClass]="{'bg-gray-50 shadow-inner text-gray-800 border-gray-300': !isEditing, 'focus:ring-orange-500 focus:border-orange-500 border-orange-500/50': isEditing}" 
-                    class="mt-1 block w-full rounded-lg border p-2.5 transition ease-in-out duration-150"
-                />
-            </div>
-
-            <!-- Middle Name -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">
-                    Middle Name
-                    <span class="inline-block ml-1 relative group">
-                        <span class="inline-flex items-center justify-center w-4 h-4 text-xs bg-gray-300 text-gray-700 rounded-full cursor-help">i</span>
-                        <span class="invisible group-hover:visible absolute left-0 top-6 w-64 bg-gray-800 text-white text-xs rounded px-3 py-2 z-10 shadow-lg">
-                            Middle Name must be between 2 and 20 characters.
-                        </span>
-                    </span>
-                </label>
-                <input 
-                    formControlName="middleName" 
-                    type="text" 
-                    maxlength="20"
-                    [readonly]="!isEditing"
-                    [ngClass]="{'bg-gray-50 shadow-inner text-gray-800 border-gray-300': !isEditing, 'focus:ring-orange-500 focus:border-orange-500 border-orange-500/50': isEditing}" 
-                    class="mt-1 block w-full rounded-lg border p-2.5 transition ease-in-out duration-150"
-                />
-            </div>
-
-            <!-- Birth Date -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Birth Date <span class="text-red-500">*</span></label>
-                <input 
-                    formControlName="dateOfBirth" 
-                    type="text" 
-                    [readonly]="!isEditing"
-                    [ngClass]="{'bg-gray-50 shadow-inner text-gray-800 border-gray-300': !isEditing, 'focus:ring-orange-500 focus:border-orange-500 border-orange-500/50': isEditing}" 
-                    class="mt-1 block w-full rounded-lg border p-2.5 transition ease-in-out duration-150"
-                />
-            </div>
-
-            <!-- Last Name -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">
-                    Last Name <span class="text-red-500">*</span>
-                    <span class="inline-block ml-1 relative group">
-                        <span class="inline-flex items-center justify-center w-4 h-4 text-xs bg-gray-300 text-gray-700 rounded-full cursor-help">i</span>
-                        <span class="invisible group-hover:visible absolute left-0 top-6 w-64 bg-gray-800 text-white text-xs rounded px-3 py-2 z-10 shadow-lg">
-                            Last Name must be between 2 and 20 characters.
-                        </span>
-                    </span>
-                </label>
-                <input 
-                    formControlName="lastName" 
-                    type="text" 
-                    maxlength="20"
-                    [readonly]="!isEditing"
-                    [ngClass]="{'bg-gray-50 shadow-inner text-gray-800 border-gray-300': !isEditing, 'focus:ring-orange-500 focus:border-orange-500 border-orange-500/50': isEditing}" 
-                    class="mt-1 block w-full rounded-lg border p-2.5 transition ease-in-out duration-150"
-                />
-            </div>
-
-            <!-- Mother Name -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">
-                    Mother Name
-                    <span class="inline-block ml-1 relative group">
-                        <span class="inline-flex items-center justify-center w-4 h-4 text-xs bg-gray-300 text-gray-700 rounded-full cursor-help">i</span>
-                        <span class="invisible group-hover:visible absolute left-0 top-6 w-64 bg-gray-800 text-white text-xs rounded px-3 py-2 z-10 shadow-lg">
-                            Mother Name must be between 2 and 20 characters.
-                        </span>
-                    </span>
-                </label>
-                <input 
-                    formControlName="motherName" 
-                    type="text" 
-                    maxlength="20"
-                    [readonly]="!isEditing"
-                    [ngClass]="{'bg-gray-50 shadow-inner text-gray-800 border-gray-300': !isEditing, 'focus:ring-orange-500 focus:border-orange-500 border-orange-500/50': isEditing}" 
-                    class="mt-1 block w-full rounded-lg border p-2.5 transition ease-in-out duration-150"
-                />
-            </div>
-
-            <!-- Gender -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Gender <span class="text-red-500">*</span></label>
-                <input 
-                    formControlName="gender" 
-                    type="text" 
-                    [readonly]="!isEditing"
-                    [ngClass]="{'bg-gray-50 shadow-inner text-gray-800 border-gray-300': !isEditing, 'focus:ring-orange-500 focus:border-orange-500 border-orange-500/50': isEditing}" 
-                    class="mt-1 block w-full rounded-lg border p-2.5 transition ease-in-out duration-150"
-                />
-            </div>
-
-            <!-- Father Name -->
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">
-                    Father Name
-                    <span class="inline-block ml-1 relative group">
-                        <span class="inline-flex items-center justify-center w-4 h-4 text-xs bg-gray-300 text-gray-700 rounded-full cursor-help">i</span>
-                        <span class="invisible group-hover:visible absolute left-0 top-6 w-64 bg-gray-800 text-white text-xs rounded px-3 py-2 z-10 shadow-lg">
-                            Father Name must be between 2 and 20 characters.
-                        </span>
-                    </span>
-                </label>
-                <input 
-                    formControlName="fatherName" 
-                    type="text" 
-                    maxlength="20"
-                    [readonly]="!isEditing"
-                    [ngClass]="{'bg-gray-50 shadow-inner text-gray-800 border-gray-300': !isEditing, 'focus:ring-orange-500 focus:border-orange-500 border-orange-500/50': isEditing}" 
-                    class="mt-1 block w-full rounded-lg border p-2.5 transition ease-in-out duration-150"
-                />
-            </div>
-            
-        </form>
-
-        <div class="mt-8 flex justify-end space-x-4 border-t pt-4" *ngIf="isEditing">
-            <button 
-                (click)="onCancel()" 
-                class="bg-gray-300 text-gray-700 px-6 py-2 rounded-md shadow-md hover:bg-gray-400 font-medium transition duration-150"
-            >
-                Cancel
-            </button>
-            <button 
-                (click)="onSave()" 
-                class="bg-orange-600 text-white px-6 py-2 rounded-md shadow-md hover:bg-orange-700 font-medium focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition duration-150"
-            >
-                Save Changes
-            </button>
-        </div>
+      <button
+        (click)="onDelete()"
+        class="text-gray-600 hover:text-red-500 transition-colors p-2 rounded-full hover:bg-gray-100 ml-3"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+          />
+        </svg>
+      </button>
     </div>
+
+    <form [formGroup]="customerForm" class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+      <!-- First Name -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          First Name <span class="text-red-500">*</span>
+          <span class="inline-block ml-1 relative group">
+            <span
+              class="inline-flex items-center justify-center w-4 h-4 text-xs bg-gray-300 text-gray-700 rounded-full cursor-help"
+              >i</span
+            >
+            <span
+              class="invisible group-hover:visible absolute left-0 top-6 w-64 bg-gray-800 text-white text-xs rounded px-3 py-2 z-10 shadow-lg"
+            >
+              First Name must be between 2 and 20 characters.
+            </span>
+          </span>
+        </label>
+        <input
+          formControlName="firstName"
+          type="text"
+          maxlength="20"
+          [readonly]="!isEditing"
+          [ngClass]="{
+            'bg-gray-50 shadow-inner text-gray-800 border-gray-300': !isEditing,
+            'focus:ring-orange-500 focus:border-orange-500 border-orange-500/50': isEditing
+          }"
+          class="mt-1 block w-full rounded-lg border p-2.5 transition ease-in-out duration-150"
+        />
+      </div>
+
+      <!-- Nat ID -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          Nat ID <span class="text-red-500">*</span>
+          <span class="inline-block ml-1 relative group">
+            <span
+              class="inline-flex items-center justify-center w-4 h-4 text-xs bg-gray-300 text-gray-700 rounded-full cursor-help"
+              >i</span
+            >
+            <span
+              class="invisible group-hover:visible absolute left-0 top-6 w-64 bg-gray-800 text-white text-xs rounded px-3 py-2 z-10 shadow-lg"
+            >
+              National Id must be 11 characters.
+            </span>
+          </span>
+        </label>
+        <input
+          formControlName="nationalId"
+          type="text"
+          maxlength="11"
+          [readonly]="!isEditing"
+          [ngClass]="{
+            'bg-gray-50 shadow-inner text-gray-800 border-gray-300': !isEditing,
+            'focus:ring-orange-500 focus:border-orange-500 border-orange-500/50': isEditing
+          }"
+          class="mt-1 block w-full rounded-lg border p-2.5 transition ease-in-out duration-150"
+        />
+      </div>
+
+      <!-- Middle Name -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          Middle Name
+          <span class="inline-block ml-1 relative group">
+            <span
+              class="inline-flex items-center justify-center w-4 h-4 text-xs bg-gray-300 text-gray-700 rounded-full cursor-help"
+              >i</span
+            >
+            <span
+              class="invisible group-hover:visible absolute left-0 top-6 w-64 bg-gray-800 text-white text-xs rounded px-3 py-2 z-10 shadow-lg"
+            >
+              Middle Name must be between 2 and 20 characters.
+            </span>
+          </span>
+        </label>
+        <input
+          formControlName="middleName"
+          type="text"
+          maxlength="20"
+          [readonly]="!isEditing"
+          [ngClass]="{
+            'bg-gray-50 shadow-inner text-gray-800 border-gray-300': !isEditing,
+            'focus:ring-orange-500 focus:border-orange-500 border-orange-500/50': isEditing
+          }"
+          class="mt-1 block w-full rounded-lg border p-2.5 transition ease-in-out duration-150"
+        />
+      </div>
+
+      <!-- Birth Date -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">
+          Birth Date <span class="text-red-500">*</span>
+        </label>
+        <input
+          formControlName="dateOfBirth"
+          type="date"
+          [readonly]="!isEditing"
+          [ngClass]="{
+            'bg-gray-50 shadow-inner text-gray-800 border-gray-300': !isEditing,
+            'focus:ring-orange-500 focus:border-orange-500 border-orange-500/50': isEditing
+          }"
+          class="mt-1 block w-full rounded-lg border p-2.5 transition ease-in-out duration-150"
+        />
+      </div>
+
+      <!-- Last Name -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          Last Name <span class="text-red-500">*</span>
+          <span class="inline-block ml-1 relative group">
+            <span
+              class="inline-flex items-center justify-center w-4 h-4 text-xs bg-gray-300 text-gray-700 rounded-full cursor-help"
+              >i</span
+            >
+            <span
+              class="invisible group-hover:visible absolute left-0 top-6 w-64 bg-gray-800 text-white text-xs rounded px-3 py-2 z-10 shadow-lg"
+            >
+              Last Name must be between 2 and 20 characters.
+            </span>
+          </span>
+        </label>
+        <input
+          formControlName="lastName"
+          type="text"
+          maxlength="20"
+          [readonly]="!isEditing"
+          [ngClass]="{
+            'bg-gray-50 shadow-inner text-gray-800 border-gray-300': !isEditing,
+            'focus:ring-orange-500 focus:border-orange-500 border-orange-500/50': isEditing
+          }"
+          class="mt-1 block w-full rounded-lg border p-2.5 transition ease-in-out duration-150"
+        />
+      </div>
+
+      <!-- Mother Name -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          Mother Name
+          <span class="inline-block ml-1 relative group">
+            <span
+              class="inline-flex items-center justify-center w-4 h-4 text-xs bg-gray-300 text-gray-700 rounded-full cursor-help"
+              >i</span
+            >
+            <span
+              class="invisible group-hover:visible absolute left-0 top-6 w-64 bg-gray-800 text-white text-xs rounded px-3 py-2 z-10 shadow-lg"
+            >
+              Mother Name must be between 2 and 20 characters.
+            </span>
+          </span>
+        </label>
+        <input
+          formControlName="motherName"
+          type="text"
+          maxlength="20"
+          [readonly]="!isEditing"
+          [ngClass]="{
+            'bg-gray-50 shadow-inner text-gray-800 border-gray-300': !isEditing,
+            'focus:ring-orange-500 focus:border-orange-500 border-orange-500/50': isEditing
+          }"
+          class="mt-1 block w-full rounded-lg border p-2.5 transition ease-in-out duration-150"
+        />
+      </div>
+
+      <!-- Gender -->
+      <!-- Gender -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">
+          Gender <span class="text-red-500">*</span>
+        </label>
+        <select
+          formControlName="gender"
+          [disabled]="!isEditing"
+          [ngClass]="{
+            'bg-gray-50 shadow-inner text-gray-800 border-gray-300': !isEditing,
+            'focus:ring-orange-500 focus:border-orange-500 border-orange-500/50': isEditing
+          }"
+          class="mt-1 block w-full rounded-lg border p-2.5 transition ease-in-out duration-150"
+        >
+          <option value="">Select Gender</option>
+          <option value="FEMALE">Female</option>
+          <option value="MALE">Male</option>
+        </select>
+      </div>
+      <!-- Father Name -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          Father Name
+          <span class="inline-block ml-1 relative group">
+            <span
+              class="inline-flex items-center justify-center w-4 h-4 text-xs bg-gray-300 text-gray-700 rounded-full cursor-help"
+              >i</span
+            >
+            <span
+              class="invisible group-hover:visible absolute left-0 top-6 w-64 bg-gray-800 text-white text-xs rounded px-3 py-2 z-10 shadow-lg"
+            >
+              Father Name must be between 2 and 20 characters.
+            </span>
+          </span>
+        </label>
+        <input
+          formControlName="fatherName"
+          type="text"
+          maxlength="20"
+          [readonly]="!isEditing"
+          [ngClass]="{
+            'bg-gray-50 shadow-inner text-gray-800 border-gray-300': !isEditing,
+            'focus:ring-orange-500 focus:border-orange-500 border-orange-500/50': isEditing
+          }"
+          class="mt-1 block w-full rounded-lg border p-2.5 transition ease-in-out duration-150"
+        />
+      </div>
+    </form>
+
+    <div class="mt-8 flex justify-end space-x-4 border-t pt-4" *ngIf="isEditing">
+      <button
+        (click)="onCancel()"
+        class="bg-gray-300 text-gray-700 px-6 py-2 rounded-md shadow-md hover:bg-gray-400 font-medium transition duration-150"
+      >
+        Cancel
+      </button>
+      <button
+        (click)="onSave()"
+        class="bg-orange-600 text-white px-6 py-2 rounded-md shadow-md hover:bg-orange-700 font-medium focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition duration-150"
+      >
+        Save Changes
+      </button>
+    </div>
+  </div>
 </div>

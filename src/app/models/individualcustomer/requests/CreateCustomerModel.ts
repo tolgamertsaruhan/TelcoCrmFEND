@@ -21,7 +21,7 @@ export interface Address {
   street: string;
   houseNumber?: string;
   description?: string;
-  isDefault:boolean;
+  default:boolean;
 }
 
 export interface ContactMedium {

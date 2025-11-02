@@ -23,7 +23,7 @@ export interface Address {
   districtName: string;
   cityName: string;
   customerId: string;
-  default: boolean;
+  isDefault: boolean;
 }
 
 export interface ContactMedium {

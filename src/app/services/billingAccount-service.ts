@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { BillingAccount } from '../models/individualcustomer/billingAccount';
+import { UpdateBillingAccountRequest } from '../models/individualcustomer/requests/UpdateBillingAccountRequest';
+import { BillingAccountRequest } from '../models/individualcustomer/requests/BillingAccountRequest';
+import { BillingAccountResponse } from '../models/individualcustomer/responses/BillingAccountResponse';
 
 
 @Injectable({ providedIn: 'root' })
@@ -16,14 +19,30 @@ export class BillingAccountService {
     );
   }
 
-  add(account: Partial<BillingAccount>): Observable<BillingAccount> {
+  /*add(account: Partial<BillingAccount>): Observable<BillingAccount> {
     return this.http.post<BillingAccount>(`${this.baseUrl}`, account);
   }
 
   update(account: BillingAccount): Observable<BillingAccount> {
-    return this.http.put<BillingAccount>(`${this.baseUrl}`, account);
+    return this.http.put<UpdateBillingAccountRequest>(`${this.baseUrl}`, account);
   }
 
+  delete(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}/soft`);
+  }*/
+
+
+   // 🔹 Add
+  add(account: BillingAccountRequest): Observable<BillingAccountResponse> {
+    return this.http.post<BillingAccountResponse>(`${this.baseUrl}`, account);
+  }
+
+  // 🔹 Update
+  update(account: UpdateBillingAccountRequest): Observable<BillingAccountResponse> {
+    return this.http.put<BillingAccountResponse>(`${this.baseUrl}`, account);
+  }
+
+  // 🔹 Soft Delete
   delete(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}/soft`);
   }

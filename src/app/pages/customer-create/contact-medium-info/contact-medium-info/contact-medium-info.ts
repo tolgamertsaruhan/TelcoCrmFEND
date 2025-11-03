@@ -66,8 +66,8 @@ export class ContactMediumInfo {
     if (this.emails.length === 0) this.emails.push(new FormControl('', [Validators.email]));
     if (this.mobilePhones.length === 0)
       this.mobilePhones.push(new FormControl('', Validators.required));
-    if (this.homePhones.length === 0) this.homePhones.push(new FormControl('', [Validators.email]));
-    if (this.faxes.length === 0) this.faxes.push(new FormControl('', Validators.required));
+    if (this.homePhones.length === 0) this.homePhones.push(new FormControl('')); // validator yok
+    if (this.faxes.length === 0) this.faxes.push(new FormControl('')); 
   }
 
   get emails() {

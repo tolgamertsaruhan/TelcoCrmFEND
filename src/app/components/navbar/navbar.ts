@@ -10,4 +10,13 @@ import { CommonModule } from '@angular/common';
 })
 export class Navbar {
   constructor(public authService: AuthService) {}
+
+  getUserFullName(): string {
+  const email = this.authService.userState().user?.sub;
+  if (!email) return '';
+  const namePart = email.split('@')[0]; // maria.garcia
+  const parts = namePart.split('.');
+  // İlk harfleri büyük yap
+  return parts.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(' ');
+}
 }

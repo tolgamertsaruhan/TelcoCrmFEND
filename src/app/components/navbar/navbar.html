@@ -2,13 +2,15 @@
   <!-- Logo -->
   <div class="flex items-center text-white text-2xl font-semibold">
     <div class="flex items-center">
-    <img 
-      src="assests/logo.png" 
-      alt="Etiya Logo" 
-      class="w-[99px] h-[25.77px] object-contain ml-2 mt-[2px]"
-    />
-  </div>
-    <div class="flex items-center pl-3 border-l-2 border-orange-500 text-orange-500 font-normal ml-1">
+      <img
+        src="assests/logo.png"
+        alt="Etiya Logo"
+        class="w-[99px] h-[25.77px] object-contain ml-2 mt-[2px]"
+      />
+    </div>
+    <div
+      class="flex items-center pl-3 border-l-2 border-orange-500 text-orange-500 font-normal ml-1"
+    >
       <span>CRMlite</span>
     </div>
   </div>
@@ -24,15 +26,29 @@
 
     <!-- Giriş durumu -->
     <ng-container *ngIf="authService.userState().isLoggedIn; else notLogged">
-      <div class="flex items-center p-1 border border-white rounded-full space-x-2">
-        <div class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-600 border-2 border-white">
+      <div class="flex items-center p-1 rounded-full space-x-2">
+        <div
+          class="flex items-center justify-center w-8 h-8 rounded-full bg-gray-600 border-2 border-white"
+        >
           <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+            <path
+              fill-rule="evenodd"
+              d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+              clip-rule="evenodd"
+            ></path>
           </svg>
         </div>
-        <div class="flex flex-col text-right pr-1 leading-tight">
-          <span class="text-sm font-bold">{{ authService.userState().user?.sub }}</span>
-          <span class="text-xs text-gray-400">CRM User</span>
+        <div class="flex flex-col text-right pr-[8px] leading-[1.1]">
+          <span
+            class="text-sm font-semibold text-white tracking-wide mt-[2px] h-[21.76px] flex items-center justify-end"
+          >
+            {{ getUserFullName() }}
+          </span>
+          <span
+            class="text-[13px] text-gray-400 font-medium h-[20.21px] flex items-center justify-end"
+          >
+            CRM Specialist
+          </span>
         </div>
       </div>
 
@@ -47,8 +63,8 @@
 
     <!-- Kullanıcı giriş yapmamışsa -->
     <ng-template #notLogged>
-      <a 
-        routerLink="/login" 
+      <a
+        routerLink="/login"
         class="ml-3 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition"
       >
         Giriş Yap

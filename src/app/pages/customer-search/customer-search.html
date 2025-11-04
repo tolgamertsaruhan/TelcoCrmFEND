@@ -1,10 +1,9 @@
 <app-navbar></app-navbar>
 
-<div class="flex h-screen bg-gray-100 p-4 font-inter">
+<div class="flex h-185 bg-gray-100 p-4 font-inter">
   <app-sidebar></app-sidebar>
-  <!-- Ana İçerik: Arama Filtresi ve Sonuçları -->
+  
   <div class="flex-grow bg-white rounded-r-xl shadow-2xl flex relative overflow-hidden">
-    <!-- Arka plan görseli (Görsellerdeki soyut deseni taklit ediyoruz) -->
     <div
       class="absolute inset-0 z-0 opacity-10 bg-no-repeat bg-cover bg-center"
       style="
@@ -12,110 +11,104 @@
       "
     ></div>
 
-    <!-- 1. Arama Filtresi Bölümü -->
-    <div class="w-80 p-6 bg-white bg-opacity-90 z-10 shadow-lg border-r border-gray-200">
+    <div class="w-72 h-full p-6 bg-white bg-opacity-90 z-10 shadow-lg border-r border-gray-200 flex flex-col">
       <h2 class="text-xl font-bold mb-6 text-gray-800">SEARCH FILTER</h2>
-      <form class="space-y-4" (ngSubmit)="search()" #searchFormRef="ngForm">
-        <!-- Customer ID -->
-        <div>
-          <label class="block text-sm font-medium text-gray-600">Customer ID</label>
-          <input
-            type="text"
-            name="id"
-            [(ngModel)]="searchForm.id"
-            (ngModelChange)="onChange()"
-            [disabled]="disabledFields.id"
-            class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
-          />
+      <form class="space-y-4 flex-grow flex flex-col justify-between" (ngSubmit)="search()" #searchFormRef="ngForm">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-600">Customer ID</label>
+            <input
+              type="text"
+              name="id"
+              [(ngModel)]="searchForm.id"
+              (ngModelChange)="onChange()"
+              [disabled]="disabledFields.id"
+              class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-600">NAT ID</label>
+            <input
+              type="text"
+              name="nationalId"
+              [(ngModel)]="searchForm.nationalId"
+              (ngModelChange)="onChange()"
+              [disabled]="disabledFields.nationalId"
+              class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-600">Account Number</label>
+            <input
+              type="text"
+              name="customerNumber"
+              [(ngModel)]="searchForm.accountNumber"
+              (ngModelChange)="onChange()"
+              [disabled]="disabledFields.accountNumber"
+              class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-600">GSM Number</label>
+            <input
+              type="text"
+              name="gsmNumber"
+              [(ngModel)]="searchForm.gsmNumber"
+              (ngModelChange)="onChange()"
+              [disabled]="disabledFields.gsmNumber"
+              class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
+            />
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-600">First Name</label>
+            <input
+              type="text"
+              name="firstName"
+              [(ngModel)]="searchForm.firstName"
+              (ngModelChange)="onChange()"
+              [disabled]="disabledFields.firstName"
+              class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
+              [ngClass]="{
+                'border-red-500':
+                  searchFormRef.submitted &&
+                  !searchForm.firstName &&
+                  !isFieldDisabled &&
+                  searchForm.lastName
+              }"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-600">Middle Name</label>
+            <input
+              type="text"
+              name="middleName"
+              [(ngModel)]="searchForm.middleName"
+              (ngModelChange)="onChange()"
+              [disabled]="disabledFields.middleName"
+              class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-600">Last Name</label>
+            <input
+              type="text"
+              name="lastName"
+              [(ngModel)]="searchForm.lastName"
+              (ngModelChange)="onChange()"
+              [disabled]="disabledFields.lastName"
+              class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
+            />
+          </div>
         </div>
 
-        <!-- NAT ID -->
-        <div>
-          <label class="block text-sm font-medium text-gray-600">NAT ID</label>
-          <input
-            type="text"
-            name="nationalId"
-            [(ngModel)]="searchForm.nationalId"
-            (ngModelChange)="onChange()"
-            [disabled]="disabledFields.nationalId"
-            class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
-          />
-        </div>
 
-        <!-- Account Number -->
-        <div>
-          <label class="block text-sm font-medium text-gray-600">Account Number</label>
-          <input
-            type="text"
-            name="customerNumber"
-            [(ngModel)]="searchForm.accountNumber"
-            (ngModelChange)="onChange()"
-            [disabled]="disabledFields.accountNumber"
-            class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
-          />
-        </div>
-
-        <!-- GSM Number -->
-        <div>
-          <label class="block text-sm font-medium text-gray-600">GSM Number</label>
-          <input
-            type="text"
-            name="gsmNumber"
-            [(ngModel)]="searchForm.gsmNumber"
-            (ngModelChange)="onChange()"
-            [disabled]="disabledFields.gsmNumber"
-            class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
-          />
-        </div>
-
-        <!-- First Name -->
-        <div>
-          <label class="block text-sm font-medium text-gray-600">First Name</label>
-          <input
-            type="text"
-            name="firstName"
-            [(ngModel)]="searchForm.firstName"
-            (ngModelChange)="onChange()"
-            [disabled]="disabledFields.firstName"
-            class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
-            [ngClass]="{
-              'border-red-500':
-                searchFormRef.submitted &&
-                !searchForm.firstName &&
-                !isFieldDisabled &&
-                searchForm.lastName
-            }"
-          />
-        </div>
-
-        <!-- Middle Name -->
-        <div>
-          <label class="block text-sm font-medium text-gray-600">Middle Name</label>
-          <input
-            type="text"
-            name="middleName"
-            [(ngModel)]="searchForm.middleName"
-            (ngModelChange)="onChange()"
-            [disabled]="disabledFields.middleName"
-            class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
-          />
-        </div>
-
-        <!-- Last Name -->
-        <div>
-          <label class="block text-sm font-medium text-gray-600">Last Name</label>
-          <input
-            type="text"
-            name="lastName"
-            [(ngModel)]="searchForm.lastName"
-            (ngModelChange)="onChange()"
-            [disabled]="disabledFields.lastName"
-            class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
-          />
-        </div>
-
-        <!-- Butonlar -->
-        <div class="flex justify-between pt-6">
+        <div class="flex justify-between pt-6 mt-auto">
           <button
             type="button"
             (click)="clearSearch()"
@@ -134,11 +127,9 @@
       </form>
     </div>
 
-    <!-- 2. Arama Sonuçları Bölümü -->
-    <div class="flex-grow p-6 z-10 relative">
+    <div class="flex-grow p-6 z-10 relative flex flex-col h-full">
       <h2 class="text-xl font-bold mb-4 text-gray-800">SEARCH RESULTS</h2>
 
-      <!-- YÜKLEME DURUMU -->
       <div
         *ngIf="isLoading"
         class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-80 z-20"
@@ -148,10 +139,9 @@
         ></div>
       </div>
 
-      <!-- BAŞLANGIÇ/BOŞ ARAMA DURUMU (image_17cea7.png) -->
       <div
         *ngIf="!searchResults && !isAnyFieldFilled"
-        class="flex flex-col items-center justify-center h-full text-center"
+        class="flex flex-col items-center justify-center flex-grow text-center"
       >
         <p class="text-3xl text-gray-600 font-light mb-6">Would you like to create the customer?</p>
         <button
@@ -179,10 +169,9 @@
         </button>
       </div>
 
-      <!-- NO CUSTOMER FOUND DURUMU (image_17d2e5.png) -->
       <div
         *ngIf="searchResults && searchResults.length === 0"
-        class="flex flex-col items-center justify-center h-full text-center"
+        class="flex flex-col items-center justify-center flex-grow text-center"
       >
         <p class="text-4xl text-red-600 font-serif font-bold italic mb-6">No customer found !</p>
         <p class="text-2xl text-gray-600 font-light mb-6">Would you like to create the customer?</p>
@@ -213,9 +202,9 @@
 
       <div
         *ngIf="searchResults && searchResults.length > 0"
-        class="overflow-x-auto border border-gray-200 rounded-lg shadow-lg"
+        class="overflow-x-auto border border-gray-200 rounded-lg shadow-lg flex-grow flex flex-col"
       >
-        <div class="relative max-h-[79vh] overflow-y-auto">
+        <div class="relative overflow-y-auto flex-grow">
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-100 sticky top-0 z-10">
               <tr>
@@ -298,29 +287,32 @@
             </tbody>
           </table>
         </div>
-        <div class="flex justify-between mt-4">
-          <button
-            (click)="prevPage()"
-            [disabled]="currentPage === 0 || isLoading"
-            class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
-          >
-            Previous
-          </button>
+        
+        <div class="p-3 bg-white border-t border-gray-200">
+            <div class="flex justify-between">
+                <button
+                    (click)="prevPage()"
+                    [disabled]="currentPage === 0 || isLoading"
+                    class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
+                >
+                    Previous
+                </button>
 
-          <span class="text-gray-700 font-medium">Page {{ currentPage + 1 }}</span>
+                <span class="text-gray-700 font-medium self-center">Page {{ currentPage + 1 }}</span>
 
-          <button
-            (click)="nextPage()"
-            [disabled]="!searchResults || searchResults.length < pageSize || isLoading"
-            class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
-        <div
-          class="p-3 text-sm text-gray-500 text-right bg-gray-50 border-t border-gray-200 rounded-b-lg"
-        >
-          {{ searchResults.length }}/{{ searchResults.length }}
+                <button
+                    (click)="nextPage()"
+                    [disabled]="!searchResults || searchResults.length < pageSize || isLoading"
+                    class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
+                >
+                    Next
+                </button>
+            </div>
+            <div
+                class="mt-2 text-sm text-gray-500 text-right"
+            >
+                {{ searchResults.length }}/{{ searchResults.length }}
+            </div>
         </div>
       </div>
     </div>

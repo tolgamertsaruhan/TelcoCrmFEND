@@ -203,6 +203,7 @@ export class CustomerSearch implements OnInit {
   if (this.searchResults && this.searchResults.length === this.pageSize) {
     this.currentPage++;
     this.search();
+    this.cdr.detectChanges();
   }
 }
 
@@ -210,6 +211,7 @@ prevPage(): void {
   if (this.currentPage > 0) {
     this.currentPage--;
     this.search();
+    this.cdr.detectChanges();
   }
 }
   /*updatePaginatedResults(): void {

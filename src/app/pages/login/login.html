@@ -29,7 +29,7 @@
       <form [formGroup]="loginForm" (ngSubmit)="submit()">
         <!-- Username -->
         <div class="mb-4">
-          <label class="block text-white text-xs font-medium mb-2">Username</label>
+          <label class="block text-white text-xs font-medium mb-2">Email</label>
           <input
             type="email"
             formControlName="email"
@@ -37,38 +37,83 @@
             class="w-full px-4 py-2 rounded-full text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500"
             style="background-color: #e8e8ee;"
           />
+          <div
+          *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid"
+          class="text-red-300 text-xs mt-1 ml-3"
+        >
+          Please enter a valid ETIYA email.
+        </div>
         </div>
 
         <!-- Password -->
         <div class="mb-6">
-          <label class="block text-white text-xs font-medium mb-2">Password</label>
-          <div class="relative">
-            <input
-              [type]="showPassword ? 'text' : 'password'"
-              formControlName="password"
-              placeholder=""
-              class="w-full px-4 py-2 rounded-full text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 pr-10"
-              style="background-color: #e8e8ee;"
-            />
-            <button
-              type="button"
-              *ngIf="loginForm.get('password')?.value"
-              (click)="togglePasswordVisibility()"
-              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-gray-800 focus:outline-none"
-            >
-              <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
-                <circle cx="12" cy="12" r="3"></circle>
-              </svg>
-              <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
-                <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
-                <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
-                <line x1="2" y1="2" x2="22" y2="22"></line>
-              </svg>
-            </button>
-          </div>
-        </div>
+  <label class="block text-white text-xs font-medium mb-2">Password</label>
+  
+  <!-- Input + icon container -->
+  <div class="relative flex flex-col">
+    <div class="relative">
+      <input
+        [type]="showPassword ? 'text' : 'password'"
+        formControlName="password"
+        placeholder=""
+        class="w-full px-4 py-2 rounded-full text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-orange-500 pr-10"
+        style="background-color: #e8e8ee;"
+      />
+      <button
+        type="button"
+        *ngIf="loginForm.get('password')?.value"
+        (click)="togglePasswordVisibility()"
+        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-800 focus:outline-none"
+      >
+        <svg
+          *ngIf="!showPassword"
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+        <svg
+          *ngIf="showPassword"
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+          <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
+          <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
+          <line x1="2" y1="2" x2="22" y2="22"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Hata mesajı alanı sabit yükseklikte -->
+    <div class="min-h-[18px] mt-1 ml-3">
+      <div
+        *ngIf="
+          loginForm.get('password')?.invalid &&
+          (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)
+        "
+        class="text-red-300 text-xs"
+      >
+        Password must be at least 8 characters with uppercase, lowercase, number and special character.
+      </div>
+    </div>
+  </div>
+</div>
 
         <!-- Login Butonu -->
         <button

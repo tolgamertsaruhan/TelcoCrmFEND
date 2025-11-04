@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import {
+  AbstractControl,
   FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
   FormsModule,
   ReactiveFormsModule,
+  ValidationErrors,
   Validators,
 } from '@angular/forms';
 import { CustomerCreationService } from '../../../../services/customer-creation-service';
@@ -36,6 +38,20 @@ export class ContactMediumInfo {
     this.buildForm();
   }
 
+  // Component'in üst kısmında custom validator fonksiyonu
+  phoneStartsWith5Validator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    if (!value) return null; // Boşsa kontrol etme
+
+    const phoneStr = value.toString().trim();
+    if (phoneStr.length > 0 && !phoneStr.startsWith('5')) {
+      return { notStartsWith5: true };
+    }
+    return null;
+  }
+
+  
+
   buildForm() {
     const state = this.customerService.state();
 
@@ -48,7 +64,14 @@ export class ContactMediumInfo {
       mobilePhones: this.fb.array(
         (
           state.createContactMediumRequests?.filter((x: any) => x.type === 'MOBILE_PHONE') ?? ['']
-        ).map((x: any) => new FormControl(x.value || '', Validators.required))
+        ).map(
+          (x: any) =>
+            new FormControl(x.value || '', [
+              Validators.required,
+              Validators.pattern(/^\d{10}$/),
+              this.phoneStartsWith5Validator.bind(this),
+            ])
+        )
       ),
       homePhones: this.fb.array(
         (state.createContactMediumRequests?.filter((x: any) => x.type === 'HOME_PHONE') ?? []).map(
@@ -65,9 +88,15 @@ export class ContactMediumInfo {
     // Eğer state’te hiçbir email yoksa en az bir tane ekleyelim:
     if (this.emails.length === 0) this.emails.push(new FormControl('', [Validators.email]));
     if (this.mobilePhones.length === 0)
-      this.mobilePhones.push(new FormControl('', Validators.required));
+  this.mobilePhones.push(
+    new FormControl('', [
+      Validators.required,
+      Validators.pattern(/^\d{10}$/),
+      this.phoneStartsWith5Validator.bind(this)
+    ])
+  );
     if (this.homePhones.length === 0) this.homePhones.push(new FormControl('')); // validator yok
-    if (this.faxes.length === 0) this.faxes.push(new FormControl('')); 
+    if (this.faxes.length === 0) this.faxes.push(new FormControl(''));
   }
 
   get emails() {

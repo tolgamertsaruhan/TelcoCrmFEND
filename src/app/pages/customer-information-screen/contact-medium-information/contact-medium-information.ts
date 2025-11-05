@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ContactMedium } from '../../../models/individualcustomer/requests/CreateCustomerModel';
@@ -20,11 +20,13 @@ export class ContactMediumInformation {
   customerId!: string;
   isEditing = false;
   originalData: CreatedContactMediumResponse[] = [];
+  
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -39,6 +41,73 @@ export class ContactMediumInformation {
 
     this.loadContactInfo();
   }
+
+  // TELEFON FORMATLAMA İÇİN YENİ METODLAR
+formatPhoneNumber(value: string): string {
+  if (!value) return '';
+  
+  // Sadece rakamları al
+  const numbers = value.replace(/\D/g, '');
+  
+  // Hiç rakam yoksa boş dön
+  if (numbers.length === 0) return '';
+  
+  // Format: (XXX) XXX-XXXX
+  if (numbers.length <= 3) {
+    return `(${numbers}`;
+  } else if (numbers.length <= 6) {
+    return `(${numbers.slice(0, 3)}) ${numbers.slice(3)}`;
+  } else {
+    return `(${numbers.slice(0, 3)}) ${numbers.slice(3, 6)}-${numbers.slice(6, 10)}`;
+  }
+}
+
+onMobilePhoneInput(event: any): void {
+  const input = event.target;
+  const cursorPosition = input.selectionStart;
+  
+  // Sadece rakamları al
+  const numbers = input.value.replace(/\D/g, '');
+  
+  // Form control'ü sadece rakamlarla güncelle (backend'e gidecek değer)
+  this.contactForm.patchValue({
+    mobilePhone: numbers
+  }, { emitEvent: false });
+  
+  // Input'u formatlanmış haliyle göster
+  const formatted = this.formatPhoneNumber(numbers);
+  input.value = formatted;
+  
+  // Cursor pozisyonunu ayarla
+  if (numbers.length > 0) {
+    this.setCursorPosition(input, cursorPosition, formatted.length, numbers.length);
+  }
+}
+
+private setCursorPosition(input: any, oldPosition: number, formattedLength: number, numbersLength: number): void {
+  let newPosition = oldPosition;
+  
+  // İlk rakamı yazarken parantez açıldığında cursor'u parantezin içine al
+  if (numbersLength === 1 && formattedLength === 2) {
+    newPosition = 2;
+  } else {
+    const value = input.value;
+    
+    // Eğer kullanıcı parantez, boşluk veya tire üzerine yazdıysa cursor'u ayarla
+    if (oldPosition <= formattedLength) {
+      const char = value[oldPosition - 1];
+      if (char === '(' || char === ')' || char === ' ' || char === '-') {
+        newPosition = oldPosition + 1;
+      }
+    }
+  }
+  
+  setTimeout(() => {
+    input.setSelectionRange(newPosition, newPosition);
+  }, 0);
+}
+// TELEFON FORMATLAMA METODLARI BİTİŞ
+
 
   loadContactInfo(): void {
     this.http.get<CreatedContactMediumResponse[]>(
@@ -74,6 +143,7 @@ export class ContactMediumInformation {
       });
 
       this.contactForm.patchValue(formValues);
+      this.cdr.detectChanges(); 
       //this.originalData = { ...formValues };
       this.originalData = res; 
       this.contactForm.disable(); // gerekiyorsa tekrar disable et

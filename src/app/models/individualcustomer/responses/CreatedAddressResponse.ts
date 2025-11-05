@@ -3,7 +3,7 @@ interface CreatedAddressResponse {
   street: string;
   houseNumber: string;
   description: string;
-  isDefault: boolean;
+  default: boolean;
   districtId: string;
   customerId: string;
 }

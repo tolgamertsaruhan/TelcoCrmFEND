@@ -223,7 +223,7 @@ export class AddressInformation {
                 street: address.street,
                 houseNumber: address.houseNumber,
                 description: address.description,
-                isDefault: address.isDefault
+                isDefault: address.default
               });
 
               this.cdr.detectChanges();
@@ -350,6 +350,7 @@ const formValue = this.addressForm.value;
         error: (err) => console.error('Error updating address:', err)
       });
     }
+    
 
   }
 

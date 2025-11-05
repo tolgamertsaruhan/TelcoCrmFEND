@@ -5,14 +5,25 @@
         <div class="space-y-4">
             <div 
                 *ngFor="let address of addresses" 
+                
                 class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200 shadow-sm transition-all duration-300 hover:shadow-md hover:border-orange-200"
             >
+            
                 <div class="flex items-center space-x-4">
-                    <span *ngIf="address.isDefault" class="text-orange-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
-                        </svg>
-                    </span>
+                    <span class="text-orange-500">
+  <ng-container *ngIf="address.default; else notDefault">
+    <!-- 🟠 Default adres: içi dolu -->
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+      <circle cx="12" cy="12" r="8" />
+    </svg>
+  </ng-container>
+  <ng-template #notDefault>
+    <!-- ⚪ Non-default adres: içi boş -->
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="8" />
+    </svg>
+  </ng-template>
+</span>
                     <p class="text-gray-700 font-medium">
                         {{ cityNames[address.districtId] || 'City' }}, {{ districtNames[address.districtId] || 'District' }}, {{ address.street }} No:{{ address.houseNumber }}
                     </p>

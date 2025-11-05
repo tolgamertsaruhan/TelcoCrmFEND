@@ -117,7 +117,7 @@ export class BillingAccountInformation implements OnInit {
     });
 
     // Varsayılan adresi seç
-    const defaultAddr = this.addresses.find(a => a.isDefault === true);
+    const defaultAddr = this.addresses.find(a => a.default === true);
     if (defaultAddr) {
       this.accountForm.patchValue({ addressId: defaultAddr.id });
     }

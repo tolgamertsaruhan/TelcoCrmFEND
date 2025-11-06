@@ -1,4 +1,6 @@
 <div class="p-6 md:p-8">
+
+
     
     <div class="bg-white/80 backdrop-blur-sm p-8 lg:p-10 rounded-2xl shadow-2xl border border-gray-100/50 relative overflow-hidden">
         
@@ -14,6 +16,27 @@
                 </svg>
             </button>
         </div>
+
+         <!-- Success Notification - EN ÜSTE EKLE -->
+<div *ngIf="showNotification" 
+     class="fixed top-5 left-5 z-[9999] animate-slide-in-left transition-all"
+     [ngClass]="{ 'fade-out': isFadingOut }">
+  <div class="flex items-center gap-3 bg-white px-6 py-4 rounded-lg border-2 border-green-500 shadow-xl">
+    <svg class="w-6 h-6 text-green-500 flex-shrink-0" 
+         xmlns="http://www.w3.org/2000/svg" 
+         viewBox="0 0 24 24" 
+         fill="none" 
+         stroke="currentColor" 
+         stroke-width="2">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+    <span class="font-medium text-green-800">
+      Contact Medium has been successfully saved
+    </span>
+  </div>
+</div>
+
+
 
         <form [formGroup]="contactForm" class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
             

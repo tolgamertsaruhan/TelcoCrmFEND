@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ContactMedium } from '../../../models/individualcustomer/requests/CreateCustomerModel';
@@ -20,13 +20,18 @@ export class ContactMediumInformation {
   customerId!: string;
   isEditing = false;
   originalData: CreatedContactMediumResponse[] = [];
+
+   // Notification için yeni property
+  showNotification = false;
+  isFadingOut = false;
   
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
     private route: ActivatedRoute,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone
   ) {}
 
   ngOnInit(): void {
@@ -247,16 +252,45 @@ private setCursorPosition(input: any, oldPosition: number, formattedLength: numb
       ? this.http.put(`http://localhost:8091/customerservice/api/contactmediums`, contact)
       : this.http.post(`http://localhost:8091/customerservice/api/contactmediums`, contact);
 
-    request$.subscribe({
-      next: () => console.log(`Saved ${contact.type}`),
-      error: (err) => console.error(`Error saving ${contact.type}:`, err)
+          request$.subscribe({
+        next: () => console.log(`Saved ${contact.type}`),
+        error: (err) => console.error(`Error saving ${contact.type}:`, err)
+      });
     });
-  });
+ 
+    // Alert yerine özel notification göster
+    this.showSuccessNotification();
+    this.isEditing = false;
+    this.contactForm.disable();
+  }
 
-  alert('Contact information saved successfully!');
+  /*alert('Contact information saved successfully!');
   this.isEditing = false;
   this.contactForm.disable();
-  }
+  }*/
+
+  showSuccessNotification(): void {
+  this.showNotification = true;
+  this.isFadingOut = false;
+  this.cdr.detectChanges(); // anında DOM’a yansısın
+
+  setTimeout(() => {
+    // Angular zone içinde çalıştır -> değişiklik algılansın
+    this.ngZone.run(() => {
+      this.isFadingOut = true;
+      this.cdr.detectChanges();
+    });
+
+    // fade-out animasyonu bitince DOM’dan kaldır
+    setTimeout(() => {
+      this.ngZone.run(() => {
+        this.showNotification = false;
+        this.cdr.detectChanges();
+      });
+    }, 500); // fadeOut animasyon süresi
+  }, 4500); // 4.5 saniye sonra fade-out başlasın
+}
+
 
   onDelete(): void {
     if (!this.contactId) {

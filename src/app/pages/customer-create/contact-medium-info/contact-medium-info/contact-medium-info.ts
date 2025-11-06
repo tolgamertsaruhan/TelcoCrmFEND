@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -27,11 +27,16 @@ import { Sidebar } from '../../../../components/sidebar/sidebar';
 export class ContactMediumInfo {
   form!: FormGroup;
 
+  isSuccessModalOpen: boolean = false;
+  isFailedModalOpen: boolean = false;
+  successCustomerId!: string;;
+
   constructor(
     private fb: FormBuilder,
     private customerService: CustomerCreationService,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -147,6 +152,21 @@ export class ContactMediumInfo {
     // this.router.navigate(['../'], { relativeTo: this.route });
   }
 
+  // Pop-up Kapatma ve Başarılı Yönlendirme Metodu
+  closeSuccessModalAndNavigate(): void {
+    this.isSuccessModalOpen = false;
+    
+    if (this.successCustomerId) {
+      this.router.navigateByUrl(`/customer-information-screen/${this.successCustomerId}`);
+    }
+  }
+
+  // Pop-up Kapatma Metodu
+  closeFailedModal(): void {
+    this.isFailedModalOpen = false;
+   
+  }
+
   create() {
     if (!this.form.valid) {
       alert('Please fill required contact fields.');
@@ -200,16 +220,24 @@ export class ContactMediumInfo {
           const customerId = response.customerResponse?.id;
 
           if (customerId) {
-            alert('Customer created successfully!');
+            this.successCustomerId = customerId;
+            
+            this.isSuccessModalOpen = true;
+           
+            //alert('Customer created successfully!');
             // ID ile yönlendirme
-            this.router.navigateByUrl(`/customer-information-screen/${customerId}`);
+            //this.router.navigateByUrl(`/customer-information-screen/${customerId}`);
           } else {
             alert('Customer created, but ID not found in response.');
           }
+
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error(err);
-          alert('Error occurred: ' + err.message);
+          //alert('Error occurred: ' + err.message);
+          this.isFailedModalOpen = true;
+          this.cdr.detectChanges();
         },
       });
 

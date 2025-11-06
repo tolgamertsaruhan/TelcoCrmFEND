@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CityService } from '../../../services/city-service';
@@ -28,13 +28,18 @@ export class AddressInformation {
   districtNames: { [key: string]: string } = {};
   cityNames: { [key: string]: string } = {};
 
+  // Notification için yeni property
+  showNotification = false;
+  isFadingOut = false;
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private addressService: AddressService,
     private cityService: CityService,
     private districtService: DistrictService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone
   ) {}
 
   ngOnInit(): void {
@@ -326,6 +331,11 @@ const formValue = this.addressForm.value;
         error: (err) => console.error('Error creating address:', err)
       });
 
+      // Alert yerine özel notification göster
+    this.showSuccessNotification();
+    this.isEditing = false;
+    this.addressForm.disable()
+
       return;
     }
 
@@ -352,7 +362,34 @@ const formValue = this.addressForm.value;
     }
     
 
+    // Alert yerine özel notification göster
+    this.showSuccessNotification();
+    this.isEditing = false;
+    this.addressForm.disable()
   }
+
+  showSuccessNotification(): void {
+  this.showNotification = true;
+  this.isFadingOut = false;
+  this.cdr.detectChanges(); // anında DOM’a yansısın
+
+  setTimeout(() => {
+    // Angular zone içinde çalıştır -> değişiklik algılansın
+    this.ngZone.run(() => {
+      this.isFadingOut = true;
+      this.cdr.detectChanges();
+    });
+
+    // fade-out animasyonu bitince DOM’dan kaldır
+    setTimeout(() => {
+      this.ngZone.run(() => {
+        this.showNotification = false;
+        this.cdr.detectChanges();
+      });
+    }, 500); // fadeOut animasyon süresi
+  }, 4500); // 4.5 saniye sonra fade-out başlasın
+}
+
 
   confirmDelete(addressId: string): void {
     const confirmed = confirm('Are you sure you want to delete this address?');

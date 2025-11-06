@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { CustomerCreationService } from '../../../../services/customer-creation-service';
 import { Router } from '@angular/router';
@@ -25,7 +25,8 @@ constructor(
     private fb: FormBuilder,
     private router: Router,
     private http: HttpClient,
-    private customerService: CustomerCreationService
+    private customerService: CustomerCreationService,
+    private cdr: ChangeDetectorRef
   ) {}
 
 ngOnInit(){
@@ -52,7 +53,8 @@ buildForm() {
         Validators.minLength(11),
         Validators.maxLength(11),
         this.numericValidator
-      ]),
+      ],
+    [this.nationalIdExistsValidator.bind(this)]),
       gender: new FormControl(this.customerService.state().createIndividualCustomerRequest?.gender ?? '', Validators.required),
       motherName: new FormControl(this.customerService.state().createIndividualCustomerRequest?.motherName ?? '',nameValidators),
       fatherName: new FormControl(this.customerService.state().createIndividualCustomerRequest?.fatherName ?? '',nameValidators),
@@ -60,7 +62,7 @@ buildForm() {
     });
 
 // 🧠 TC Kimlik numarası değiştikçe backend kontrolü
-    this.form.get('nationalId')?.valueChanges
+    /*this.form.get('nationalId')?.valueChanges
       .pipe(
         debounceTime(600),
         switchMap(value =>
@@ -69,8 +71,29 @@ buildForm() {
           )
         )
       )
-      .subscribe(exists => (this.nationalIdExists = exists));
+      .subscribe(exists => {
+      this.nationalIdExists = exists;
+      this.cdr.detectChanges(); // 🧠 Angular’a manuel bildir
+    });*/
   }
+
+  nationalIdExistsValidator(control: AbstractControl) {
+  if (!control.value || control.value.length !== 11) {
+    return of(null); // boş veya eksikse sorgulama yapma
+  }
+
+  return this.http
+    .get<boolean>(`http://localhost:8091/customerservice/api/individual-customers/existsByNationalId/${control.value}`)
+    .pipe(
+      debounceTime(500),
+      catchError(() => of(false)),
+      switchMap(exists => {
+        this.nationalIdExists = exists; // UI'da da gösterebilmek için
+        this.cdr.detectChanges();
+        return of(exists ? { nationalIdExists: true } : null); // ✅ Angular validator sonucu
+      })
+    );
+}
 
 
   next() {

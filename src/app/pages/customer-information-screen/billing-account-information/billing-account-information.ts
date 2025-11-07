@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BillingAccountResponse } from '../../../models/individualcustomer/responses/BillingAccountResponse';
 import { ActivatedRoute } from '@angular/router';
@@ -38,6 +38,11 @@ export class BillingAccountInformation implements OnInit {
   isEditing = false;
   editingId: string | null = null;
 
+  // ✅ Notification properties
+  showNotificationUpdate = false;
+  showNotificationCreate = false;
+  isFadingOut = false;
+
   types = ['INDIVIDUAL', 'CORPORATE', 'PREPAID', 'POSTPAID'];
   statuses = ['ACTIVE', 'SUSPENDED', 'CLOSED'];
 
@@ -48,7 +53,8 @@ export class BillingAccountInformation implements OnInit {
     private addressService: AddressService,
     private cdr: ChangeDetectorRef,
     private cityService: CityService,
-    private districtService: DistrictService
+    private districtService: DistrictService,
+    private ngZone: NgZone
   ) {}
 
   ngOnInit(): void {
@@ -237,6 +243,7 @@ export class BillingAccountInformation implements OnInit {
         next: () => {
           this.isAdding = false;
           this.loadAccounts();
+          this.showSuccessNotificationCreate();
         },
         error: (err) => console.error('Error adding billing account', err)
       });
@@ -254,6 +261,7 @@ export class BillingAccountInformation implements OnInit {
           this.isEditing = false;
           this.editingId = null;
           this.loadAccounts();
+          this.showSuccessNotificationUpdate();
         },
         error: (err) => console.error('Error updating billing account', err)
       });
@@ -268,4 +276,59 @@ export class BillingAccountInformation implements OnInit {
       error: (err) => console.error('Error deleting billing account', err)
     });
   }
+
+  // =================== NOTIFICATION METHODS ===================
+  showSuccessNotificationUpdate(): void {
+    this.showNotificationUpdate = true;
+    this.isFadingOut = false;
+    this.cdr.detectChanges();
+
+    setTimeout(() => {
+      this.ngZone.run(() => {
+        this.isFadingOut = true;
+        this.cdr.detectChanges();
+      });
+
+      setTimeout(() => {
+        this.ngZone.run(() => {
+          this.showNotificationUpdate = false;
+          this.cdr.detectChanges();
+        });
+      }, 500);
+    }, 4500);
+  }
+
+  showSuccessNotificationCreate(): void {
+    this.showNotificationCreate = true;
+    this.isFadingOut = false;
+    this.cdr.detectChanges();
+
+    setTimeout(() => {
+      this.ngZone.run(() => {
+        this.isFadingOut = true;
+        this.cdr.detectChanges();
+      });
+
+      setTimeout(() => {
+        this.ngZone.run(() => {
+          this.showNotificationCreate = false;
+          this.cdr.detectChanges();
+        });
+      }, 500);
+    }, 4500);
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

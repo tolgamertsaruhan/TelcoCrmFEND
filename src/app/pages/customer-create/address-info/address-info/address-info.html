@@ -18,17 +18,27 @@
                     </button>
                 </div>
 
-                <div class="flex text-center font-medium bg-orange-500/90 text-white shadow-md">
-                    <div class="flex-1 py-3 hover:bg-orange-500/80 cursor-pointer">
-                        Customer Info
-                    </div>
-                    <div class="flex-1 py-3 border-b-2 border-amber-300 bg-orange-600/90">
-                        Address
-                    </div>
-                    <div class="flex-1 py-3 hover:bg-orange-500/80 cursor-pointer">
-                        Contact Medium
-                    </div>
-                </div>
+                <!-- Tabs -->
+        <div class="flex text-center font-medium bg-orange-500/90 text-white shadow-md">
+          <div 
+            class="flex-1 py-3 cursor-pointer hover:bg-orange-500/80" 
+            [ngClass]="{'border-b-2 border-amber-300 bg-orange-600/90': currentStep===1}" 
+            (click)="goToStep(1)">
+            Customer Info
+          </div>
+          <div 
+            class="flex-1 py-3 cursor-pointer hover:bg-orange-500/80" 
+            [ngClass]="{'border-b-2 border-amber-300 bg-orange-600/90': currentStep===2}" 
+            (click)="goToStep(2)">
+            Address
+          </div>
+          <div 
+            class="flex-1 py-3 cursor-pointer hover:bg-orange-500/80" 
+            [ngClass]="{'border-b-2 border-amber-300 bg-orange-600/90': currentStep===3}" 
+            (click)="goToStep(3)">
+            Contact Medium
+          </div>
+        </div>
             
                 <div class="p-6 md:p-8">
                     <form [formGroup]="form" class="space-y-6"> 

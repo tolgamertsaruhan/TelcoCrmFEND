@@ -146,10 +146,14 @@ export class AddressInfo  {
       ...this.form.getRawValue()
     };
     
-    const updated = {
-      ...this.customerService.state(),
-      addressRequestList: [formValue]
-    };
+     const updated = {
+    ...this.customerService.state(),
+    addressRequestList: [this.form.value],
+    _meta: {
+      ...this.customerService.state()._meta,
+      addressFormValid: this.form.valid // sadece frontend
+    }
+  };
     this.customerService.state.set(updated);
 
     this.router.navigateByUrl('/customer-create/customer-info');
@@ -161,12 +165,50 @@ export class AddressInfo  {
       return;
     }
 
-    const updated = {
-      ...this.customerService.state(),
-      addressRequestList: [this.form.value]
-    };
-
+     const updated = {
+    ...this.customerService.state(),
+    addressRequestList: [this.form.value],
+    _meta: {
+      ...this.customerService.state()._meta,
+      addressFormValid: this.form.valid // sadece frontend
+    }
+  };
     this.customerService.state.set(updated);
     this.router.navigateByUrl('/customer-create/contact-medium-info');
   }
+
+  currentStep = 2;
+
+  goToStep(step: number) {
+  const state = this.customerService.state();
+
+  // 💾 Mevcut formu state’e kaydet (disabled alanlar dahil)
+  const formValue = this.form.getRawValue();
+  const updated = {
+    ...state,
+    addressRequestList: [formValue],
+    _meta: {
+      ...state._meta,
+      addressFormValid: this.form.valid
+    }
+  };
+  this.customerService.state.set(updated);
+
+  switch (step) {
+    case 1:
+      this.router.navigate(['/customer-create/customer-info']);
+      break;
+    case 2:
+      // current tab
+      break;
+    case 3:
+      if (state._meta?.addressFormValid) {
+        this.router.navigate(['/customer-create/contact-medium-info']);
+      } else {
+        alert('Address form is not valid yet.');
+      }
+      break;
+  }
+}
+
 }

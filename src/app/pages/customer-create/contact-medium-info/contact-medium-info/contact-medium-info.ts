@@ -55,7 +55,38 @@ export class ContactMediumInfo {
     return null;
   }
 
-  
+  currentStep = 3;
+
+  goToStep(step: number) {
+  const state = this.customerService.state();
+
+  // 💾 Mevcut contact medium formunu kaydet
+  const contactMediums = [
+    ...this.emails.value.map((v) => ({ type: 'EMAIL', value: v, primary: false })),
+    ...this.mobilePhones.value.map((v) => ({ type: 'MOBILE_PHONE', value: v, primary: false })),
+    ...this.homePhones.value.map((v) => ({ type: 'HOME_PHONE', value: v, primary: false })),
+    ...this.faxes.value.map((v) => ({ type: 'FAX', value: v, primary: false })),
+  ];
+
+  const updated = {
+    ...state,
+    createContactMediumRequests: contactMediums
+  };
+  this.customerService.state.set(updated);
+
+  switch (step) {
+    case 1:
+      this.router.navigate(['/customer-create/customer-info']);
+      break;
+    case 2:
+      this.router.navigate(['/customer-create/address-info']);
+      break;
+    case 3:
+      // current tab
+      break;
+  }
+}
+
 
   buildForm() {
     const state = this.customerService.state();

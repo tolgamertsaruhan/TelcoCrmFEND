@@ -96,6 +96,30 @@ buildForm() {
 }
 
 
+currentStep = 1;
+
+goToStep(step: number) {
+  const state = this.customerService.state();
+
+  switch(step) {
+    case 1:
+      this.router.navigate(['/customer-create/customer-info']);
+      break;
+    case 2:
+      if (this.form.valid) {
+        this.customerService.setCustomerInfo(this.form.value);
+        this.router.navigate(['/customer-create/address-info']);
+      }
+      break;
+    case 3:
+      if (state._meta?.addressFormValid) {
+        this.router.navigate(['/customer-create/contact-medium-info']);
+      } else {
+        alert('Address form is not valid yet.');
+      }
+      break;
+  }
+}
   next() {
     if (!this.form.valid) {
       alert('Please fill all required fields.');

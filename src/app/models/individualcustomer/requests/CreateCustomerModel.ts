@@ -2,6 +2,7 @@ export interface CreateCustomerModel {
   createIndividualCustomerRequest?:Customer,
   addressRequestList?: Address[];
   createContactMediumRequests?: ContactMedium[];
+  _meta?: { addressFormValid?: boolean };
 }
 
 export interface Customer{

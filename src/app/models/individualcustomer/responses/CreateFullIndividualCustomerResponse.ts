@@ -32,4 +32,5 @@ export interface CreateFullIndividualCustomerResponse {
   customerResponse: CreatedIndividualCustomerResponse;
   addressResponse: CreatedAddressResponse[];
   createdContactMediumResponses: CreatedContactMediumResponse[];
+  
 }

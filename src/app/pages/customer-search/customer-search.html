@@ -30,13 +30,16 @@
           <div>
             <label class="block text-sm font-medium text-gray-600">NAT ID</label>
             <input
-              type="text"
-              name="nationalId"
-              [(ngModel)]="searchForm.nationalId"
-              (ngModelChange)="onChange()"
-              [disabled]="disabledFields.nationalId"
-              class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
-            />
+  type="text"
+  name="nationalId"
+  [(ngModel)]="searchForm.nationalId"
+  (ngModelChange)="onChange()"
+  [disabled]="disabledFields.nationalId"
+  maxlength="11"
+  pattern="[0-9]*"
+  (keypress)="allowOnlyNumbers($event, 11)"
+  class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
+/>
           </div>
 
           <div>
@@ -54,13 +57,16 @@
           <div>
             <label class="block text-sm font-medium text-gray-600">GSM Number</label>
             <input
-              type="text"
-              name="gsmNumber"
-              [(ngModel)]="searchForm.gsmNumber"
-              (ngModelChange)="onChange()"
-              [disabled]="disabledFields.gsmNumber"
-              class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
-            />
+  type="text"
+  name="gsmNumber"
+  [(ngModel)]="searchForm.gsmNumber"
+  (ngModelChange)="onChange()"
+  [disabled]="disabledFields.gsmNumber"
+  maxlength="10"
+  pattern="[0-9]*"
+  (keypress)="allowOnlyNumbers($event, 10)"
+  class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
+/>
           </div>
           
           <div>

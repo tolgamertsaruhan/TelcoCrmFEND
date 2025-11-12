@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormsModule, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 import { Navbar } from '../../components/navbar/navbar';
 import { CommonModule } from '@angular/common';
 import { IndividualCustomerSearchRequest } from '../../models/individualcustomer/requests/individualCustomerSearchRequest';
@@ -65,6 +65,22 @@ export class CustomerSearch implements OnInit {
     );
   }
   }
+
+allowOnlyNumbers(event: KeyboardEvent, maxLength: number): void {
+  const input = event.target as HTMLInputElement;
+  const charCode = event.which ? event.which : event.keyCode;
+
+  // Eğer sayı değilse engelle
+  if (charCode < 48 || charCode > 57) {
+    event.preventDefault();
+    return;
+  }
+
+  // Maksimum karakter sınırı
+  if (input.value.length >= maxLength) {
+    event.preventDefault();
+  }
+}
 
   clearSearch(): void {
     /*this.searchForm = {};

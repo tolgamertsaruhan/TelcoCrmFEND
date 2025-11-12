@@ -83,6 +83,7 @@
               [(ngModel)]="searchForm.firstName"
               (ngModelChange)="onChange()"
               [disabled]="disabledFields.firstName"
+              (keypress)="allowOnlyLetters($event)"
               class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
               [ngClass]="{
                 'border-red-500':
@@ -102,6 +103,7 @@
               [(ngModel)]="searchForm.middleName"
               (ngModelChange)="onChange()"
               [disabled]="disabledFields.middleName"
+              (keypress)="allowOnlyLetters($event)"
               class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
             />
           </div>
@@ -114,6 +116,7 @@
               [(ngModel)]="searchForm.lastName"
               (ngModelChange)="onChange()"
               [disabled]="disabledFields.lastName"
+              (keypress)="allowOnlyLetters($event)"
               class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
             />
           </div>

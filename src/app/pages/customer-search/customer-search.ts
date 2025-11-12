@@ -82,6 +82,15 @@ allowOnlyNumbers(event: KeyboardEvent, maxLength: number): void {
   }
 }
 
+allowOnlyLetters(event: KeyboardEvent): void {
+  const char = event.key;
+  const regex = /^[a-zA-ZğüşöçıİĞÜŞÖÇ\s]$/; // Türkçe karakterleri de dahil ettik
+
+  if (!regex.test(char)) {
+    event.preventDefault();
+  }
+}
+
   clearSearch(): void {
     /*this.searchForm = {};
     this.searchResults = null;

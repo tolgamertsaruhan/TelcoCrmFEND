@@ -19,9 +19,9 @@ export class Login {
   errorMessage: string | null = null;
   showPassword = false;
 
-  private emailRegex = /^[a-z]+\.[a-z]+@etiya\.com$/; // ETIYA_EMAIL_REGEX
+  //private emailRegex = /^[a-z]+\.[a-z]+@etiya\.com$/; // ETIYA_EMAIL_REGEX
   
-  private passwordRegex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-\=\[\]{};':"\\|,.<>/?]).{8,}$/; // STRONG_PASSWORD_REGEX
+  //private passwordRegex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-\=\[\]{};':"\\|,.<>/?]).{8,}$/; // STRONG_PASSWORD_REGEX
 
   constructor(private fb: FormBuilder, private auth: AuthService, private router: Router, private cd: ChangeDetectorRef) {}
 
@@ -34,8 +34,8 @@ export class Login {
     }
 
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.pattern(this.emailRegex)]],
-      password: ['', [Validators.required, Validators.pattern(this.passwordRegex)]]
+      email: ['', [Validators.required]],
+      password: ['', [Validators.required]]
     });
   }
 

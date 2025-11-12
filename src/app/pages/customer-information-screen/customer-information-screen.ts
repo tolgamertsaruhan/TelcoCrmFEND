@@ -37,7 +37,18 @@ export class CustomerInformationScreen {
     this.router.navigate([tab], { relativeTo: this.route });
   }
 
-  goBack(){
+ /* goBack(){
     this.router.navigate(['/customer-search']);
-  }
+  }*/
+
+    goBack() {
+  // Arama sonuçları ve form state'ini geri gönder
+  this.router.navigate(['/customer-search'], {
+    state: {
+      searchForm: history.state.searchForm,
+      searchResults: history.state.searchResults,
+      currentPage: history.state.currentPage
+    }
+  });
+}
 }

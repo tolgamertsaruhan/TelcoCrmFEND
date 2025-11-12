@@ -49,9 +49,19 @@ export class CustomerSearch implements OnInit {
     private cdr: ChangeDetectorRef
   ) { }
 
-  ngOnInit(): void {
+  /*ngOnInit(): void {
     this.checkAnyFieldFilled();
-  }
+  }*/
+
+    ngOnInit(): void {
+  const state = history.state;
+
+  if (state.searchForm) this.searchForm = state.searchForm;
+  if (state.searchResults) this.searchResults = state.searchResults;
+  if (state.currentPage) this.currentPage = state.currentPage;
+
+  this.checkAnyFieldFilled();
+}
 
   onChange(): void {
     //this.isNationalIdActive = !!this.searchForm.nationalId; 
@@ -291,7 +301,20 @@ prevPage(): void {
     return this.isIdLocked;
   }
 
-  goToCustomerInformation(customerId: string): void {
+ /* goToCustomerInformation(customerId: string): void {
   this.router.navigate([`customer-information-screen/`, customerId]);
+}*/
+
+goToCustomerInformation(customerId: string): void {
+  this.router.navigate(
+    [`customer-information-screen/`, customerId],
+    { 
+      state: { 
+        searchForm: this.searchForm, 
+        searchResults: this.searchResults, 
+        currentPage: this.currentPage 
+      }
+    }
+  );
 }
 }

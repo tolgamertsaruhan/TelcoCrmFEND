@@ -2,7 +2,7 @@
 
 <div class="flex h-185 bg-gray-100 p-4 font-inter">
   <app-sidebar></app-sidebar>
-  
+
   <div class="flex-grow bg-white rounded-r-xl shadow-2xl flex relative overflow-hidden">
     <div
       class="absolute inset-0 z-0 opacity-10 bg-no-repeat bg-cover bg-center"
@@ -11,9 +11,15 @@
       "
     ></div>
 
-    <div class="w-72 h-full p-6 bg-white bg-opacity-90 z-10 shadow-lg border-r border-gray-200 flex flex-col">
+    <div
+      class="w-72 h-full p-6 bg-white bg-opacity-90 z-10 shadow-lg border-r border-gray-200 flex flex-col"
+    >
       <h2 class="text-xl font-bold mb-6 text-gray-800">SEARCH FILTER</h2>
-      <form class="space-y-4 flex-grow flex flex-col justify-between" (ngSubmit)="search()" #searchFormRef="ngForm">
+      <form
+        class="space-y-4 flex-grow flex flex-col justify-between"
+        (ngSubmit)="search()"
+        #searchFormRef="ngForm"
+      >
         <div class="space-y-4">
           <div>
             <label class="block text-sm font-medium text-gray-600">Customer ID</label>
@@ -30,16 +36,16 @@
           <div>
             <label class="block text-sm font-medium text-gray-600">NAT ID</label>
             <input
-  type="text"
-  name="nationalId"
-  [(ngModel)]="searchForm.nationalId"
-  (ngModelChange)="onChange()"
-  [disabled]="disabledFields.nationalId"
-  maxlength="11"
-  pattern="[0-9]*"
-  (keypress)="allowOnlyNumbers($event, 11)"
-  class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
-/>
+              type="text"
+              name="nationalId"
+              [(ngModel)]="searchForm.nationalId"
+              (ngModelChange)="onChange()"
+              [disabled]="disabledFields.nationalId"
+              maxlength="11"
+              pattern="[0-9]*"
+              (keypress)="allowOnlyNumbers($event, 11)"
+              class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
+            />
           </div>
 
           <div>
@@ -57,18 +63,18 @@
           <div>
             <label class="block text-sm font-medium text-gray-600">GSM Number</label>
             <input
-  type="text"
-  name="gsmNumber"
-  [(ngModel)]="searchForm.gsmNumber"
-  (ngModelChange)="onChange()"
-  [disabled]="disabledFields.gsmNumber"
-  maxlength="10"
-  pattern="[0-9]*"
-  (keypress)="allowOnlyNumbers($event, 10)"
-  class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
-/>
+              type="text"
+              name="gsmNumber"
+              [(ngModel)]="searchForm.gsmNumber"
+              (ngModelChange)="onChange()"
+              [disabled]="disabledFields.gsmNumber"
+              maxlength="10"
+              pattern="[0-9]*"
+              (keypress)="allowOnlyNumbers($event, 10)"
+              class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
+            />
           </div>
-          
+
           <div>
             <label class="block text-sm font-medium text-gray-600">First Name</label>
             <input
@@ -112,7 +118,6 @@
             />
           </div>
         </div>
-
 
         <div class="flex justify-between pt-6 mt-auto">
           <button
@@ -262,7 +267,7 @@
             <tbody class="bg-white divide-y divide-gray-100">
               <tr
                 *ngFor="let customer of searchResults; let i = index"
-                class="hover:bg-orange-50  transition duration-100"
+                class="hover:bg-orange-50 transition duration-100"
               >
                 <td
                   class="px-4 py-3 whitespace-nowrap text-sm font-medium text-orange-600 underline cursor-pointer"
@@ -293,32 +298,30 @@
             </tbody>
           </table>
         </div>
-        
+
         <div class="p-3 bg-white border-t border-gray-200">
-            <div class="flex justify-between">
-                <button
-                    (click)="prevPage()"
-                    [disabled]="currentPage === 0 || isLoading"
-                    class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
-                >
-                    Previous
-                </button>
-
-                <span class="text-gray-700 font-medium self-center">Page {{ currentPage + 1 }}</span>
-
-                <button
-                    (click)="nextPage()"
-                    [disabled]="!searchResults || searchResults.length < pageSize || isLoading"
-                    class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
-                >
-                    Next
-                </button>
-            </div>
-            <div
-                class="mt-2 text-sm text-gray-500 text-right"
+          <div class="flex justify-between">
+            <button
+              (click)="prevPage()"
+              [disabled]="currentPage === 0 || isLoading"
+              class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
             >
-                {{ searchResults.length }}/{{ searchResults.length }}
-            </div>
+              Previous
+            </button>
+
+            <span class="text-gray-700 font-medium self-center">Page {{ currentPage + 1 }}</span>
+
+            <button
+              (click)="nextPage()"
+              [disabled]="!searchResults || searchResults.length < pageSize || isLoading"
+              class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+          <div class="mt-2 text-sm text-gray-500 text-right">
+            {{ searchResults.length }}/{{ searchResults.length }}
+          </div>
         </div>
       </div>
     </div>

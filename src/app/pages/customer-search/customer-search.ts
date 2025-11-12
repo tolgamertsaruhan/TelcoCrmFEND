@@ -246,7 +246,9 @@ prevPage(): void {
   }
 
   getGsmNumber(customer: IndividualCustomerSearchResponse): string {
-    if (!customer.contactMediumSearchList || customer.contactMediumSearchList.length === 0) {
+
+    return customer.contactMediumSearchList?.find(cm => cm.type === 'MOBILE_PHONE')?.value || 'N/A';
+    /*if (!customer.contactMediumSearchList || customer.contactMediumSearchList.length === 0) {
       return 'N/A';
     }
 
@@ -257,7 +259,7 @@ prevPage(): void {
     }
 
     // Yoksa ilk contact'ı al
-    return customer.contactMediumSearchList[0]?.value || 'N/A';
+    return customer.contactMediumSearchList[0]?.value || 'N/A';*/
   }
 
   get isFieldDisabled(): boolean {

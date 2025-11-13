@@ -7,6 +7,7 @@ import { IndividualCustomerSearchResponse } from '../../models/individualcustome
 import { CustomerSearchService } from '../../services/customer-search-service';
 import { Router } from '@angular/router';
 import { Sidebar } from "../../components/sidebar/sidebar";
+import { CustomerCreationService } from '../../services/customer-creation-service';
 
 @Component({
   selector: 'app-customer-search',
@@ -46,7 +47,8 @@ export class CustomerSearch implements OnInit {
   constructor(
     private customerSearchService: CustomerSearchService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private customerCreationService: CustomerCreationService
   ) { }
 
   /*ngOnInit(): void {
@@ -277,6 +279,7 @@ prevPage(): void {
   }*/
 
   goToCreateCustomer(): void {
+    this.customerCreationService.reset();
     this.router.navigate(['customer-create/customer-info']); 
   }
 

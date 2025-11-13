@@ -258,6 +258,7 @@ export class ContactMediumInfo {
             //alert('Customer created successfully!');
             // ID ile yönlendirme
             //this.router.navigateByUrl(`/customer-information-screen/${customerId}`);
+
           } else {
             alert('Customer created, but ID not found in response.');
           }

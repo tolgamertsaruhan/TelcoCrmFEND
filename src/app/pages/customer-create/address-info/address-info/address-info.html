@@ -1,137 +1,149 @@
 <div class="flex flex-col h-screen bg-gray-100">
-<app-navbar></app-navbar>
- 
+  <app-navbar></app-navbar>
+
   <div class="flex flex-1 overflow-hidden">
-<app-sidebar></app-sidebar>
- 
+    <app-sidebar></app-sidebar>
+
     <main class="flex-1 overflow-y-auto p-4 md:p-8">
-<div class="max-w-4xl mx-auto rounded-xl overflow-hidden bg-white shadow-xl">
-<div class="flex items-center p-3 md:p-4 bg-gray-200">
-<button
-
+      <div class="max-w-4xl mx-auto rounded-xl overflow-hidden bg-white shadow-xl">
+        <div class="flex items-center p-3 md:p-4 bg-gray-200">
+          <button
             (click)="goBackToSearch()"
-
             class="flex items-center text-gray-700 hover:text-gray-900 focus:outline-none"
->
-<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 mr-2"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              />
+            </svg>
+            <span class="text-base font-semibold">Create Customer</span>
+          </button>
+        </div>
 
-              stroke="currentColor">
-<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-
-                d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-</svg>
-<span class="text-base font-semibold">Create Customer</span>
-</button>
-</div>
- 
         <!-- Tabs -->
-<div class="flex text-center font-medium bg-orange-500/90 text-white shadow-md">
-<div class="flex-1 py-3 cursor-pointer hover:bg-orange-500/80"
-
-            [ngClass]="{'border-b-2 border-amber-300 bg-orange-600/90': currentStep===1}" (click)="goToStep(1)">
-
+        <div class="flex text-center font-medium bg-orange-500/90 text-white shadow-md">
+          <div
+            class="flex-1 py-3 cursor-pointer hover:bg-orange-500/80"
+            [ngClass]="{ 'border-b-2 border-amber-300 bg-orange-600/90': currentStep === 1 }"
+            (click)="goToStep(1)"
+          >
             Customer Info
-</div>
-<div class="flex-1 py-3 cursor-pointer hover:bg-orange-500/80"
-
-            [ngClass]="{'border-b-2 border-amber-300 bg-orange-600/90': currentStep===2}" (click)="goToStep(2)">
-
+          </div>
+          <div
+            class="flex-1 py-3 cursor-pointer hover:bg-orange-500/80"
+            [ngClass]="{ 'border-b-2 border-amber-300 bg-orange-600/90': currentStep === 2 }"
+            (click)="goToStep(2)"
+          >
             Address
-</div>
-<div class="flex-1 py-3 cursor-pointer hover:bg-orange-500/80"
-
-            [ngClass]="{'border-b-2 border-amber-300 bg-orange-600/90': currentStep===3}" (click)="goToStep(3)">
-
+          </div>
+          <div
+            class="flex-1 py-3 cursor-pointer hover:bg-orange-500/80"
+            [ngClass]="{ 'border-b-2 border-amber-300 bg-orange-600/90': currentStep === 3 }"
+            (click)="goToStep(3)"
+          >
             Contact Medium
-</div>
-</div>
- 
+          </div>
+        </div>
+
         <div class="p-6 md:p-8">
-<form [formGroup]="form" class="space-y-6">
- 
+          <form [formGroup]="form" class="space-y-6">
             <!-- City -->
-<div>
-<label class="block text-sm font-medium text-gray-700">
-
+            <div>
+              <label class="block text-sm font-medium text-gray-700">
                 City <span class="text-red-500">*</span>
-</label>
-<select formControlName="cityId" (change)="onCityChange($event)"
+              </label>
+              <select
+                formControlName="cityId"
+                (change)="onCityChange($event)"
+                class="mt-1 block w-full rounded-md border border-gray-300 shadow-inner focus:border-orange-500 focus:ring focus:ring-orange-500/50 sm:text-sm p-2.5 transition ease-in-out duration-150 appearance-none disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed enabled:bg-white"
+              >
+                <option value="" disabled selected>Select City</option>
+                <option *ngFor="let c of cities" [value]="c.id">{{ c.name }}</option>
+              </select>
+            </div>
 
-                class="mt-1 block w-full rounded-md border border-gray-300 shadow-inner focus:border-orange-500 focus:ring focus:ring-orange-500/50 sm:text-sm p-2.5 transition ease-in-out duration-150 appearance-none disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed enabled:bg-white">
-<option value="" disabled selected>Select City</option>
-<option *ngFor="let c of cities" [value]="c.id">{{ c.name }}</option>
-</select>
-</div>
- 
             <!-- District -->
-<div>
-<label class="block text-sm font-medium text-gray-700">
-
+            <div>
+              <label class="block text-sm font-medium text-gray-700">
                 District <span class="text-red-500">*</span>
-</label>
-<select formControlName="districtId" (change)="onDistrictChange($event)"
+              </label>
+              <select
+                formControlName="districtId"
+                (change)="onDistrictChange($event)"
+                class="mt-1 block w-full rounded-md border border-gray-300 shadow-inner focus:border-orange-500 focus:ring focus:ring-orange-500/50 sm:text-sm p-2.5 transition ease-in-out duration-150 appearance-none disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed enabled:bg-white"
+              >
+                <option value="" disabled selected>Select District</option>
+                <option *ngFor="let d of districts" [value]="d.id">{{ d.name }}</option>
+              </select>
+            </div>
 
-                class="mt-1 block w-full rounded-md border border-gray-300 shadow-inner focus:border-orange-500 focus:ring focus:ring-orange-500/50 sm:text-sm p-2.5 transition ease-in-out duration-150 appearance-none disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed enabled:bg-white">
-<option value="" disabled selected>Select District</option>
-<option *ngFor="let d of districts" [value]="d.id">{{ d.name }}</option>
-</select>
-</div>
- 
             <!-- Street -->
-<div>
-<label class="block text-sm font-medium text-gray-700">
-
+            <div>
+              <label class="block text-sm font-medium text-gray-700">
                 Street <span class="text-red-500">*</span>
-</label>
-<input type="text" formControlName="street"
+              </label>
+              <input
+                type="text"
+                formControlName="street"
+                class="mt-1 block w-full rounded-md border border-gray-300 shadow-inner focus:border-orange-500 focus:ring focus:ring-orange-500/50 sm:text-sm p-2.5 transition ease-in-out duration-150 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed enabled:bg-white"
+              />
+            </div>
 
-                class="mt-1 block w-full rounded-md border border-gray-300 shadow-inner focus:border-orange-500 focus:ring focus:ring-orange-500/50 sm:text-sm p-2.5 transition ease-in-out duration-150 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed enabled:bg-white" />
-</div>
- 
             <!-- House Number & Description -->
-<div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-<div>
-<label class="block text-sm font-medium text-gray-700">
-
-                  House Number <span class="text-red-500">*</span>
-</label>
-<input type="text" formControlName="houseNumber"
-
-                  class="mt-1 block w-full rounded-md border border-gray-300 shadow-inner focus:border-orange-500 focus:ring focus:ring-orange-500/50 sm:text-sm p-2.5 transition ease-in-out duration-150 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed enabled:bg-white" />
-</div>
- 
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
               <div>
-<label class="block text-sm font-medium text-gray-700">
+                <label class="block text-sm font-medium text-gray-700">
+                  House Number <span class="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  formControlName="houseNumber"
+                  class="mt-1 block w-full rounded-md border border-gray-300 shadow-inner focus:border-orange-500 focus:ring focus:ring-orange-500/50 sm:text-sm p-2.5 transition ease-in-out duration-150 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed enabled:bg-white"
+                />
+              </div>
 
+              <div>
+                <label class="block text-sm font-medium text-gray-700">
                   Description <span class="text-red-500">*</span>
-</label>
-<input type="text" formControlName="description"
+                </label>
+                <input
+                  type="text"
+                  formControlName="description"
+                  class="mt-1 block w-full rounded-md border border-gray-300 shadow-inner focus:border-orange-500 focus:ring focus:ring-orange-500/50 sm:text-sm p-2.5 transition ease-in-out duration-150 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed enabled:bg-white"
+                />
+              </div>
+            </div>
 
-                  class="mt-1 block w-full rounded-md border border-gray-300 shadow-inner focus:border-orange-500 focus:ring focus:ring-orange-500/50 sm:text-sm p-2.5 transition ease-in-out duration-150 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed enabled:bg-white" />
-</div>
-</div>
- 
             <!-- Buttons -->
-<div class="flex justify-end pt-4 space-x-3">
-<button type="button" (click)="back()"
-
-                class="px-6 py-2 border border-gray-300 text-gray-700 rounded-md shadow-md bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 text-base font-medium">
-
+            <div class="flex justify-end pt-4 space-x-3">
+              <button
+                type="button"
+                (click)="back()"
+                class="px-6 py-2 border border-gray-300 text-gray-700 rounded-md shadow-md bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 text-base font-medium"
+              >
                 Previous
-</button>
-<button type="button" (click)="next()" [disabled]="form.invalid"
-
-                class="px-6 py-2 border border-gray-300 text-gray-700 rounded-md shadow-md bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 text-base font-medium transition ease-in-out duration-150 disabled:opacity-50 disabled:cursor-not-allowed">
-
+              </button>
+              <button
+                type="button"
+                (click)="next()"
+                [disabled]="form.invalid"
+                class="px-6 py-2 border border-gray-300 text-gray-700 rounded-md shadow-md bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 text-base font-medium transition ease-in-out duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 Next
-</button>
-</div>
- 
+              </button>
+            </div>
           </form>
+        </div>
+      </div>
+    </main>
+  </div>
 </div>
-</div>
-</main>
-</div>
-</div>
-
- 

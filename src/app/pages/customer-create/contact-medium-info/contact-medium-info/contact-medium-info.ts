@@ -185,11 +185,11 @@ export class ContactMediumInfo {
 
   // Pop-up Kapatma ve Başarılı Yönlendirme Metodu
   closeSuccessModalAndNavigate(): void {
-    this.isSuccessModalOpen = false;
-    
-    if (this.successCustomerId) {
-      this.router.navigateByUrl(`/customer-information-screen/${this.successCustomerId}`);
-    }
+   if (this.successCustomerId) {
+    this.router.navigate(['/customer-information-screen', this.successCustomerId], {
+      queryParams: { created: 'true' }
+    });
+  }
   }
 
   // Pop-up Kapatma Metodu
@@ -258,6 +258,14 @@ export class ContactMediumInfo {
             //alert('Customer created successfully!');
             // ID ile yönlendirme
             //this.router.navigateByUrl(`/customer-information-screen/${customerId}`);
+
+            
+   if (this.successCustomerId) {
+    this.router.navigate(['/customer-information-screen', this.successCustomerId], {
+      queryParams: { created: 'true' }
+    });
+  }
+
 
           } else {
             alert('Customer created, but ID not found in response.');

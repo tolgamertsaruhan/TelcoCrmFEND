@@ -22,6 +22,7 @@ export class CustomerInformation {
   originalData: any;
   customerId!: string;
   isEditing = false;
+  showToast = false;
 
   constructor(
     private fb: FormBuilder,
@@ -72,7 +73,23 @@ export class CustomerInformation {
       }
     });
 
+// ✅ Query param kontrolü
+    this.route.queryParams.subscribe(params => {
+      if (params['created'] === 'true') {
+        this.showSuccessToast();
+      }
+    });
+
     this.loadCustomer();
+  }
+
+  showSuccessToast(): void {
+    this.showToast = true;
+ 
+    // 5 saniye sonra otomatik kaybolsun
+    setTimeout(() => {
+      this.showToast = false;
+    }, 5000);
   }
 
   loadCustomer(): void {

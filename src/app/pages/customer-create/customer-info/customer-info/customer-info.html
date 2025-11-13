@@ -30,33 +30,47 @@
         </div>
 
         <div class="flex text-center font-medium bg-orange-500/90 text-white shadow-md">
-  <div 
-  class="flex-1 py-3" 
-  [ngClass]="currentStep === 1 ? 'border-b-2 border-amber-300 bg-orange-600/90' : 'hover:bg-orange-500/80 cursor-pointer'" 
-  (click)="goToStep(1)">
-  Customer Info
-</div>
+          <div
+            class="flex-1 py-3"
+            [ngClass]="
+              currentStep === 1
+                ? 'border-b-2 border-amber-300 bg-orange-600/90'
+                : 'hover:bg-orange-500/80 cursor-pointer'
+            "
+            (click)="goToStep(1)"
+          >
+            Customer Info
+          </div>
 
-<div 
-  class="flex-1 py-3" 
-  [ngClass]="currentStep === 2 ? 'border-b-2 border-amber-300 bg-orange-600/90' : 'hover:bg-orange-500/80 cursor-pointer'" 
-  (click)="goToStep(2)">
-  Address
-</div>
+          <div
+            class="flex-1 py-3"
+            [ngClass]="
+              currentStep === 2
+                ? 'border-b-2 border-amber-300 bg-orange-600/90'
+                : 'hover:bg-orange-500/80 cursor-pointer'
+            "
+            (click)="goToStep(2)"
+          >
+            Address
+          </div>
 
-<div 
-  class="flex-1 py-3" 
-  [ngClass]="currentStep === 3 ? 'border-b-2 border-amber-300 bg-orange-600/90' : 'hover:bg-orange-500/80 cursor-pointer'" 
-  (click)="goToStep(3)">
-  Contact Medium
-</div>
-
-</div>
-
+          <div
+            class="flex-1 py-3"
+            [ngClass]="
+              currentStep === 3
+                ? 'border-b-2 border-amber-300 bg-orange-600/90'
+                : 'hover:bg-orange-500/80 cursor-pointer'
+            "
+            (click)="goToStep(3)"
+          >
+            Contact Medium
+          </div>
+        </div>
 
         <div class="p-6 md:p-8">
-          <form [formGroup]="form" class="space-y-6">
+          <form [formGroup]="form" class="space-y-6" (ngSubmit)="$event.preventDefault()">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+              <!-- FIRST NAME -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 flex items-center">
                   First Name <span class="text-red-500 ml-1">*</span>
@@ -69,7 +83,8 @@
                     <div
                       class="absolute left-0 top-6 w-48 p-2 bg-gray-800 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10"
                     >
-                      First Name must be between 2 and 20 characters.
+                      First Name must be between 2 and 20 characters. No spaces, digits or special
+                      characters allowed.
                     </div>
                   </div>
                 </label>
@@ -77,11 +92,20 @@
                   formControlName="firstName"
                   type="text"
                   maxlength="20"
+                  (keydown)="onNameKeydown($event)"
+                  (paste)="onNamePaste($event)"
                   class="mt-1 block w-full rounded-md bg-gray-50 border border-gray-300 shadow-inner focus:border-orange-500 focus:ring focus:ring-orange-500/50 sm:text-sm p-2.5 transition ease-in-out duration-150"
                   placeholder=""
                 />
+                <p
+                  *ngIf="form.get('firstName')?.invalid && form.get('firstName')?.touched"
+                  class="text-red-500 text-sm mt-1"
+                >
+                  First name is required (2-20 letters).
+                </p>
               </div>
 
+              <!-- NATIONAL ID -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 flex items-center">
                   Nat ID <span class="text-red-500 ml-1">*</span>
@@ -103,7 +127,6 @@
                   type="text"
                   class="mt-1 block w-full rounded-md bg-gray-50 border border-gray-300 shadow-inner focus:border-orange-500 focus:ring focus:ring-orange-500/50 sm:text-sm p-2.5 transition ease-in-out duration-150"
                   maxlength="11"
-                  
                 />
                 <p
                   *ngIf="
@@ -119,6 +142,7 @@
                 </p>
               </div>
 
+              <!-- MIDDLE NAME -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 flex items-center">
                   Middle Name
@@ -144,17 +168,27 @@
                 />
               </div>
 
+              <!-- DATE OF BIRTH -->
               <div>
                 <label class="block text-sm font-medium text-gray-700"
                   >Birth Date <span class="text-red-500">*</span></label
                 >
                 <div class="relative">
+                  <!-- input[type=date] üzerinde klavye girişini engelliyoruz; max bugünün tarihi -->
                   <input
+                    #dobInput
                     formControlName="dateOfBirth"
                     type="date"
+                    [attr.max]="todayString"
+                    (keydown)="preventDateTyping($event)"
                     class="mt-1 block w-full rounded-md bg-gray-50 border border-gray-300 shadow-inner focus:border-orange-500 focus:ring focus:ring-orange-500/50 sm:text-sm p-2.5 transition ease-in-out duration-150 pr-10"
                   />
-                  <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                  <button
+                    type="button"
+                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 p-1"
+                    (click)="openDatePicker(dobInput)"
+                    aria-label="Open date picker"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       class="h-5 w-5"
@@ -169,10 +203,14 @@
                         d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                       />
                     </svg>
-                  </span>
+                  </button>
                 </div>
+                <!-- Görsel dd-mm-yyyy gösterimi (kullanıcı için) -->
+                <p *ngIf="form.get('dateOfBirth')?.value" class="text-gray-600 text-sm mt-1">
+                </p>
               </div>
 
+              <!-- LAST NAME -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 flex items-center">
                   Last Name <span class="text-red-500 ml-1">*</span>
@@ -185,7 +223,8 @@
                     <div
                       class="absolute left-0 top-6 w-48 p-2 bg-gray-800 text-white text-xs rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10"
                     >
-                      Last Name must be between 2 and 20 characters.
+                      Last Name must be between 2 and 20 characters. No spaces, digits or special
+                      characters allowed.
                     </div>
                   </div>
                 </label>
@@ -193,11 +232,20 @@
                   formControlName="lastName"
                   type="text"
                   maxlength="20"
+                  (keydown)="onNameKeydown($event)"
+                  (paste)="onNamePaste($event)"
                   class="mt-1 block w-full rounded-md bg-gray-50 border border-gray-300 shadow-inner focus:border-orange-500 focus:ring focus:ring-orange-500/50 sm:text-sm p-2.5 transition ease-in-out duration-150"
                   placeholder=""
                 />
+                <p
+                  *ngIf="form.get('lastName')?.invalid && form.get('lastName')?.touched"
+                  class="text-red-500 text-sm mt-1"
+                >
+                  Last name is required (2-20 letters).
+                </p>
               </div>
 
+              <!-- MOTHER NAME -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 flex items-center">
                   Mother Name
@@ -223,6 +271,7 @@
                 />
               </div>
 
+              <!-- GENDER -->
               <div>
                 <label class="block text-sm font-medium text-gray-700"
                   >Gender <span class="text-red-500">*</span></label
@@ -234,9 +283,11 @@
                   <option value="" disabled selected>Select</option>
                   <option value="MALE">Male</option>
                   <option value="FEMALE">Female</option>
+                  <option value="PREFER_NOT_TO_SAY">Prefer not to say</option>
                 </select>
               </div>
 
+              <!-- FATHER NAME -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 flex items-center">
                   Father Name
@@ -267,12 +318,8 @@
               <button
                 (click)="next()"
                 type="button"
-                [disabled]="form.invalid" 
-                class="px-6 py-2 border border-gray-300 text-gray-700 rounded-md shadow-md 
-           bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 
-           focus:ring-offset-2 focus:ring-orange-500 text-base font-medium
-           transition ease-in-out duration-150
-           disabled:opacity-50 disabled:cursor-not-allowed" 
+                [disabled]="form.invalid"
+                class="px-6 py-2 border border-gray-300 text-gray-700 rounded-md shadow-md bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 text-base font-medium transition ease-in-out duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Next
               </button>

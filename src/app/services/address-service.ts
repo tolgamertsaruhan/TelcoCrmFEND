@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { Address } from '../models/individualcustomer/responses/individualCustomerListResponse';
 import { UpdateAddressRequest } from '../models/individualcustomer/requests/UpdateAddressRequest';
 import { CreateAddressRequest } from '../models/individualcustomer/requests/CreateAddressRequest';
+import { GetAddressResponse } from '../models/individualcustomer/responses/GetAddressResponse';
 
 
 @Injectable({
@@ -29,6 +30,9 @@ export class AddressService {
   return this.http.post<CreatedAddressResponse>(`${this.baseUrl}`, request);
 }
 
+ getAddressById(addressId: string) {
+    return this.http.get<GetAddressResponse>(`${this.baseUrl}/${addressId}`);
+  }
 
   // Var olan adresi güncelle
   /*updateAddress(addressId: string, address: Address): Observable<CreatedAddressResponse> {

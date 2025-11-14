@@ -1,0 +1,441 @@
+<app-navbar></app-navbar>
+
+<div class="flex h-[calc(100vh-4rem)] bg-gray-100 p-4 font-inter">
+  <app-sidebar></app-sidebar>
+
+  <div class="flex-grow bg-white rounded-r-xl shadow-2xl flex relative overflow-hidden">
+    <!-- Arka plan -->
+    <div
+      class="absolute inset-0 z-0 opacity-5 bg-no-repeat bg-cover bg-center"
+      style="
+        background-image: url('https://placehold.co/1200x800/262626/808080?text=Offer+Selection+Background');
+      "
+    ></div>
+
+    <!-- Sol taraf: Catalog / Campaign -->
+    <div class="flex-1 p-6 md:p-8 z-10 flex flex-col">
+      <h2 class="text-2xl font-bold mb-4 text-gray-800 tracking-wide">OFFER SELECTION</h2>
+
+      <!-- Tabs -->
+      <div class="mb-6 border-b border-gray-200">
+        <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+          <button
+            type="button"
+            (click)="activeTab = 'catalog'"
+            class="whitespace-nowrap px-4 py-2 border-b-2 text-sm font-medium"
+            [ngClass]="{
+              'border-orange-500 text-orange-600': activeTab === 'catalog',
+              'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300':
+                activeTab !== 'catalog'
+            }"
+          >
+            Catalog
+          </button>
+
+          <button
+            type="button"
+            (click)="activeTab = 'campaign'"
+            class="whitespace-nowrap px-4 py-2 border-b-2 text-sm font-medium"
+            [ngClass]="{
+              'border-orange-500 text-orange-600': activeTab === 'campaign',
+              'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300':
+                activeTab !== 'campaign'
+            }"
+          >
+            Campaign
+          </button>
+        </nav>
+      </div>
+
+      <!-- Catalog TAB -->
+      <div *ngIf="activeTab === 'catalog'" class="space-y-6 flex flex-col h-full">
+        <!-- Form -->
+        <div class="bg-white bg-opacity-90 rounded-xl shadow-lg border border-gray-200 p-4 md:p-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Catalog Search</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+            <div>
+              <label class="block text-sm font-medium text-gray-600 mb-1">Catalog</label>
+              <select
+                class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                [(ngModel)]="selectedCatalogId"
+                name="catalogSelection"
+              >
+                <option [ngValue]="null" disabled selected>Select Catalog</option>
+                <option *ngFor="let cat of catalogs" [ngValue]="cat.id">
+                  {{ cat.name }}
+                </option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-600 mb-1">
+                Product Offer Name (optional)
+              </label>
+              <input
+                type="text"
+                [(ngModel)]="catalogProductOfferName"
+                name="catalogProductOfferName"
+                class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                placeholder="Enter product offer name"
+              />
+            </div>
+
+            <div class="flex justify-end">
+              <button
+                (click)="onCatalogSearch()"
+                class="px-6 py-2 bg-orange-500 text-white font-semibold rounded-lg shadow-md hover:bg-orange-600 transition-all duration-200 self-end"
+              >
+                SEARCH
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loading -->
+        <div *ngIf="isCatalogLoading" class="flex-1 flex items-center justify-center">
+          <div
+            class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-orange-500"
+          ></div>
+        </div>
+
+        <!-- Results -->
+        <div
+          *ngIf="!isCatalogLoading"
+          class="flex-1 overflow-auto max-h-[450px] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 rounded-lg"
+        >
+          <div
+            *ngIf="catalogResults.length === 0"
+            class="h-full flex items-center justify-center text-gray-500"
+          >
+            <p class="text-lg">No product offers found. Please search.</p>
+          </div>
+
+          <div
+            *ngIf="catalogResults.length > 0"
+            class="bg-white bg-opacity-90 rounded-xl shadow-lg border border-gray-200 overflow-hidden"
+          >
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th
+                    class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Product Offer Id
+                  </th>
+                  <th
+                    class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Product Offer Name
+                  </th>
+                  <th
+                    class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Price
+                  </th>
+                  <th
+                    class="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Add
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let item of catalogResults">
+                  <td class="px-4 py-2 text-sm text-gray-800">
+                    {{ item.productOfferId }}
+                  </td>
+                  <td class="px-4 py-2 text-sm text-gray-800">
+                    {{ item.productOfferName }}
+                  </td>
+                  <td class="px-4 py-2 text-sm text-gray-800 text-right">
+                    {{ item.price | currency : 'TRY' }}
+                  </td>
+                  <td class="px-4 py-2 text-sm text-center">
+                    <button
+                      (click)="addCatalogProductOfferToBasket(item.productOfferId)"
+                      class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-orange-500 text-white hover:bg-orange-600 shadow-md"
+                    >
+                      +
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Campaign TAB -->
+      <div *ngIf="activeTab === 'campaign'" class="space-y-6 flex flex-col h-full">
+        <!-- Form -->
+        <div class="bg-white bg-opacity-90 rounded-xl shadow-lg border border-gray-200 p-4 md:p-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Campaign Search</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+            <div>
+              <label class="block text-sm font-medium text-gray-600 mb-1">Campaign</label>
+              <select
+                class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                [(ngModel)]="selectedCampaignId"
+                name="campaignSelection"
+              >
+                <option [ngValue]="null" disabled selected>Select Campaign</option>
+                <option *ngFor="let camp of campaigns" [ngValue]="camp.id">
+                  {{ camp.name }}
+                </option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-600 mb-1">
+                Product Offer Name (optional)
+              </label>
+              <input
+                type="text"
+                [(ngModel)]="campaignProductOfferName"
+                name="campaignProductOfferName"
+                class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500"
+                placeholder="Enter product offer name"
+              />
+            </div>
+
+            <div class="flex justify-end">
+              <button
+                (click)="onCampaignSearch()"
+                class="px-6 py-2 bg-orange-500 text-white font-semibold rounded-lg shadow-md hover:bg-orange-600 transition-all duration-200 self-end"
+              >
+                SEARCH
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loading -->
+        <div *ngIf="isCampaignLoading" class="flex-1 flex items-center justify-center">
+          <div
+            class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-orange-500"
+          ></div>
+        </div>
+
+        <!-- Results -->
+        <div
+          *ngIf="!isCampaignLoading"
+          class="flex-1 overflow-auto max-h-[450px] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 rounded-lg"
+        >
+          <div *ngIf="!campaignGroup" class="h-full flex items-center justify-center text-gray-500">
+            <p class="text-lg">No campaign product offers found. Please search.</p>
+          </div>
+
+          <div
+            *ngIf="campaignGroup"
+            class="bg-white bg-opacity-90 rounded-xl shadow-lg border border-gray-200 p-4 md:p-6 space-y-4"
+          >
+            <!-- Campaign header with single + icon -->
+            <div class="flex justify-between items-center border-b border-gray-200 pb-3">
+              <div>
+                <p class="text-sm text-gray-500">
+                  Campaign ID: <span class="font-mono">{{ campaignGroup.campaignId }}</span>
+                </p>
+                <p class="text-lg font-semibold text-gray-800">
+                  {{ campaignGroup.campaignName }}
+                  <span class="ml-2 text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full">
+                    {{ campaignGroup.campaignCode }}
+                  </span>
+                </p>
+                <p class="text-sm text-gray-600">
+                  Discount Rate:
+                  <span class="font-semibold text-green-600">
+                    {{ campaignGroup.discountRate }}%
+                  </span>
+                </p>
+              </div>
+
+              <button
+                (click)="addCampaignToBasket(campaignGroup.campaignId)"
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-orange-500 text-white font-semibold shadow-md hover:bg-orange-600"
+              >
+                <span class="text-xl leading-none">+</span>
+                <span>Add All to Cart</span>
+              </button>
+            </div>
+
+            <!-- Product offers inside campaign -->
+            <div class="space-y-2">
+              <div
+                *ngFor="let item of campaignGroup.productOffers"
+                class="flex justify-between items-center border border-gray-200 rounded-lg px-4 py-2 bg-white"
+              >
+                <div>
+                  <p class="text-xs text-gray-500 font-mono">
+                    Product Offer ID: {{ item.productOfferId }}
+                  </p>
+                  <p class="text-sm font-semibold text-gray-800">
+                    {{ item.productOfferName }}
+                  </p>
+                </div>
+                <div class="text-right">
+                  <p class="text-sm font-semibold text-gray-800">
+                    {{ item.price | currency : 'TRY' }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /Campaign TAB -->
+    </div>
+
+    <!-- Sağ taraf: CART -->
+    <div
+      class="w-80 md:w-96 bg-gray-50 bg-opacity-95 border-l border-gray-200 p-4 md:p-6 z-10 flex flex-col"
+    >
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-800">CART</h3>
+        <button
+          (click)="clearBasket()"
+          class="text-xs px-3 py-1 border border-red-400 text-red-500 rounded-full hover:bg-red-50"
+          [disabled]="!basket || basket.basketItems.length === 0"
+        >
+          CLEAR ALL
+        </button>
+      </div>
+
+      <!-- Loading -->
+      <div *ngIf="isBasketLoading" class="flex-1 flex items-center justify-center">
+        <div
+          class="animate-spin rounded-full h-10 w-10 border-t-4 border-b-4 border-orange-500"
+        ></div>
+      </div>
+
+      <div *ngIf="!isBasketLoading" class="flex-1 flex flex-col">
+        <!-- No items -->
+        <div
+          *ngIf="!basket || basket.basketItems.length === 0"
+          class="flex-1 flex items-center justify-center text-gray-500"
+        >
+          <p>No items in the cart.</p>
+        </div>
+
+        <!-- Items (scrollable) -->
+        <div
+          *ngIf="basket && basket.basketItems.length > 0"
+          class="flex-1 overflow-auto space-y-4 max-h-[calc(100vh-260px)] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 pr-1"
+        >
+          <!-- Campaign Groups -->
+          <div
+            *ngFor="let group of groupedCampaigns"
+            class="border border-gray-300 rounded-xl bg-white p-4 shadow-sm space-y-2"
+          >
+            <div class="flex justify-between items-center">
+              <div class="flex flex-col">
+                <span class="text-sm font-semibold text-gray-800">
+                  {{ group.campaignName }}
+                </span>
+                <div class="flex gap-2 mt-1">
+                  <span class="px-2 py-1 rounded-full bg-orange-100 text-orange-700 text-xs">
+                    Campaign
+                  </span>
+                  <span class="px-2 py-1 rounded-full bg-green-100 text-green-700 text-xs">
+                    {{ group.discountRate }}% OFF
+                  </span>
+                </div>
+              </div>
+
+              <!-- Quantity controls -->
+              <div class="flex items-center gap-2">
+                <button
+                  (click)="decrementCampaignGroup(group)"
+                  class="w-7 h-7 flex items-center justify-center rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100"
+                >
+                  -
+                </button>
+                <span class="w-6 text-center text-sm font-semibold text-gray-800">
+                  {{ group.quantity }}
+                </span>
+                <button
+                  (click)="incrementCampaignGroup(group)"
+                  class="w-7 h-7 flex items-center justify-center rounded-full bg-orange-500 text-white hover:bg-orange-600"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <!-- Campaign items (scrollable if çok) -->
+            <div
+              class="space-y-1 mt-1 max-h-40 overflow-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 pr-1"
+            >
+              <div
+                *ngFor="let item of group.items"
+                class="flex justify-between text-xs text-gray-700"
+              >
+                <span class="truncate max-w-[130px]">{{ item.productName }}</span>
+                <span>{{ getItemDisplayPrice(item) | currency : 'TRY' }}</span>
+              </div>
+            </div>
+
+            <!-- Total -->
+            <div class="text-right text-sm font-semibold text-gray-800 mt-1">
+              Total: {{ group.totalPrice | currency : 'TRY' }}
+            </div>
+          </div>
+
+          <!-- Normal (non-campaign) items -->
+          <div
+            *ngFor="let item of normalProducts"
+            class="flex items-center justify-between border border-gray-200 rounded-lg bg-white px-3 py-2 shadow-sm"
+          >
+            <div class="flex-1 mr-2">
+              <p class="text-sm font-semibold text-gray-800 truncate">
+                {{ item.productName }}
+              </p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button
+                (click)="decrementItem(item)"
+                class="w-7 h-7 flex items-center justify-center rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100"
+              >
+                -
+              </button>
+              <span class="w-6 text-center text-sm font-semibold text-gray-800">
+                {{ item.quantity }}
+              </span>
+              <button
+                (click)="incrementItem(item)"
+                class="w-7 h-7 flex items-center justify-center rounded-full bg-orange-500 text-white hover:bg-orange-600"
+              >
+                +
+              </button>
+            </div>
+            <div class="ml-3 text-right">
+              <p class="text-sm font-semibold text-gray-800">
+                {{ getItemDisplayPrice(item) | currency : 'TRY' }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Total amount -->
+        <div class="pt-3 mt-3 border-t border-gray-200">
+          <div class="flex justify-between items-center">
+            <span class="text-sm font-medium text-gray-600">Total Amount</span>
+            <span class="text-lg font-bold text-orange-600">
+              {{ basket?.totalPrice || 0 | currency : 'TRY' }}
+            </span>
+          </div>
+        </div>
+
+        <!-- NEXT BUTTON -->
+        <div class="mt-4">
+          <button
+            (click)="goToConfiguration()"
+            class="w-full py-3 bg-orange-500 text-white font-semibold rounded-lg shadow-lg hover:bg-orange-600 transition-all"
+            [disabled]="!basket || basket.basketItems.length === 0"
+          >
+            NEXT
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -13,6 +13,10 @@ import { BillingAccountInformation } from './pages/customer-information-screen/b
 import { Login } from './pages/login/login';
 import { AuthGuard } from './guards/auth-guard-guard';
 import { Register } from './pages/register/register';
+import { OfferSelectionComponent } from './pages/offer-selection/offer-selection';
+import { ConfigurationProductComponent } from './pages/configuration-product/configuration-product';
+import { SubmittedOrderComponent } from './pages/submitted-order/submitted-order';
+
 
 export const routes: Routes = [
     { path: 'register', component: Register },
@@ -41,6 +45,18 @@ export const routes: Routes = [
       { path: 'contact-medium-information', component: ContactMediumInformation },
       { path: 'billing-account-information', component: BillingAccountInformation },
     ]
+  },
+  {
+    path: 'offer-selection',
+    component: OfferSelectionComponent
+  },
+  {
+    path: 'configuration-product',
+    component: ConfigurationProductComponent
+  },
+  {
+    path: 'submitted-order',
+    component: SubmittedOrderComponent
   },
   { path: '', redirectTo: 'customer-search', pathMatch: 'full' }
 

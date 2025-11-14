@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BillingAccountResponse } from '../../../models/individualcustomer/responses/BillingAccountResponse';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BillingAccountService } from '../../../services/billingAccount-service';
 import { AddressService } from '../../../services/address-service';
 import { CityService } from '../../../services/city-service';
@@ -37,8 +37,9 @@ export class BillingAccountInformation implements OnInit {
   isAdding = false;
   isEditing = false;
   editingId: string | null = null;
+  expandedAccountId: string | null = null;
 
-  // ✅ Notification properties
+  // Notifications
   showNotificationUpdate = false;
   showNotificationCreate = false;
   isFadingOut = false;
@@ -49,6 +50,7 @@ export class BillingAccountInformation implements OnInit {
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
+    private router: Router,
     private billingService: BillingAccountService,
     private addressService: AddressService,
     private cdr: ChangeDetectorRef,
@@ -96,7 +98,7 @@ export class BillingAccountInformation implements OnInit {
     this.billingService.getByCustomerId(this.customerId).subscribe({
       next: (data) => {
         this.accounts = data as BillingAccountResponse[];
-        this.cdr.detectChanges();
+        this.cdr.markForCheck();
       },
       error: (err) => console.error('Error loading billing accounts', err)
     });
@@ -117,7 +119,7 @@ export class BillingAccountInformation implements OnInit {
                   if (city) {
                     this.cityNames[address.districtId] = city.name;
                   }
-                  this.cdr.detectChanges();
+                  this.cdr.markForCheck();
                 }
               });
             },
@@ -181,6 +183,7 @@ export class BillingAccountInformation implements OnInit {
         this.loadAddresses();
         this.selectedAddressId = res.id;
         this.accountForm.patchValue({ addressId: res.id });
+        this.cdr.markForCheck();
       },
       error: (err) => console.error('Error creating address:', err)
     });
@@ -207,7 +210,7 @@ export class BillingAccountInformation implements OnInit {
       status: account.status,
       addressId: account.addressId || ''
     });
-    this.cdr.detectChanges();
+    this.cdr.markForCheck();
   }
 
   cancel() {
@@ -238,12 +241,12 @@ export class BillingAccountInformation implements OnInit {
         customerId: this.customerId,
         addressId: addressId
       };
-      console.log(payload);
+
       this.billingService.add(payload).subscribe({
         next: () => {
           this.isAdding = false;
           this.loadAccounts();
-          this.showSuccessNotificationCreate();
+          setTimeout(() => this.showSuccessNotificationCreate());
         },
         error: (err) => console.error('Error adding billing account', err)
       });
@@ -261,7 +264,7 @@ export class BillingAccountInformation implements OnInit {
           this.isEditing = false;
           this.editingId = null;
           this.loadAccounts();
-          this.showSuccessNotificationUpdate();
+          setTimeout(() => this.showSuccessNotificationUpdate());
         },
         error: (err) => console.error('Error updating billing account', err)
       });
@@ -277,58 +280,51 @@ export class BillingAccountInformation implements OnInit {
     });
   }
 
+  // =================== EXPAND / NAVIGATION ===================
+  toggleExpand(accountId: string) {
+    this.expandedAccountId = this.expandedAccountId === accountId ? null : accountId;
+  }
+
+  startNewSale(accountId: string) {
+    this.router.navigate(['/offer-selection'], {
+      queryParams: { billingAccountId: accountId }
+    });
+  }
+
   // =================== NOTIFICATION METHODS ===================
   showSuccessNotificationUpdate(): void {
-    this.showNotificationUpdate = true;
-    this.isFadingOut = false;
-    this.cdr.detectChanges();
-
-    setTimeout(() => {
-      this.ngZone.run(() => {
-        this.isFadingOut = true;
-        this.cdr.detectChanges();
-      });
+    this.ngZone.run(() => {
+      this.showNotificationUpdate = true;
+      this.isFadingOut = false;
+      this.cdr.markForCheck();
 
       setTimeout(() => {
-        this.ngZone.run(() => {
+        this.isFadingOut = true;
+        this.cdr.markForCheck();
+
+        setTimeout(() => {
           this.showNotificationUpdate = false;
-          this.cdr.detectChanges();
-        });
-      }, 500);
-    }, 4500);
+          this.cdr.markForCheck();
+        }, 500);
+      }, 4500);
+    });
   }
 
   showSuccessNotificationCreate(): void {
-    this.showNotificationCreate = true;
-    this.isFadingOut = false;
-    this.cdr.detectChanges();
-
-    setTimeout(() => {
-      this.ngZone.run(() => {
-        this.isFadingOut = true;
-        this.cdr.detectChanges();
-      });
+    this.ngZone.run(() => {
+      this.showNotificationCreate = true;
+      this.isFadingOut = false;
+      this.cdr.markForCheck();
 
       setTimeout(() => {
-        this.ngZone.run(() => {
+        this.isFadingOut = true;
+        this.cdr.markForCheck();
+
+        setTimeout(() => {
           this.showNotificationCreate = false;
-          this.cdr.detectChanges();
-        });
-      }, 500);
-    }, 4500);
+          this.cdr.markForCheck();
+        }, 500);
+      }, 4500);
+    });
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

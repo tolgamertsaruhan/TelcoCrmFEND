@@ -1,0 +1,16 @@
+.toast-animate {
+  /* 5 saniye bekle, sonra 0.5s içinde kaybol */
+  animation: toastFadeOut 0.5s ease-in-out 5s forwards;
+}
+
+@keyframes toastFadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}

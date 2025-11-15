@@ -15,4 +15,14 @@ export class OrderService {
    getOrderById(id: string): Observable<OrderResponse> {
     return this.http.get<OrderResponse>(`${this.apiUrl}/${id}`);
   }
+
+  getBillingAccountIdByOrderId(orderId: string) {
+  return this.http.get<string>(`${this.apiUrl}/${orderId}/billing-account`);
+}
+
+getOrdersByBillingAccountId(billingAccountId: string) {
+  return this.http.get<OrderResponse[]>(
+    `${this.apiUrl}/by-billing-account/${billingAccountId}`
+  );
+}
 }

@@ -8,6 +8,9 @@ import { AddressService } from '../../../services/address-service';
 import { CityService } from '../../../services/city-service';
 import { DistrictService } from '../../../services/district-service';
 import { AddressForBillingAccountResponse } from '../../../models/individualcustomer/responses/AddressForBillingAccountResponse';
+import { OrderService } from '../../../services/order-service';
+import { OrderResponse } from '../../../models/ordermodels/OrderResponse';
+import { GetAddressResponse } from '../../../models/individualcustomer/responses/GetAddressResponse';
 
 @Component({
   selector: 'app-billing-account-information',
@@ -17,23 +20,24 @@ import { AddressForBillingAccountResponse } from '../../../models/individualcust
   styleUrls: ['./billing-account-information.scss']
 })
 export class BillingAccountInformation implements OnInit {
+  
   customerId!: string;
   accounts: BillingAccountResponse[] = [];
   accountForm!: FormGroup;
 
-  // adres yönetimi
+  // Address selection
   addresses: AddressForBillingAccountResponse[] = [];
   districtNames: { [key: string]: string } = {};
   cityNames: { [key: string]: string } = {};
   selectedAddressId: string | null = null;
 
-  // yeni adres oluşturma
+  // New Address Form
   showAddAddressForm = false;
   newAddressForm!: FormGroup;
   cities: any[] = [];
   districts: any[] = [];
 
-  // UI durumları
+  // UI state
   isAdding = false;
   isEditing = false;
   editingId: string | null = null;
@@ -44,6 +48,17 @@ export class BillingAccountInformation implements OnInit {
   showNotificationCreate = false;
   isFadingOut = false;
 
+  // Orders section
+  orders: OrderResponse[] = [];
+  loadingOrders = false;
+  ordersLoadError = false;
+  selectedOrderId: string | null = null;
+
+  // Service Address for Orders (IMPORTANT NEW)
+  orderAddressDetails: { [orderId: string]: GetAddressResponse } = {};
+  orderDistrictNames: { [orderId: string]: string } = {};
+  orderCityNames: { [orderId: string]: string } = {};
+
   types = ['INDIVIDUAL', 'CORPORATE', 'PREPAID', 'POSTPAID'];
   statuses = ['ACTIVE', 'SUSPENDED', 'CLOSED'];
 
@@ -53,14 +68,16 @@ export class BillingAccountInformation implements OnInit {
     private router: Router,
     private billingService: BillingAccountService,
     private addressService: AddressService,
-    private cdr: ChangeDetectorRef,
     private cityService: CityService,
     private districtService: DistrictService,
-    private ngZone: NgZone
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone,
+    private orderService: OrderService
   ) {}
 
   ngOnInit(): void {
     this.customerId = this.route.parent?.snapshot.paramMap.get('id') || '';
+
     this.initForm();
     this.initNewAddressForm();
 
@@ -71,7 +88,7 @@ export class BillingAccountInformation implements OnInit {
     }
   }
 
-  // =================== INIT FORMS ===================
+  // -------------------- INIT FORMS --------------------
   initForm() {
     this.accountForm = this.fb.group({
       type: ['INDIVIDUAL', Validators.required],
@@ -93,8 +110,8 @@ export class BillingAccountInformation implements OnInit {
     });
   }
 
-  // =================== LOAD DATA ===================
-  loadAccounts() {
+  // -------------------- LOAD INITIAL DATA --------------------
+loadAccounts() {
     this.billingService.getByCustomerId(this.customerId).subscribe({
       next: (data) => {
         this.accounts = data as BillingAccountResponse[];
@@ -105,40 +122,32 @@ export class BillingAccountInformation implements OnInit {
   }
 
   loadAddresses() {
-    if (!this.customerId) return;
     this.addressService.getAddressesByCustomerId(this.customerId).subscribe({
       next: (data) => {
         this.addresses = data;
-        this.addresses.forEach((address) => {
-          this.districtService.getDistrictById(address.districtId).subscribe({
-            next: (district) => {
-              this.districtNames[address.districtId] = district.name;
-              this.cityService.getCitiesforaddresspage().subscribe({
-                next: (cities) => {
-                  const city = cities.find((c: any) => c.id === district.cityId);
-                  if (city) {
-                    this.cityNames[address.districtId] = city.name;
-                  }
-                  this.cdr.markForCheck();
-                }
-              });
-            },
-            error: (err) => console.error('Error loading district:', err)
+
+        this.addresses.forEach((a) => {
+          this.districtService.getDistrictById(a.districtId).subscribe(district => {
+            this.districtNames[a.districtId] = district.name;
+
+            this.cityService.getCitiesforaddresspage().subscribe(cities => {
+              const city = cities.find((c: any) => c.id === district.cityId);
+              if (city) this.cityNames[a.districtId] = city.name;
+              this.cdr.detectChanges();
+            });
           });
         });
-      },
-      error: (err) => console.error('Error loading addresses:', err)
+      }
     });
   }
 
   loadCities() {
     this.cityService.getCities().subscribe({
-      next: (data) => (this.cities = data),
-      error: (err) => console.error('Error loading cities:', err)
+      next: (data) => this.cities = data
     });
   }
 
-  // =================== ADDRESS MANAGEMENT ===================
+  // -------------------- ADDRESS SELECTION --------------------
   selectAddress(id: string) {
     this.selectedAddressId = id;
     this.accountForm.patchValue({ addressId: id });
@@ -151,12 +160,11 @@ export class BillingAccountInformation implements OnInit {
 
   onCityChangeForNewAddress() {
     const selectedCityId = this.newAddressForm.get('cityId')?.value;
+
     if (selectedCityId) {
-      this.districtService.getDistrictsByCity(selectedCityId).subscribe({
-        next: (res) => {
-          this.districts = res;
-          this.newAddressForm.patchValue({ districtId: null });
-        }
+      this.districtService.getDistrictsByCity(selectedCityId).subscribe(res => {
+        this.districts = res;
+        this.newAddressForm.patchValue({ districtId: null });
       });
     } else {
       this.districts = [];
@@ -166,6 +174,7 @@ export class BillingAccountInformation implements OnInit {
 
   saveNewAddress() {
     if (this.newAddressForm.invalid) return;
+
     const formValue = this.newAddressForm.value;
 
     const createRequest = {
@@ -174,35 +183,40 @@ export class BillingAccountInformation implements OnInit {
       street: formValue.street,
       houseNumber: formValue.houseNumber,
       description: formValue.description,
-      default: formValue.isDefault ?? false
+      default: formValue.isDefault
     };
 
-    this.addressService.addAddressInfoPage(createRequest).subscribe({
-      next: (res) => {
-        this.showAddAddressForm = false;
-        this.loadAddresses();
-        this.selectedAddressId = res.id;
-        this.accountForm.patchValue({ addressId: res.id });
-        this.cdr.markForCheck();
-      },
-      error: (err) => console.error('Error creating address:', err)
+    this.addressService.addAddressInfoPage(createRequest).subscribe((res) => {
+      this.showAddAddressForm = false;
+      this.loadAddresses();
+
+      this.selectedAddressId = res.id;
+      this.accountForm.patchValue({ addressId: res.id });
+      this.cdr.detectChanges();
     });
   }
 
-  // =================== BILLING ACCOUNT CRUD ===================
+  // -------------------- ADD / EDIT BILLING ACCOUNT --------------------
   startAdd() {
     this.isAdding = true;
     this.isEditing = false;
     this.editingId = null;
-    this.accountForm.reset({ type: 'INDIVIDUAL', status: 'ACTIVE' });
+
+    this.accountForm.reset({
+      type: 'INDIVIDUAL',
+      status: 'ACTIVE'
+    });
+
     this.selectedAddressId = null;
   }
 
   startEdit(account: BillingAccountResponse) {
     this.isEditing = true;
     this.isAdding = false;
+
     this.editingId = account.id;
     this.selectedAddressId = account.addressId || null;
+
     this.accountForm.patchValue({
       type: account.type,
       accountName: account.accountName,
@@ -210,7 +224,8 @@ export class BillingAccountInformation implements OnInit {
       status: account.status,
       addressId: account.addressId || ''
     });
-    this.cdr.markForCheck();
+
+    this.cdr.detectChanges();
   }
 
   cancel() {
@@ -229,6 +244,7 @@ export class BillingAccountInformation implements OnInit {
 
     const formValue = this.accountForm.getRawValue();
     const addressId = this.selectedAddressId || formValue.addressId;
+
     if (!addressId) {
       alert('Please select or create an address');
       return;
@@ -247,10 +263,11 @@ export class BillingAccountInformation implements OnInit {
           this.isAdding = false;
           this.loadAccounts();
           setTimeout(() => this.showSuccessNotificationCreate());
-        },
-        error: (err) => console.error('Error adding billing account', err)
+        }
       });
-    } else if (this.isEditing && this.editingId) {
+    }
+
+    if (this.isEditing && this.editingId) {
       const payload = {
         id: this.editingId,
         accountName: formValue.accountName,
@@ -259,52 +276,116 @@ export class BillingAccountInformation implements OnInit {
         customerId: this.customerId,
         addressId: addressId
       };
+
       this.billingService.update(payload).subscribe({
         next: () => {
           this.isEditing = false;
           this.editingId = null;
           this.loadAccounts();
           setTimeout(() => this.showSuccessNotificationUpdate());
-        },
-        error: (err) => console.error('Error updating billing account', err)
+        }
       });
     }
   }
 
   confirmDelete(id?: string) {
     if (!id) return;
-    if (!confirm('Are you sure you want to delete this billing account?')) return;
-    this.billingService.delete(id).subscribe({
-      next: () => this.loadAccounts(),
-      error: (err) => console.error('Error deleting billing account', err)
+
+    if (confirm('Are you sure you want to delete this billing account?')) {
+      this.billingService.delete(id).subscribe(() => {
+        this.loadAccounts();
+      });
+    }
+  }
+
+  // -------------------- ORDERS LOAD + SERVICE ADDRESS FIX --------------------
+  toggleExpand(accountId: string) {
+    if (this.expandedAccountId === accountId) {
+      this.expandedAccountId = null;
+      this.orders = [];
+      this.selectedOrderId = null;
+      return;
+    }
+
+    this.expandedAccountId = accountId;
+    this.selectedOrderId = null;
+
+    this.loadOrdersForBillingAccount(accountId);
+  }
+
+  private loadOrdersForBillingAccount(billingAccountId: string) {
+    this.loadingOrders = true;
+    this.ordersLoadError = false;
+    this.orders = [];
+
+    this.orderService.getOrdersByBillingAccountId(billingAccountId).subscribe({
+      next: (data: OrderResponse[]) => {
+        this.orders = data || [];
+        this.loadingOrders = false;
+
+        // 🔥 HER ORDER İÇİN ADRES DETAYI YÜKLE
+        this.orders.forEach(order => {
+          if (order.serviceAddress) {
+            this.loadOrderAddressDetails(order.orderId, order.serviceAddress);
+          }
+        });
+
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.loadingOrders = false;
+        this.ordersLoadError = true;
+        this.cdr.detectChanges();
+      }
     });
   }
 
-  // =================== EXPAND / NAVIGATION ===================
-  toggleExpand(accountId: string) {
-    this.expandedAccountId = this.expandedAccountId === accountId ? null : accountId;
+  // -------------------- SERVICE ADDRESS LOADING PER ORDER --------------------
+  loadOrderAddressDetails(orderId: string, addressId: string) {
+    this.addressService.getAddressById(addressId).subscribe(addr => {
+
+      this.orderAddressDetails[orderId] = addr;
+
+      this.districtService.getDistrictById(addr.districtId).subscribe(district => {
+        this.orderDistrictNames[orderId] = district.name;
+
+        this.cityService.getCitiesforaddresspage().subscribe(cities => {
+          const city = cities.find((c: any) => c.id === district.cityId);
+          if (city) this.orderCityNames[orderId] = city.name;
+
+          this.cdr.detectChanges();
+        });
+      });
+    });
   }
 
+  // -------------------- SELECT ORDER --------------------
+  selectOrder(order: OrderResponse) {
+    this.selectedOrderId = this.selectedOrderId === order.orderId ? null : order.orderId;
+    this.cdr.detectChanges();
+  }
+
+  // -------------------- START SALE --------------------
   startNewSale(accountId: string) {
     this.router.navigate(['/offer-selection'], {
       queryParams: { billingAccountId: accountId }
     });
   }
 
-  // =================== NOTIFICATION METHODS ===================
+  // -------------------- NOTIFICATIONS --------------------
   showSuccessNotificationUpdate(): void {
     this.ngZone.run(() => {
       this.showNotificationUpdate = true;
       this.isFadingOut = false;
-      this.cdr.markForCheck();
+      this.cdr.detectChanges();
 
       setTimeout(() => {
         this.isFadingOut = true;
-        this.cdr.markForCheck();
+        this.cdr.detectChanges();
 
         setTimeout(() => {
           this.showNotificationUpdate = false;
-          this.cdr.markForCheck();
+          this.cdr.detectChanges();
         }, 500);
       }, 4500);
     });
@@ -314,17 +395,18 @@ export class BillingAccountInformation implements OnInit {
     this.ngZone.run(() => {
       this.showNotificationCreate = true;
       this.isFadingOut = false;
-      this.cdr.markForCheck();
+      this.cdr.detectChanges();
 
       setTimeout(() => {
         this.isFadingOut = true;
-        this.cdr.markForCheck();
+        this.cdr.detectChanges();
 
         setTimeout(() => {
           this.showNotificationCreate = false;
-          this.cdr.markForCheck();
+          this.cdr.detectChanges();
         }, 500);
       }, 4500);
     });
   }
+
 }

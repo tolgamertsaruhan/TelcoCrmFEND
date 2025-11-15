@@ -4,7 +4,6 @@
   <app-sidebar></app-sidebar>
 
   <div class="flex-1 p-6 bg-[url('/assets/crm-bg.png')] bg-cover bg-center bg-fixed">
-
     <!-- SUCCESS TOAST -->
     <div *ngIf="order" class="fixed top-6 right-10 z-50">
       <div
@@ -18,21 +17,20 @@
           stroke="currentColor"
           stroke-width="2"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
         </svg>
         <span>Order submitted successfully</span>
       </div>
     </div>
 
     <!-- MAIN PANEL -->
-    <div class="backdrop-blur-xl bg-white/40 border border-white/30 shadow-2xl rounded-2xl p-8 max-w-5xl mx-auto mt-4">
-
+    <div
+      class="backdrop-blur-xl bg-white/40 border border-white/30 shadow-2xl rounded-2xl p-8 max-w-5xl mx-auto mt-4"
+    >
       <h1 class="text-2xl font-bold text-gray-800 mb-6">Submitted Order</h1>
 
       <!-- LOADING -->
-      <div *ngIf="isLoading" class="py-10 text-center text-gray-600">
-        Loading order details...
-      </div>
+      <div *ngIf="isLoading" class="py-10 text-center text-gray-600">Loading order details...</div>
 
       <!-- ERROR -->
       <div *ngIf="!isLoading && hasError" class="py-10 text-center text-red-600 font-semibold">
@@ -41,18 +39,22 @@
 
       <!-- CONTENT -->
       <div *ngIf="!isLoading && !hasError && order" class="space-y-8">
-
         <!-- ORDER NUMBER -->
         <div class="flex items-start gap-6">
           <div class="w-40 text-sm font-semibold text-gray-700">Order Number:</div>
-          <div class="flex-1 text-sm font-semibold text-gray-900">{{ order.orderId }}</div>
+          <div class="flex-1 text-sm font-semibold text-gray-900">
+            {{ order.orderId }}
+          </div>
         </div>
 
         <!-- ORDER ITEMS -->
         <div class="flex items-start gap-6">
           <div class="w-40 text-sm font-semibold text-gray-700">Order Items:</div>
+
           <div class="flex-1">
-            <div class="bg-white/70 border border-gray-300 rounded-xl shadow-inner px-4 py-3 text-sm text-gray-800 max-w-xl">
+            <div
+              class="bg-white/70 border border-gray-300 rounded-xl shadow-inner px-4 py-3 text-sm text-gray-800 max-w-xl"
+            >
               <div *ngFor="let item of order.orderItems" class="mb-1 last:mb-0">
                 {{ item.productName }}
               </div>
@@ -60,50 +62,55 @@
           </div>
         </div>
 
-        <!-- SERVICE ADDRESS (BILLING ACCOUNT TASARIMI) -->
+        <!-- SERVICE ADDRESS (billing-account tasarımına benzer) -->
         <div class="flex items-start gap-6">
           <div class="w-40 text-sm font-semibold text-gray-700">Service Address:</div>
 
           <div class="flex-1">
-
             <div class="p-4 rounded-xl border bg-white border-blue-300 shadow-sm max-w-xl">
-
               <div class="flex items-start space-x-3">
-
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     class="h-5 w-5 text-orange-500 mt-1"
-                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"/>
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M15 11a3 3 0 11-6 0 3 3 0z"/>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 text-orange-500 mt-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 11a3 3 0 11-6 0 3 3 0z"
+                  />
                 </svg>
 
-                <p class="font-medium text-gray-700 flex-1">
+                <div class="flex-1">
+                  <p class="font-medium text-gray-700">
+                    <!-- STREET + HOUSE NO -->
+                    {{ addressDetails?.street }}
+                    {{ addressDetails?.houseNumber ? '#' + addressDetails?.houseNumber : '' }}
+                    <br />
 
-                  <!-- STREET + HOUSE NO -->
-                  {{ addressDetails?.street }}
-                  {{ addressDetails?.houseNumber ? '#' + addressDetails?.houseNumber : '' }}
-
-                  <br>
-
-                  <!-- DISTRICT + CITY -->
-                  <span class="text-sm text-gray-500">
-                    {{ districtName || 'Loading...' }},
-                    {{ cityName || 'Loading...' }}
-                  </span>
+                    <!-- DISTRICT + CITY -->
+                    <span class="text-sm text-gray-500">
+                      {{ districtName || 'Loading...' }},
+                      {{ cityName || 'Loading...' }}
+                    </span>
+                  </p>
 
                   <!-- DESCRIPTION -->
                   <div *ngIf="addressDetails?.description" class="text-xs text-gray-500 mt-1">
                     {{ addressDetails?.description }}
                   </div>
-
-                
-
+                </div>
               </div>
-
             </div>
-
           </div>
         </div>
 
@@ -111,21 +118,20 @@
         <div class="flex items-start gap-6">
           <div class="w-40 text-sm font-semibold text-gray-700">Total Amount:</div>
           <div class="flex-1 text-sm font-semibold text-gray-900">
-            {{ order.totalAmount | currency : 'TRY' : 'symbol' : '1.0-0' }}
+            {{ order.totalAmount | currency:'₺':'symbol':'1.2-2' }}
           </div>
         </div>
-
       </div>
 
       <!-- FINISH -->
       <div class="mt-10 flex justify-end">
         <button
           (click)="onFinish()"
-          class="px-10 py-2.5 bg-orange-600 text-white font-bold rounded-xl shadow hover:bg-orange-700 transition">
+          class="px-10 py-2.5 bg-orange-600 text-white font-bold rounded-xl shadow hover:bg-orange-700 transition"
+        >
           FINISH
         </button>
       </div>
-
     </div>
   </div>
 </div>

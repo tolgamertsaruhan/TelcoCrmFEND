@@ -46,4 +46,8 @@ export class BillingAccountService {
   delete(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}/soft`);
   }
+
+  getCustomerIdByBillingAccountId(billingAccountId: string) {
+  return this.http.get<string>(`${this.baseUrl}/${billingAccountId}/customer-id`);
+}
 }

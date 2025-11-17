@@ -7,10 +7,11 @@ import { CityService } from '../../../../services/city-service';
 import { DistrictService } from '../../../../services/district-service';
 import { Sidebar } from "../../../../components/sidebar/sidebar";
 import { Navbar } from "../../../../components/navbar/navbar";
+import { BackgroundItem } from "../../../../components/background-item/background-item";
  
 @Component({
   selector: 'app-address-info',
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, Sidebar, Navbar],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, Sidebar, Navbar, BackgroundItem],
   templateUrl: './address-info.html',
   styleUrl: './address-info.scss',
 })

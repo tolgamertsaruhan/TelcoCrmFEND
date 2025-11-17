@@ -9,5 +9,5 @@ export interface IndividualCustomerSearchRequest {
   // UI'da var ama BE Request'te karşılığı olmayanlar, sadece form tutarlılığı için:
   middleName?: string; 
   gsmNumber?: string; // UI'da kullanılan isim (BE'ye mobilePhone olarak gidecek)
-  //orderNumber?: string;
+  orderId?: string;
 }

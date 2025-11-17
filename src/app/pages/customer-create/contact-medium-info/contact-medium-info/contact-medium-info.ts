@@ -17,10 +17,11 @@ import { Router } from '@angular/router';
 import { CreateFullIndividualCustomerResponse } from '../../../../models/individualcustomer/responses/CreateFullIndividualCustomerResponse';
 import { Navbar } from '../../../../components/navbar/navbar';
 import { Sidebar } from '../../../../components/sidebar/sidebar';
+import { BackgroundItem } from "../../../../components/background-item/background-item";
 
 @Component({
   selector: 'app-contact-medium-info',
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, Navbar, Sidebar],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, Navbar, Sidebar, BackgroundItem],
   templateUrl: './contact-medium-info.html',
   styleUrl: './contact-medium-info.scss',
 })

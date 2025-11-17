@@ -5,10 +5,11 @@ import { CustomerService } from '../../services/customer-service';
 import { IndividualCustomerCreateRequest } from '../../models/individualcustomer/requests/individualCustomerCreateRequest';
 import { CreateAddress } from "../create-address/create-address";
 import { Sidebar } from "../../components/sidebar/sidebar";
+import { BackgroundItem } from "../../components/background-item/background-item";
 
 @Component({
   selector: 'app-individual-customer-create',
-  imports: [Navbar, FormsModule, ReactiveFormsModule, CreateAddress, Sidebar],
+  imports: [Navbar, FormsModule, ReactiveFormsModule, CreateAddress, Sidebar, BackgroundItem],
   templateUrl: './individual-customer-create.html',
   styleUrl: './individual-customer-create.scss',
 })

@@ -8,10 +8,11 @@ import { CustomerSearchService } from '../../services/customer-search-service';
 import { Router } from '@angular/router';
 import { Sidebar } from "../../components/sidebar/sidebar";
 import { CustomerCreationService } from '../../services/customer-creation-service';
+import { BackgroundItem } from "../../components/background-item/background-item";
 
 @Component({
   selector: 'app-customer-search',
-  imports: [Navbar, FormsModule, ReactiveFormsModule, CommonModule, Sidebar],
+  imports: [Navbar, FormsModule, ReactiveFormsModule, CommonModule, Sidebar, BackgroundItem],
   templateUrl: './customer-search.html',
   styleUrl: './customer-search.scss',
 })
@@ -34,7 +35,8 @@ export class CustomerSearch implements OnInit {
     gsmNumber: false,
     firstName: false,
     middleName: false,
-    lastName: false
+    lastName: false,
+    orderId: false
   };
 
 
@@ -116,7 +118,8 @@ allowOnlyLetters(event: KeyboardEvent): void {
       gsmNumber: '',
       firstName: '',
       middleName: '',
-      lastName: ''
+      lastName: '',
+      orderId: ''
     };
 
     this.disabledFields = {
@@ -126,7 +129,8 @@ allowOnlyLetters(event: KeyboardEvent): void {
       gsmNumber: false,
       firstName: false,
       middleName: false,
-      lastName: false
+      lastName: false,
+      orderId: false
     };
 
     this.isAnyFieldFilled = false;
@@ -137,10 +141,10 @@ allowOnlyLetters(event: KeyboardEvent): void {
 
   checkAnyFieldFilled(): void {
     
-  const { id, accountNumber, nationalId, gsmNumber, firstName, middleName, lastName } = this.searchForm;
+  const { id, accountNumber, nationalId, gsmNumber, firstName, middleName, lastName, orderId } = this.searchForm;
 
   // 1️⃣ Kimlik alanlarından biri dolu mu?
-  const isAnyIdentityFieldFilled = !!(id || accountNumber || nationalId || gsmNumber);
+  const isAnyIdentityFieldFilled = !!(id || accountNumber || nationalId || gsmNumber || orderId);
 
   // 2️⃣ İsim alanlarından biri dolu mu?
   const isAnyNameFieldFilled = !!(firstName || middleName || lastName);
@@ -157,8 +161,10 @@ allowOnlyLetters(event: KeyboardEvent): void {
       gsmNumber: !gsmNumber,
       firstName: true,
       middleName: true,
-      lastName: true
+      lastName: true,
+      orderId: !orderId
     };
+    this.cdr.detectChanges();
   } else if (isAnyNameFieldFilled) {
     this.disabledFields = {
       id: true,
@@ -167,8 +173,10 @@ allowOnlyLetters(event: KeyboardEvent): void {
       gsmNumber: true,
       firstName: false,
       middleName: false,
-      lastName: false
+      lastName: false,
+      orderId: true
     };
+    this.cdr.detectChanges();
   } else {
     // Hiçbiri dolu değilse, her şey aktif
     this.disabledFields = {
@@ -178,8 +186,10 @@ allowOnlyLetters(event: KeyboardEvent): void {
       gsmNumber: false,
       firstName: false,
       middleName: false,
-      lastName: false
+      lastName: false,
+      orderId: false
     };
+    this.cdr.detectChanges();
   }
   }
 

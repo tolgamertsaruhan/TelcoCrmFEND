@@ -16,6 +16,7 @@ import { CampaignService } from '../../services/campaign-service';
 import { ProductOfferService } from '../../services/product-offer-service';
 import { BasketService } from '../../services/basket-service';
 import { BasketItem } from '../../models/basketmodels/BasketItem';
+import { BackgroundItem } from "../../components/background-item/background-item";
 
 interface CampaignBasketGroup {
   campaignId: string;
@@ -29,7 +30,7 @@ interface CampaignBasketGroup {
 @Component({
   selector: 'app-offer-selection',
   standalone: true,
-  imports: [CommonModule, FormsModule, Navbar, Sidebar],
+  imports: [CommonModule, FormsModule, Navbar, Sidebar, BackgroundItem],
   templateUrl: './offer-selection.html',
   styleUrl: './offer-selection.scss'
 })

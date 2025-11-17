@@ -33,6 +33,9 @@ export class CustomerSearchService {
     if (request.middleName) {
       httpParams = httpParams.set('middleName', request.middleName);
     }
+    if (request.orderId) {
+      httpParams = httpParams.set('orderId', request.orderId);
+    }
 
     // Backend'in beklediği parametre adı
     if (request.gsmNumber) {

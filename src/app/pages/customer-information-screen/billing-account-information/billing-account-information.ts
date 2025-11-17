@@ -11,6 +11,7 @@ import { AddressForBillingAccountResponse } from '../../../models/individualcust
 import { OrderService } from '../../../services/order-service';
 import { OrderResponse } from '../../../models/ordermodels/OrderResponse';
 import { GetAddressResponse } from '../../../models/individualcustomer/responses/GetAddressResponse';
+import { ProductOfferService } from '../../../services/product-offer-service';
 
 @Component({
   selector: 'app-billing-account-information',
@@ -20,10 +21,15 @@ import { GetAddressResponse } from '../../../models/individualcustomer/responses
   styleUrls: ['./billing-account-information.scss']
 })
 export class BillingAccountInformation implements OnInit {
-  
+
   customerId!: string;
   accounts: BillingAccountResponse[] = [];
   accountForm!: FormGroup;
+
+  showProductModal = false;
+  selectedProduct: any = null;
+  productSpec: any = null;
+  selectedOrder: any;
 
   // Address selection
   addresses: AddressForBillingAccountResponse[] = [];
@@ -42,6 +48,7 @@ export class BillingAccountInformation implements OnInit {
   isEditing = false;
   editingId: string | null = null;
   expandedAccountId: string | null = null;
+  expandedOrderId: string | null = null;  // ✅ MOVED HERE - was at bottom!
 
   // Notifications
   showNotificationUpdate = false;
@@ -54,7 +61,7 @@ export class BillingAccountInformation implements OnInit {
   ordersLoadError = false;
   selectedOrderId: string | null = null;
 
-  // Service Address for Orders (IMPORTANT NEW)
+  // Service Address for Orders
   orderAddressDetails: { [orderId: string]: GetAddressResponse } = {};
   orderDistrictNames: { [orderId: string]: string } = {};
   orderCityNames: { [orderId: string]: string } = {};
@@ -72,7 +79,8 @@ export class BillingAccountInformation implements OnInit {
     private districtService: DistrictService,
     private cdr: ChangeDetectorRef,
     private ngZone: NgZone,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private productOfferService: ProductOfferService
   ) {}
 
   ngOnInit(): void {
@@ -111,11 +119,11 @@ export class BillingAccountInformation implements OnInit {
   }
 
   // -------------------- LOAD INITIAL DATA --------------------
-loadAccounts() {
+  loadAccounts() {
     this.billingService.getByCustomerId(this.customerId).subscribe({
       next: (data) => {
         this.accounts = data as BillingAccountResponse[];
-        this.cdr.markForCheck();
+        this.cdr.detectChanges();  // ✅ Changed from markForCheck to detectChanges
       },
       error: (err) => console.error('Error loading billing accounts', err)
     });
@@ -143,7 +151,10 @@ loadAccounts() {
 
   loadCities() {
     this.cityService.getCities().subscribe({
-      next: (data) => this.cities = data
+      next: (data) => {
+        this.cities = data;
+        this.cdr.detectChanges();  // ✅ Added detectChanges
+      }
     });
   }
 
@@ -151,11 +162,13 @@ loadAccounts() {
   selectAddress(id: string) {
     this.selectedAddressId = id;
     this.accountForm.patchValue({ addressId: id });
+    this.cdr.detectChanges();  // ✅ Added detectChanges
   }
 
   startAddAddress() {
     this.showAddAddressForm = true;
     this.newAddressForm.reset({ isDefault: false });
+    this.cdr.detectChanges();
   }
 
   onCityChangeForNewAddress() {
@@ -165,10 +178,12 @@ loadAccounts() {
       this.districtService.getDistrictsByCity(selectedCityId).subscribe(res => {
         this.districts = res;
         this.newAddressForm.patchValue({ districtId: null });
+        this.cdr.detectChanges();  // ✅ Moved inside subscribe
       });
     } else {
       this.districts = [];
       this.newAddressForm.patchValue({ districtId: null });
+      this.cdr.detectChanges();
     }
   }
 
@@ -198,22 +213,30 @@ loadAccounts() {
 
   // -------------------- ADD / EDIT BILLING ACCOUNT --------------------
   startAdd() {
+    console.log('startAdd called');  // ✅ Debug log
+    
     this.isAdding = true;
     this.isEditing = false;
     this.editingId = null;
+    this.selectedAddressId = null;
 
     this.accountForm.reset({
       type: 'INDIVIDUAL',
-      status: 'ACTIVE'
+      status: 'ACTIVE',
+      accountName: '',
+      accountNumber: '',
+      addressId: ''
     });
 
-    this.selectedAddressId = null;
+    console.log('isAdding:', this.isAdding);  // ✅ Debug log
+    this.cdr.detectChanges();
   }
 
   startEdit(account: BillingAccountResponse) {
+    console.log('startEdit called', account);  // ✅ Debug log
+    
     this.isEditing = true;
     this.isAdding = false;
-
     this.editingId = account.id;
     this.selectedAddressId = account.addressId || null;
 
@@ -234,9 +257,15 @@ loadAccounts() {
     this.editingId = null;
     this.selectedAddressId = null;
     this.showAddAddressForm = false;
+    this.accountForm.reset();
+    this.cdr.detectChanges();
   }
 
   save() {
+    console.log('save called');  // ✅ Debug log
+    console.log('Form valid:', this.accountForm.valid);
+    console.log('Selected address:', this.selectedAddressId);
+    
     if (this.accountForm.invalid) {
       alert('Please fill required fields');
       return;
@@ -258,11 +287,21 @@ loadAccounts() {
         addressId: addressId
       };
 
+      console.log('Creating account with payload:', payload);  // ✅ Debug log
+
       this.billingService.add(payload).subscribe({
-        next: () => {
+        next: (response) => {
+          console.log('Account created:', response);  // ✅ Debug log
           this.isAdding = false;
+          this.selectedAddressId = null;
+          this.accountForm.reset();
           this.loadAccounts();
-          setTimeout(() => this.showSuccessNotificationCreate());
+          this.cdr.detectChanges();
+          setTimeout(() => this.showSuccessNotificationCreate(), 100);
+        },
+        error: (err) => {
+          console.error('Error creating account:', err);
+          alert('Error creating billing account');
         }
       });
     }
@@ -277,12 +316,22 @@ loadAccounts() {
         addressId: addressId
       };
 
+      console.log('Updating account with payload:', payload);  // ✅ Debug log
+
       this.billingService.update(payload).subscribe({
-        next: () => {
+        next: (response) => {
+          console.log('Account updated:', response);  // ✅ Debug log
           this.isEditing = false;
           this.editingId = null;
+          this.selectedAddressId = null;
+          this.accountForm.reset();
           this.loadAccounts();
-          setTimeout(() => this.showSuccessNotificationUpdate());
+          this.cdr.detectChanges();
+          setTimeout(() => this.showSuccessNotificationUpdate(), 100);
+        },
+        error: (err) => {
+          console.error('Error updating account:', err);
+          alert('Error updating billing account');
         }
       });
     }
@@ -292,8 +341,15 @@ loadAccounts() {
     if (!id) return;
 
     if (confirm('Are you sure you want to delete this billing account?')) {
-      this.billingService.delete(id).subscribe(() => {
-        this.loadAccounts();
+      this.billingService.delete(id).subscribe({
+        next: () => {
+          this.loadAccounts();
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error deleting account:', err);
+          alert('Error deleting billing account');
+        }
       });
     }
   }
@@ -304,11 +360,14 @@ loadAccounts() {
       this.expandedAccountId = null;
       this.orders = [];
       this.selectedOrderId = null;
+      this.expandedOrderId = null;  // ✅ Reset expanded order too
+      this.cdr.detectChanges();
       return;
     }
 
     this.expandedAccountId = accountId;
     this.selectedOrderId = null;
+    this.expandedOrderId = null;  // ✅ Reset expanded order
 
     this.loadOrdersForBillingAccount(accountId);
   }
@@ -323,7 +382,7 @@ loadAccounts() {
         this.orders = data || [];
         this.loadingOrders = false;
 
-        // 🔥 HER ORDER İÇİN ADRES DETAYI YÜKLE
+        // Load address details for each order
         this.orders.forEach(order => {
           if (order.serviceAddress) {
             this.loadOrderAddressDetails(order.orderId, order.serviceAddress);
@@ -332,7 +391,8 @@ loadAccounts() {
 
         this.cdr.detectChanges();
       },
-      error: () => {
+      error: (err) => {
+        console.error('Error loading orders:', err);
         this.loadingOrders = false;
         this.ordersLoadError = true;
         this.cdr.detectChanges();
@@ -342,21 +402,30 @@ loadAccounts() {
 
   // -------------------- SERVICE ADDRESS LOADING PER ORDER --------------------
   loadOrderAddressDetails(orderId: string, addressId: string) {
-    this.addressService.getAddressById(addressId).subscribe(addr => {
+    this.addressService.getAddressById(addressId).subscribe({
+      next: (addr) => {
+        this.orderAddressDetails[orderId] = addr;
 
-      this.orderAddressDetails[orderId] = addr;
+        this.districtService.getDistrictById(addr.districtId).subscribe(district => {
+          this.orderDistrictNames[orderId] = district.name;
 
-      this.districtService.getDistrictById(addr.districtId).subscribe(district => {
-        this.orderDistrictNames[orderId] = district.name;
-
-        this.cityService.getCitiesforaddresspage().subscribe(cities => {
-          const city = cities.find((c: any) => c.id === district.cityId);
-          if (city) this.orderCityNames[orderId] = city.name;
-
-          this.cdr.detectChanges();
+          this.cityService.getCitiesforaddresspage().subscribe(cities => {
+            const city = cities.find((c: any) => c.id === district.cityId);
+            if (city) this.orderCityNames[orderId] = city.name;
+            this.cdr.detectChanges();
+          });
         });
-      });
+      },
+      error: (err) => {
+        console.error('Error loading order address:', err);
+      }
     });
+  }
+
+  // -------------------- ORDER TOGGLE --------------------
+  toggleOrder(orderId: string) {
+    this.expandedOrderId = this.expandedOrderId === orderId ? null : orderId;
+    this.cdr.detectChanges();
   }
 
   // -------------------- SELECT ORDER --------------------
@@ -369,6 +438,32 @@ loadAccounts() {
   startNewSale(accountId: string) {
     this.router.navigate(['/offer-selection'], {
       queryParams: { billingAccountId: accountId }
+    });
+  }
+
+  // -------------------- VIEW PRODUCT --------------------
+  viewProduct(item: any, order: any) {
+    console.log("Product clicked:", item);
+    console.log("Order:", order);
+    
+    this.selectedProduct = item;
+    this.selectedOrder = order;
+
+    if (!item.productOfferId) {
+      alert("Product Offer ID bulunamadı!");
+      return;
+    }
+
+    this.productOfferService.getProductOffer(item.productOfferId).subscribe({
+      next: (spec) => {
+        this.productSpec = spec;
+        this.showProductModal = true;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error loading product spec:', err);
+        alert("Spec bilgisi alınamadı.");
+      }
     });
   }
 
@@ -385,6 +480,7 @@ loadAccounts() {
 
         setTimeout(() => {
           this.showNotificationUpdate = false;
+          this.isFadingOut = false;
           this.cdr.detectChanges();
         }, 500);
       }, 4500);
@@ -403,10 +499,10 @@ loadAccounts() {
 
         setTimeout(() => {
           this.showNotificationCreate = false;
+          this.isFadingOut = false;
           this.cdr.detectChanges();
         }, 500);
       }, 4500);
     });
   }
-
 }

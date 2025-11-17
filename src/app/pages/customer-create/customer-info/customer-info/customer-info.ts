@@ -19,11 +19,12 @@ import { catchError } from 'rxjs/internal/operators/catchError';
 import { of } from 'rxjs/internal/observable/of';
 import { Navbar } from "../../../../components/navbar/navbar";
 import { Sidebar } from "../../../../components/sidebar/sidebar";
+import { BackgroundItem } from "../../../../components/background-item/background-item";
  
 @Component({
   selector: 'app-customer-info',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, Navbar, Sidebar],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, Navbar, Sidebar, BackgroundItem],
   templateUrl: './customer-info.html',
   styleUrls: ['./customer-info.scss'],
 })

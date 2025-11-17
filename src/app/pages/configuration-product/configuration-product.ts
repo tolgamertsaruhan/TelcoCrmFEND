@@ -9,11 +9,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Navbar } from "../../components/navbar/navbar";
 import { Sidebar } from "../../components/sidebar/sidebar";
+import { BackgroundItem } from "../../components/background-item/background-item";
 
 @Component({
   selector: 'app-configuration-product',
   templateUrl: './configuration-product.html',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, Navbar, Sidebar],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, Navbar, Sidebar, BackgroundItem],
 })
 export class ConfigurationProductComponent implements OnInit {
 

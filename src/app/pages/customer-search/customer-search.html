@@ -1,14 +1,14 @@
 <app-navbar></app-navbar>
+<app-background-item></app-background-item>
 
-<div class="flex h-185 bg-gray-100 p-4 font-inter">
+<div class="flex h-185 p-4 font-inter">
+  
   <app-sidebar></app-sidebar>
 
   <div class="flex-grow bg-white rounded-r-xl shadow-2xl flex relative overflow-hidden">
     <div
       class="absolute inset-0 z-0 opacity-10 bg-no-repeat bg-cover bg-center"
-      style="
-        background-image: url('https://placehold.co/1200x800/262626/808080?text=Abstract+Background');
-      "
+      
     ></div>
 
     <div
@@ -20,7 +20,7 @@
         (ngSubmit)="search()"
         #searchFormRef="ngForm"
       >
-        <div class="space-y-4">
+        <div class="space-y-1">
           <div>
             <label class="block text-sm font-medium text-gray-600">Customer ID</label>
             <input
@@ -71,6 +71,18 @@
               maxlength="10"
               pattern="[0-9]*"
               (keypress)="allowOnlyNumbers($event, 10)"
+              class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
+            />
+          </div>
+
+                    <div>
+            <label class="block text-sm font-medium text-gray-600">Order Number</label>
+            <input
+              type="text"
+              name="orderId"
+              [(ngModel)]="searchForm.orderId"
+              (ngModelChange)="onChange()"
+              [disabled]="disabledFields.orderId"
               class="w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-orange-500 focus:border-orange-500 disabled:bg-gray-100 disabled:text-gray-500"
             />
           </div>

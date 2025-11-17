@@ -13,11 +13,12 @@ import { BillingAccountService } from '../../services/billingAccount-service';
  
 import { OrderResponse } from '../../models/ordermodels/OrderResponse';
 import { GetAddressResponse } from '../../models/individualcustomer/responses/GetAddressResponse';
+import { BackgroundItem } from "../../components/background-item/background-item";
  
 @Component({
   selector: 'app-submitted-order',
   standalone: true,
-  imports: [CommonModule, Navbar, Sidebar],
+  imports: [CommonModule, Navbar, Sidebar, BackgroundItem],
   templateUrl: './submitted-order.html',
   styleUrl: './submitted-order.scss'
 })

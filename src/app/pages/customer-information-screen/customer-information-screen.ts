@@ -6,10 +6,11 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { CommonModule } from '@angular/common';
 import { Navbar } from "../../components/navbar/navbar";
 import { Sidebar } from "../../components/sidebar/sidebar";
+import { BackgroundItem } from "../../components/background-item/background-item";
 
 @Component({
   selector: 'app-customer-information-screen',
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, RouterOutlet, Navbar, Sidebar],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, RouterOutlet, Navbar, Sidebar, BackgroundItem],
   templateUrl: './customer-information-screen.html',
   styleUrl: './customer-information-screen.scss',
 })

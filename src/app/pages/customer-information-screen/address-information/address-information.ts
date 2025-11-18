@@ -4,31 +4,31 @@ import { ActivatedRoute } from '@angular/router';
 import { CityService } from '../../../services/city-service';
 import { DistrictService } from '../../../services/district-service';
 import { AddressService } from '../../../services/address-service';
-import { Address } from '../../../models/individualcustomer/requests/CreateCustomerModel';
 import { CommonModule } from '@angular/common';
 import { UpdateAddressRequest } from '../../../models/individualcustomer/requests/UpdateAddressRequest';
 
+
 @Component({
   selector: 'app-address-information',
-  imports: [CommonModule,
-    FormsModule,
-    ReactiveFormsModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './address-information.html',
   styleUrl: './address-information.scss',
 })
 export class AddressInformation {
+
   customerId!: string;
   addresses: CreatedAddressResponse[] = [];
   addressForm!: FormGroup;
   isAdding = false;
   isEditing = false;
   editingAddressId!: string;
+
   cities: any[] = [];
   districts: any[] = [];
   districtNames: { [key: string]: string } = {};
   cityNames: { [key: string]: string } = {};
 
-  // Notification için yeni property
   showNotificationUpdate = false;
   showNotificationCreate = false;
   isFadingOut = false;
@@ -44,9 +44,7 @@ export class AddressInformation {
   ) {}
 
   ngOnInit(): void {
-    // ✅ Parent route’tan müşteri ID’sini alıyoruz
     this.customerId = this.route.parent?.snapshot.paramMap.get('id')!;
-
     this.initForm();
     this.loadCities();
 
@@ -58,171 +56,122 @@ export class AddressInformation {
   initForm(): void {
     this.addressForm = this.fb.group({
       cityId: ['', Validators.required],
-      districtId: ['', Validators.required],
-      street: ['', Validators.required],
-      houseNumber: ['', Validators.required],
-      description: [''],
-      isDefault: [false]
+      districtId: [{ value: '', disabled: true }, Validators.required],
+      street: [{ value: '', disabled: true }, Validators.required],
+      houseNumber: [{ value: '', disabled: true }, Validators.required],
+      description: [{ value: '', disabled: true }, Validators.required],
+
+      // ❗ CREATE modunda required değil
+      isDefault: [{ value: false, disabled: true }]
     });
   }
 
+  // --------------------------------------------------------
+
   loadAddresses(): void {
-    /*if (!this.customerId) return;
+    if (!this.customerId) return;
+
     this.addressService.getAddressesByCustomerId(this.customerId).subscribe({
-      next: (data) => (this.addresses = data),
-      error: (err) => console.error('Error loading addresses:', err)
-    });*/
+      next: (data) => {
+        this.addresses = data;
 
-    /*if (!this.customerId) return;
-    this.addressService.getAddressesByCustomerId(this.customerId).subscribe({
-    next: (data) => {
-      this.addresses = data;
-      this.cdr.detectChanges(); // 🟢 Angular’a değişikliği bildir
-    },
-    error: (err) => console.error('Error loading addresses:', err)
-  });*/
-   if (!this.customerId) return;
+        this.addresses.forEach(address => {
+          this.districtService.getDistrictById(address.districtId).subscribe({
+            next: (district) => {
+              this.districtNames[address.districtId] = district.name;
 
-  this.addressService.getAddressesByCustomerId(this.customerId).subscribe({
-    next: (data) => {
-      this.addresses = data;
+              this.cityService.getCitiesforaddresspage().subscribe({
+                next: (cities) => {
+                  const city = cities.find((c: any) => c.id === district.cityId);
+                  if (city) this.cityNames[address.districtId] = city.name;
 
-      // Her adres için district ve city isimlerini al
-      this.addresses.forEach(address => {
-        this.districtService.getDistrictById(address.districtId).subscribe({
-          next: (district) => {
-            this.districtNames[address.districtId] = district.name;
-
-            // Şehrin adını da al
-            this.cityService.getCitiesforaddresspage().subscribe({
-              next: (cities) => {
-                const city = cities.find((c: any) => c.id === district.cityId);
-                if (city) {
-                  this.cityNames[address.districtId] = city.name;
+                  this.cdr.detectChanges();
                 }
-
-                this.cdr.detectChanges();
-              }
-            });
-          },
-          error: (err) => console.error('Error loading district:', err)
+              });
+            }
+          });
         });
-      });
-    },
-    error: (err) => console.error('Error loading addresses:', err)
-  });
+      }
+    });
   }
 
   loadCities(): void {
     this.cityService.getCities().subscribe({
-      next: (data) => (this.cities = data),
-      error: (err) => console.error('Error loading cities:', err)
+      next: (data) => (this.cities = data)
     });
   }
 
   onCityChange(): void {
-    /*const cityId = this.addressForm.get('cityId')?.value;
+    const cityId = this.addressForm.get('cityId')?.value;
+
     if (cityId) {
+      this.addressForm.get('districtId')?.enable();
+      this.addressForm.get('street')?.disable();
+      this.addressForm.get('houseNumber')?.disable();
+      this.addressForm.get('description')?.disable();
+      this.addressForm.get('isDefault')?.disable();
+
       this.districtService.getDistrictsByCity(cityId).subscribe({
-        next: (data) => (this.districts = data),
-        error: (err) => console.error('Error loading districts:', err)
+        next: (data) => {
+          this.districts = data;
+          this.addressForm.patchValue({ districtId: null });
+        }
       });
     } else {
-      this.districts = [];
-    }*/
-
-      // 2. düzenleme
-  /* const cityId = this.addressForm.get('cityId')?.value;
-  if (cityId) {
-    this.districtService.getDistrictsByCity(cityId).subscribe({
-      next: (data) => {
-        this.districts = data;
-
-        // Eğer düzenleme modundaysan, districtId'yi tekrar patch et
-        if (this.isEditing) {
-          const currentDistrict = this.addressForm.get('districtId')?.value;
-          this.addressForm.patchValue({ districtId: currentDistrict });
-        }
-      },
-      error: (err) => console.error('Error loading districts:', err)
-    });
-  } else {
-    this.districts = [];
-  }*/
-
-   const selectedCityId = this.addressForm.get('cityId')?.value;
-
-  if (selectedCityId) {
-    this.districtService.getDistrictsByCity(selectedCityId).subscribe({
-      next: (response) => {
-        this.districts = response;
-        this.addressForm.patchValue({ districtId: null }); // ✅ district sıfırlanır
-      },
-    });
-  } else {
-    this.districts = [];
-    this.addressForm.patchValue({ districtId: null });
+      this.addressForm.get('districtId')?.disable();
+      this.addressForm.patchValue({ districtId: null });
+    }
   }
+
+  onDistrictChange(): void {
+    const districtId = this.addressForm.get('districtId')?.value;
+
+    if (districtId) {
+      this.addressForm.get('street')?.enable();
+      this.addressForm.get('houseNumber')?.enable();
+      this.addressForm.get('description')?.enable();
+      this.addressForm.get('isDefault')?.enable();
+    }
   }
+
+  // --------------------------------------------------------
 
   startAdd(): void {
     this.isAdding = true;
     this.isEditing = false;
     this.editingAddressId = "";
-    this.addressForm.reset({ isDefault: false });
+
+    this.initForm();
+    this.addressForm.enable();
+
+    this.addressForm.get('districtId')?.disable();
+    this.addressForm.get('street')?.disable();
+    this.addressForm.get('houseNumber')?.disable();
+    this.addressForm.get('description')?.disable();
+    this.addressForm.get('isDefault')?.disable();
   }
 
   startEdit(address: CreatedAddressResponse): void {
-  /*this.isEditing = true;
-  this.isAdding = false;
-  this.editingAddressId = address.id;
-
-  /*this.addressForm.patchValue({
-    districtId: address.districtId,
-    street: address.street,
-    houseNumber: address.houseNumber,
-    description: address.description,
-    isPrimary: address.isDefault === 'true' // string → boolean
-  });
-
-  this.onCityChange();
-  // districtId üzerinden city'yi bul
-  this.districtService.getDistrictById(address.districtId).subscribe({
-    next: (district) => {
-      this.addressForm.patchValue({
-        cityId: district.cityId, // buradan cityId'yi getiriyoruz
-        districtId: address.districtId,
-        street: address.street,
-        houseNumber: address.houseNumber,
-        description: address.description,
-        isPrimary: address.isDefault
-      });
-
-      this.onCityChange(); // city'ye göre districtleri tekrar yükle
-    },
-    error: (err) => console.error(err)
-  });
-
-  */
-
   this.isEditing = true;
   this.isAdding = false;
   this.editingAddressId = address.id;
 
-  // districtId üzerinden city’yi bul
+  this.addressForm.enable();
+
+  // Checkbox required olmayacak! Çünkü kural checkbox'ın default olup olmaması.
+  this.addressForm.get('isDefault')?.clearValidators();
+  this.addressForm.get('isDefault')?.updateValueAndValidity();
+
   this.districtService.getDistrictById(address.districtId).subscribe({
     next: (district) => {
-      // önce şehir listesini yükle
       this.cityService.getCities().subscribe({
         next: (cities) => {
           this.cities = cities;
 
-          // Şehrin district’lerini yükle
           this.districtService.getDistrictsByCity(district.cityId).subscribe({
             next: (districtList) => {
               this.districts = districtList;
 
-              // Formu patchle
               this.addressForm.patchValue({
                 cityId: district.cityId,
                 districtId: address.districtId,
@@ -232,17 +181,22 @@ export class AddressInformation {
                 isDefault: address.default
               });
 
+              // 🔥 ASIL ÖNEMLİ YER BURASI
+              if (address.default === true) {
+                this.addressForm.get('isDefault')?.disable(); // kullanıcı kaldıramaz
+              } else {
+                this.addressForm.get('isDefault')?.enable(); // kullanıcı default yapabilir
+              }
+
               this.cdr.detectChanges();
-            },
-            error: (err) => console.error('Error loading districts for edit:', err)
+            }
           });
-        },
-        error: (err) => console.error('Error loading cities:', err)
+        }
       });
-    },
-    error: (err) => console.error('Error getting district:', err)
+    }
   });
 }
+
 
   cancel(): void {
     this.isAdding = false;
@@ -250,179 +204,93 @@ export class AddressInformation {
     this.editingAddressId = "";
   }
 
+  // --------------------------------------------------------
+
   save(): void {
-    /*const formValue = this.addressForm.value;
+    const formValue = this.addressForm.value;
 
-    if (this.isAdding) {
-      // ✅ Yeni adres ekleme
-      this.addressService
-        .addAddress({ ...formValue, customerId: this.customerId })
-        .subscribe({
-          next: () => {
-            this.isAdding = false;
-            this.loadAddresses();
-          },
-          error: (err) => console.error('Error adding address:', err)
-        });
-    } else if (this.isEditing && this.editingAddressId) {
-  const updateRequest = {
-    id: this.editingAddressId,              // ✅ backend’in beklediği id
-    street: formValue.street,
-    houseNumber: formValue.houseNumber,
-    description: formValue.description,
-    districtId: formValue.districtId,
-    isDefault: formValue.isDefault           // ✅ backend’te “default” alanına denk geliyor
-  };
-
-  console.log(updateRequest);
-  this.addressService.updateAddress(updateRequest).subscribe({
-    next: () => {
-      this.isEditing = false;
-      this.loadAddresses();
-    },
-    error: (err) => console.error('Error updating address:', err)
-  });
-    }
-
-    */
-
-    /*
-const formValue = this.addressForm.value;
-   const updatedRequest: UpdateAddressRequest = {
-  id: this.editingAddressId,
-  street: formValue.street,
-  houseNumber: formValue.houseNumber,
-  description: formValue.description,
-  districtId: formValue.districtId,
-  isDefault: formValue.isPrimary ?? false  // ✅ backend’in beklediği isim
-};
-
-console.log('Final Update Request:', updatedRequest);
-
-this.addressService.updateAddress(updatedRequest).subscribe({
-  next: () => {
-    this.isEditing = false;
-    this.loadAddresses();
-  },
-  error: (err) => console.error('Error updating address:', err)
-});*/
-const formValue = this.addressForm.value;
-  console.log('Form Value:', formValue);  // ✅ Tüm form değerlerini görelim
-  console.log('isDefault:', formValue.isDefault);  // ✅ Özellikle isPrimary değerini kontrol edelim
-  console.log('isDefault type:', typeof formValue.isDefault);  // ✅ Tipini kontrol edelim
-    // ✅ CREATE MODE
+    // CREATE ------------------------------------------------
     if (this.isAdding) {
       const createRequest = {
-      
         customerId: this.customerId,
         districtId: formValue.districtId,
         street: formValue.street,
         houseNumber: formValue.houseNumber,
         description: formValue.description,
-        default: formValue.isDefault ?? false
-      };
 
-      console.log('Create Request:', createRequest);
+        // required değil → backend'e gönderiyoruz
+        default: formValue.isDefault
+      };
 
       this.addressService.addAddressInfoPage(createRequest).subscribe({
         next: () => {
           this.isAdding = false;
           this.loadAddresses();
-        },
-        error: (err) => console.error('Error creating address:', err)
+        }
       });
 
-      // Alert yerine özel notification göster
-    this.showSuccessNotificationCreate();
-    this.isEditing = false;
-    this.addressForm.disable()
-
+      this.showSuccessNotificationCreate();
       return;
     }
 
-    // 📝 UPDATE MODE
+    // UPDATE ------------------------------------------------
     if (this.isEditing && this.editingAddressId) {
+
       const updatedRequest: UpdateAddressRequest = {
         id: this.editingAddressId,
         street: formValue.street,
         houseNumber: formValue.houseNumber,
         description: formValue.description,
         districtId: formValue.districtId,
-        default: formValue.isDefault ?? false
+        default: formValue.isDefault
       };
-
-      console.log('Final Update Request:', updatedRequest);
 
       this.addressService.updateAddress(updatedRequest).subscribe({
         next: () => {
           this.isEditing = false;
           this.loadAddresses();
-        },
-        error: (err) => console.error('Error updating address:', err)
+        }
       });
     }
-    
 
-    // Alert yerine özel notification göster
     this.showSuccessNotificationUpdate();
-    this.isEditing = false;
-    this.addressForm.disable()
   }
 
+  // --------------------------------------------------------
+
   showSuccessNotificationUpdate(): void {
-  this.showNotificationUpdate = true;
-  this.isFadingOut = false;
-  this.cdr.detectChanges(); // anında DOM’a yansısın
+    this.showNotificationUpdate = true;
+    this.isFadingOut = false;
+    this.cdr.detectChanges();
 
-  setTimeout(() => {
-    // Angular zone içinde çalıştır -> değişiklik algılansın
-    this.ngZone.run(() => {
-      this.isFadingOut = true;
-      this.cdr.detectChanges();
-    });
-
-    // fade-out animasyonu bitince DOM’dan kaldır
     setTimeout(() => {
-      this.ngZone.run(() => {
-        this.showNotificationUpdate = false;
-        this.cdr.detectChanges();
-      });
-    }, 500); // fadeOut animasyon süresi
-  }, 4500); // 4.5 saniye sonra fade-out başlasın
-}
+      this.ngZone.run(() => { this.isFadingOut = true; this.cdr.detectChanges(); });
+      setTimeout(() => {
+        this.ngZone.run(() => { this.showNotificationUpdate = false; this.cdr.detectChanges(); });
+      }, 500);
+    }, 4500);
+  }
 
+  showSuccessNotificationCreate(): void {
+    this.showNotificationCreate = true;
+    this.isFadingOut = false;
+    this.cdr.detectChanges();
 
- showSuccessNotificationCreate(): void {
-  this.showNotificationCreate = true;
-  this.isFadingOut = false;
-  this.cdr.detectChanges(); // anında DOM’a yansısın
-
-  setTimeout(() => {
-    // Angular zone içinde çalıştır -> değişiklik algılansın
-    this.ngZone.run(() => {
-      this.isFadingOut = true;
-      this.cdr.detectChanges();
-    });
-
-    // fade-out animasyonu bitince DOM’dan kaldır
     setTimeout(() => {
-      this.ngZone.run(() => {
-        this.showNotificationCreate = false;
-        this.cdr.detectChanges();
-      });
-    }, 500); // fadeOut animasyon süresi
-  }, 4500); // 4.5 saniye sonra fade-out başlasın
-}
-
- 
-
+      this.ngZone.run(() => { this.isFadingOut = true; this.cdr.detectChanges(); });
+      setTimeout(() => {
+        this.ngZone.run(() => {
+          this.showNotificationCreate = false;
+          this.cdr.detectChanges();
+        });
+      }, 500);
+    }, 4500);
+  }
 
   confirmDelete(addressId: string): void {
-    const confirmed = confirm('Are you sure you want to delete this address?');
-    if (confirmed) {
+    if (confirm('Are you sure you want to delete this address?')) {
       this.addressService.deleteAddress(addressId).subscribe({
-        next: () => this.loadAddresses(),
-        error: (err) => console.error('Error deleting address:', err)
+        next: () => this.loadAddresses()
       });
     }
   }

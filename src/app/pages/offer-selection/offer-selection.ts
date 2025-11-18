@@ -354,6 +354,7 @@ export class OfferSelectionComponent implements OnInit, AfterViewInit {
         error: err => {
           console.error(err);
           this.groupedCampaigns = groupsArray;
+          
           this.cdr.detectChanges();
         }
       });

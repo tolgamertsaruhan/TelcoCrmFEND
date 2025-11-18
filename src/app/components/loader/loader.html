@@ -1,8 +1,8 @@
-@if(loaderService.isLoading())
-{
-<div class="overlay">
-    <div class="overlay__inner">
-        <div class="overlay__content"><span class="spinner"></span></div>
-    </div>
+@if (loaderService.isLoading()) {
+<div class="loader-overlay">
+  <div class="loader-container">
+    <div class="loader-spinner"></div>
+    <p class="loader-text">Loading...</p>
+  </div>
 </div>
 }

@@ -5,7 +5,6 @@
   <app-sidebar></app-sidebar>
 
   <div class="flex-grow bg-white rounded-r-xl shadow-2xl flex relative overflow-hidden">
-
     <!-- Sol taraf: Catalog / Campaign -->
     <div class="flex-1 p-6 md:p-8 z-10 flex flex-col">
       <h2 class="text-2xl font-bold mb-4 text-gray-800 tracking-wide">OFFER SELECTION</h2>
@@ -379,11 +378,20 @@
             *ngFor="let item of normalProducts"
             class="flex items-center justify-between border border-gray-200 rounded-lg bg-white px-3 py-2 shadow-sm"
           >
-            <div class="flex-1 mr-2">
+            <!-- LEFT SIDE -->
+            <div class="flex-1 mr-4">
+              <!-- Product name -->
               <p class="text-sm font-semibold text-gray-800 truncate">
                 {{ item.productName }}
               </p>
+
+              <!-- Price BELOW product name -->
+              <p class="text-sm font-semibold text-gray-600 mt-1">
+                {{ getItemDisplayPrice(item) | currency : '₺' }}
+              </p>
             </div>
+
+            <!-- RIGHT SIDE - QUANTITY ACTIONS -->
             <div class="flex items-center gap-2">
               <button
                 (click)="decrementItem(item)"
@@ -391,20 +399,17 @@
               >
                 -
               </button>
+
               <span class="w-6 text-center text-sm font-semibold text-gray-800">
                 {{ item.quantity }}
               </span>
+
               <button
                 (click)="incrementItem(item)"
                 class="w-7 h-7 flex items-center justify-center rounded-full bg-orange-500 text-white hover:bg-orange-600"
               >
                 +
               </button>
-            </div>
-            <div class="ml-3 text-right">
-              <p class="text-sm font-semibold text-gray-800">
-                {{ getItemDisplayPrice(item) | currency : 'TRY' }}
-              </p>
             </div>
           </div>
         </div>

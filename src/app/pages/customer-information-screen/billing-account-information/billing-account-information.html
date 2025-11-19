@@ -258,7 +258,7 @@
                       <tr class="text-left text-gray-500 border-b">
                         <th class="py-2 pr-4">Order ID</th>
                         <th class="py-2 pr-4">Total Amount</th>
-                        <th class="py-2 pr-4">Service Address</th>
+                        <th class="py-2 pr-4">Address</th>
                       </tr>
                     </thead>
 
@@ -364,7 +364,7 @@
                                     <td class="py-2 pr-4">{{ item.productName }}</td>
 
                                     <td class="py-2 pr-4">
-                                      {{ item.price | currency : '₺' : 'symbol' : '1.2-2' }}
+                                      {{ item.discountedPrice | currency : '₺' : 'symbol' : '1.2-2' }}
                                     </td>
 
                                     <td class="py-2 pr-4 text-left">
